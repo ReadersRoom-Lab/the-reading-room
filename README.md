@@ -28,6 +28,7 @@ See `docs/DATABASE_SETUP.md` for local Postgres/Supabase setup and migrations.
 - Keep shared domain logic in `src/lib`.
 - Follow the V1.0 scope from the PDF and avoid Pro/PDF/research-room work in this phase.
 - The next backend milestones are Clerk auth, article ingestion, and room/article CRUD persistence.
+- Repository pushed to GitHub at https://github.com/ReadersRoom-Lab/the-reading-room
 
 ## Verification
 - npm test
