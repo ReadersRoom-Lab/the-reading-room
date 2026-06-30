@@ -1,4 +1,5 @@
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
+import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { Home, Library, LayoutGrid, BookMarked, User } from "lucide-react";
 import Link from "next/link";
 
@@ -14,6 +15,9 @@ export default function DashboardLayout({
           The Reading Room
         </div>
         
+        <GlobalSearchDialog />
+        <div className="mt-2" />
+        
         <SaveArticleDialog />
 
         <nav className="flex flex-col gap-1 font-sans">
@@ -26,8 +30,11 @@ export default function DashboardLayout({
           <Link href="/rooms" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
             <LayoutGrid className="w-4 h-4" /> My Rooms
           </Link>
-          <Link href="/vault" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md bg-zinc-900 text-zinc-50 transition-colors">
+          <Link href="/vault" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
             <BookMarked className="w-4 h-4" /> Vault
+          </Link>
+          <Link href="/insights" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+            <span className="text-lg leading-none font-serif">✨</span> Insights
           </Link>
           <Link href="/profile" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors mt-2">
             <User className="w-4 h-4" /> Profile
