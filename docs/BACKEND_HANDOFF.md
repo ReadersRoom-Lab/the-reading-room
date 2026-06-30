@@ -9,6 +9,7 @@ The Reading Room V1.0 is a free-tier reading workspace where users can save arti
 - Prisma schema has been defined and the Prisma client was generated.
 - The store supports optional database persistence with a fallback to in-memory storage for dev.
 - A regression test validates the current store behavior.
+- A reusable API smoke test script exists at `scripts/api-smoke.ts`.
 
 ## What to build next
 1. Add Clerk authentication and protected routes.
@@ -26,6 +27,7 @@ The Reading Room V1.0 is a free-tier reading workspace where users can save arti
 ## Verification commands
 - npm test
 - npm run build
+- npm run api:smoke  (requires the local server running on `localhost:3000`)
 
 ## Notes for the next developer or AI
 Keep the implementation aligned to the V1.0 plan from the PDF. Avoid adding billing, PDF ingestion, or research-room features in this phase.

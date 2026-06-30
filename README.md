@@ -15,7 +15,10 @@ The Reading Room is a free-tier personal reading and knowledge workspace. The cu
 npm install
 npm test
 npm run dev
+npm run api:smoke
 ```
+
+Start the app with `npm run dev`, then run `npm run api:smoke` to verify the core API endpoints against `localhost:3000`.
 
 ## Database setup
 See `docs/DATABASE_SETUP.md` for local Postgres/Supabase setup and migrations.
