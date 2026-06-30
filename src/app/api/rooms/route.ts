@@ -3,7 +3,7 @@ import { store } from '@/lib/store';
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const room = store.createRoom(
+  const room = await store.createRoom(
     body.userId ?? 'demo-user',
     body.name ?? 'Untitled room',
     body.coverColor ?? '#f59e0b',
@@ -14,5 +14,5 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  return NextResponse.json({ rooms: store.listRooms('demo-user') });
+  return NextResponse.json({ rooms: await store.listRooms('demo-user') });
 }
