@@ -1,0 +1,69 @@
+import { NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import prisma from '@/lib/prisma'
+
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const article = await prisma.article.findUnique({
+      where: {
+        id: id,
+        user_id: userId,
+      }
+    })
+
+    if (!article) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    return NextResponse.json(article)
+  } catch (error) {
+    console.error("Error fetching article:", error)
+    return NextResponse.json(
+      { error: 'Failed to fetch article' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { reading_progress, status } = await req.json()
+
+    const article = await prisma.article.update({
+      where: {
+        id: id,
+        user_id: userId,
+      },
+      data: {
+        ...(reading_progress !== undefined && { reading_progress }),
+        ...(status !== undefined && { status }),
+      }
+    })
+
+    return NextResponse.json(article)
+  } catch (error) {
+    console.error("Error updating article:", error)
+    return NextResponse.json(
+      { error: 'Failed to update article' },
+      { status: 500 }
+    )
+  }
+}

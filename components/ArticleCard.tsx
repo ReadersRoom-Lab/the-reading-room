@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Clock } from "lucide-react"
+import Link from "next/link"
 
 export interface ArticleProps {
   article: {
@@ -25,7 +26,8 @@ export function ArticleCard({ article }: ArticleProps) {
   }
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow cursor-pointer border-border bg-card">
+    <Link href={`/read/${article.id}`} className="block h-full">
+      <Card className="flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow cursor-pointer border-border bg-card">
       {article.cover_image && (
         <div className="h-40 w-full overflow-hidden bg-muted">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -67,5 +69,6 @@ export function ArticleCard({ article }: ArticleProps) {
         )}
       </CardContent>
     </Card>
+    </Link>
   )
 }
