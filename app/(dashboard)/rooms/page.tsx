@@ -1,9 +1,9 @@
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
-import { Library, ArrowRight } from "lucide-react"
+import { Library } from "lucide-react"
 import { CreateRoomDialog } from "@/components/CreateRoomDialog"
-import { Card, CardContent } from "@/components/ui/card"
+import { format } from 'date-fns'
 
 export default async function RoomsPage() {
   const { userId } = await auth()
@@ -21,16 +21,28 @@ export default async function RoomsPage() {
     orderBy: { created_at: 'desc' },
     include: {
       _count: {
-        select: { articles: true }
+        select: { articles: true, vaultTrails: true }
+      },
+      articles: {
+        select: {
+          _count: {
+            select: { highlights: true }
+          }
+        }
       }
     }
   }) : []
 
   return (
-    <div className="flex flex-col gap-12 w-full max-w-5xl mx-auto py-12 px-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-heading font-bold">My Rooms</h1>
-        <CreateRoomDialog />
+    <div className="flex flex-col gap-12 w-full max-w-3xl mx-auto py-12 px-6">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-4xl font-heading font-bold text-[#1a1a1a]">My Rooms</h1>
+        <p className="text-sm font-source-serif text-muted-foreground mb-4">
+          Manage your intellectual environments and curated research clusters.
+        </p>
+        <div className="w-fit">
+          <CreateRoomDialog />
+        </div>
       </div>
 
       {rooms.length === 0 ? (
@@ -40,30 +52,49 @@ export default async function RoomsPage() {
           <p className="text-muted-foreground max-w-sm text-center">Rooms are themed shelves where you can organize your saved articles.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map(room => (
-            <Link key={room.id} href={`/rooms/${room.id}`} className="block h-full">
-              <Card className="h-full hover:shadow-md transition-shadow cursor-pointer flex flex-col bg-card border-border rounded-none">
-                <CardContent className="p-6 flex flex-col flex-1">
-                  <div className="flex justify-between items-start mb-4">
-                    <Library className="w-5 h-5 text-primary" />
-                    <span className="text-xs font-semibold px-2 py-1 bg-secondary text-secondary-foreground rounded-full">
-                      {room._count.articles} {room._count.articles === 1 ? 'Article' : 'Articles'}
-                    </span>
+        <div className="flex flex-col gap-8">
+          {rooms.map(room => {
+            const highlightsCount = room.articles.reduce((acc, curr) => acc + curr._count.highlights, 0)
+            const isResearch = room.mode === 'research' || room.name.toLowerCase().includes('thesis') || room.name.toLowerCase().includes('ethics') || room.name.toLowerCase().includes('learning')
+
+            return (
+              <Link key={room.id} href={`/rooms/${room.id}`} className="block group">
+                <div className="flex flex-col bg-[#F9F8F6] hover:bg-[#F2F0EB] transition-colors overflow-hidden border border-border/50">
+                  {/* Cover Image Placeholder - simple gradient */}
+                  <div className="h-32 w-full opacity-80 mix-blend-multiply" style={{ background: `linear-gradient(135deg, ${room.cover_color}33 0%, #1a1a1a11 100%)` }}></div>
+                  
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+                          {isResearch ? 'Research Room' : 'Reading Room'}
+                        </span>
+                        {isResearch && (
+                          <span className="text-[9px] font-bold tracking-widest uppercase bg-[#D17659] text-white px-1.5 py-0.5 rounded-sm">PRO</span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
+                        {format(new Date(room.created_at), 'MMM dd')}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-3xl font-heading font-semibold text-[#1a1a1a] mb-8">{room.name}</h3>
+                    
+                    <div className="grid grid-cols-2 max-w-xs gap-y-2 text-xs text-muted-foreground">
+                      <span>Articles</span>
+                      <span className="text-right font-medium text-[#1a1a1a]">{room._count.articles}</span>
+                      
+                      <span>Highlights</span>
+                      <span className="text-right font-medium text-[#1a1a1a]">{highlightsCount}</span>
+                      
+                      <span>Vault</span>
+                      <span className="text-right font-medium text-[#1a1a1a]">{room._count.vaultTrails}</span>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-heading font-semibold mb-2">{room.name}</h3>
-                  {room.description && (
-                    <p className="text-muted-foreground text-sm line-clamp-2 mb-4 flex-1">
-                      {room.description}
-                    </p>
-                  )}
-                  <div className="mt-auto pt-4 flex items-center text-sm font-medium text-primary gap-1">
-                    Enter Room <ArrowRight className="w-4 h-4" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+                </div>
+              </Link>
+            )
+          })}
         </div>
       )}
     </div>

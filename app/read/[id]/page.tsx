@@ -13,6 +13,8 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { Progress } from "@/components/ui/progress"
+import { DictionaryPopover } from "@/components/DictionaryPopover"
+import { ConceptSlideOver } from "@/components/ConceptSlideOver"
 
 export default function ReaderPage() {
   const params = useParams()
@@ -24,6 +26,9 @@ export default function ReaderPage() {
   const [fontFamily, setFontFamily] = useState<'serif' | 'sans'>('serif')
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base')
   const [showAnnotate, setShowAnnotate] = useState(false)
+  const [selection, setSelection] = useState<{ word: string, rect: DOMRect } | null>(null)
+  const [concept, setConcept] = useState<{ term: string, definition: string, contextSnippet: string } | null>(null)
+  
   
   // Progress tracking
   const [progress, setProgress] = useState(0)
@@ -81,6 +86,44 @@ export default function ReaderPage() {
     }
   }, [progress, params.id, article])
 
+  // Handle text selection
+  const handleMouseUp = () => {
+    const sel = window.getSelection()
+    if (sel && sel.toString().trim().length > 0) {
+      const text = sel.toString().trim()
+      // Only show dictionary popover for single words or very short phrases (up to 3 words max)
+      const wordCount = text.split(/\s+/).length
+      if (wordCount <= 3) {
+        const range = sel.getRangeAt(0)
+        const rect = range.getBoundingClientRect()
+        setSelection({ word: text, rect })
+      } else {
+        setSelection(null)
+      }
+    } else {
+      setSelection(null)
+    }
+  }
+
+  // Handle save concept
+  const handleSaveConcept = (word: string, definition: string) => {
+    const sel = window.getSelection()
+    let contextSnippet = ""
+    if (sel && sel.rangeCount > 0) {
+      const node = sel.anchorNode?.parentElement
+      contextSnippet = node?.textContent || ""
+      // truncate snippet if too long
+      if (contextSnippet.length > 200) {
+        contextSnippet = contextSnippet.substring(0, 200) + "..."
+      }
+    }
+    setSelection(null) // hide popover
+    setConcept({
+      term: word,
+      definition,
+      contextSnippet
+    })
+  }
 
   if (loading) {
     return (
@@ -159,7 +202,8 @@ export default function ReaderPage() {
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
-          className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${showAnnotate ? 'md:mr-96' : ''}`}
+          onMouseUp={handleMouseUp}
+          className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? 'md:mr-[400px]' : ''}`}
         >
           <article 
             className={`
@@ -178,50 +222,30 @@ export default function ReaderPage() {
           </article>
         </div>
 
-        {/* Annotate Sidebar Placeholder */}
-        {showAnnotate && (
-          <aside className="absolute right-0 top-0 bottom-0 w-96 border-l border-border bg-sidebar shrink-0 flex flex-col animate-in slide-in-from-right-full z-20">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-              <h2 className="font-heading font-semibold text-lg">Annotate</h2>
-              <Button variant="ghost" size="icon" onClick={() => setShowAnnotate(false)}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            <div className="p-6 flex-1 overflow-y-auto">
-              <div className="mb-6 p-4 border-l-2 border-primary bg-primary/5 rounded-r-md">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2 font-semibold">Selected Text</p>
-                <p className="italic text-sm">"Select text in the article to begin annotating. (Feature coming in Phase 5)"</p>
-              </div>
-              
-              <div className="space-y-6">
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-semibold">Classification</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" className="justify-start text-xs h-9">👍 Supports Argument</Button>
-                    <Button variant="outline" className="justify-start text-xs h-9">👎 Contradicts</Button>
-                    <Button variant="outline" className="justify-start text-xs h-9">⭐ Key Finding</Button>
-                    <Button variant="outline" className="justify-start text-xs h-9">🔬 Methodology</Button>
-                  </div>
-                </div>
-                
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 font-semibold">Analysis Note</p>
-                  <textarea 
-                    className="w-full min-h-[120px] p-3 text-sm bg-background border border-input rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="Add your insights here..."
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="p-4 border-t border-border bg-background mt-auto">
-              <Button className="w-full gap-2 text-primary-foreground bg-primary">
-                <Save className="w-4 h-4" />
-                <span>Save Analysis</span>
-              </Button>
-            </div>
-          </aside>
+        {/* Dictionary Popover */}
+        {selection && (
+          <DictionaryPopover 
+            word={selection.word} 
+            rect={selection.rect} 
+            onClose={() => setSelection(null)}
+            onSave={handleSaveConcept}
+            onHighlight={() => {
+              // Highlight logic for Phase 5
+              setSelection(null)
+            }}
+          />
+        )}
+
+        {/* Concept Slide-Over */}
+        {concept && (
+          <ConceptSlideOver 
+            term={concept.term}
+            definition={concept.definition}
+            contextSnippet={concept.contextSnippet}
+            articleId={article.id}
+            roomId={article.room_id}
+            onClose={() => setConcept(null)}
+          />
         )}
       </div>
     </div>

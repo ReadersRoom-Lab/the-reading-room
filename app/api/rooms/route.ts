@@ -23,7 +23,14 @@ export async function GET() {
       orderBy: { created_at: 'desc' },
       include: {
         _count: {
-          select: { articles: true }
+          select: { articles: true, vaultTrails: true }
+        },
+        articles: {
+          select: {
+            _count: {
+              select: { highlights: true }
+            }
+          }
         }
       }
     })
