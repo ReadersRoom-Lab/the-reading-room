@@ -5,16 +5,17 @@ The Reading Room V1.0 is a free-tier reading workspace where users can save arti
 
 ## Current status
 - A Next.js + TypeScript app has been scaffolded.
-- The backend currently uses an in-memory store for development and testing.
 - Core REST endpoints exist for rooms, articles, highlights, and health.
+- Prisma schema has been defined and the Prisma client was generated.
+- The store supports optional database persistence with a fallback to in-memory storage for dev.
 - A regression test validates the current store behavior.
 
 ## What to build next
-1. Persist data with Prisma + Supabase.
-2. Add Clerk authentication and protected routes.
-3. Implement article ingestion from URLs using Readability.
-4. Build user-scoped CRUD for articles and rooms.
-5. Add vault and archive APIs.
+1. Add Clerk authentication and protected routes.
+2. Implement article ingestion from URLs using Readability.
+3. Build user-scoped CRUD for rooms and articles.
+4. Add vault and archive APIs.
+5. Harden database persistence and production deployment.
 
 ## Suggested file map
 - src/app/api/rooms/route.ts — room endpoints
