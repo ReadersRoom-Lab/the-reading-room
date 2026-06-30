@@ -13,7 +13,7 @@ interface ConceptSlideOverProps {
   onClose: () => void
 }
 
-export function ConceptSlideOver({ term, definition, contextSnippet, articleId, roomId, onClose }: ConceptSlideOverProps) {
+export function ConceptSlideOver({ term, definition, contextSnippet, articleId, roomId, onClose }: Readonly<ConceptSlideOverProps>) {
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState("")
   const router = useRouter()
@@ -41,7 +41,8 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
       } else {
         toast.error("Failed to save to Vault")
       }
-    } catch (e) {
+    } catch (e: unknown) {
+      console.error(e)
       toast.error("Error saving to Vault")
     } finally {
       setLoading(false)

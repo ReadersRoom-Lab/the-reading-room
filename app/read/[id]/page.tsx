@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ChevronLeft, Type, Loader2, Save, X } from "lucide-react"
+import { ChevronLeft, Type, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -66,7 +66,7 @@ export default function ReaderPage() {
     // Only update state if it increased by at least 1% to avoid excessive re-renders, 
     // or if we hit exactly 100%
     if (currentProgress > progress) {
-      setProgress(currentProgress > 100 ? 100 : currentProgress)
+      setProgress(Math.min(100, currentProgress))
     }
   }, [progress])
 
@@ -88,7 +88,7 @@ export default function ReaderPage() {
 
   // Handle text selection
   const handleMouseUp = () => {
-    const sel = window.getSelection()
+    const sel = globalThis.getSelection()
     if (sel && sel.toString().trim().length > 0) {
       const text = sel.toString().trim()
       // Only show dictionary popover for single words or very short phrases (up to 3 words max)
@@ -107,7 +107,7 @@ export default function ReaderPage() {
 
   // Handle save concept
   const handleSaveConcept = (word: string, definition: string) => {
-    const sel = window.getSelection()
+    const sel = globalThis.getSelection()
     let contextSnippet = ""
     if (sel && sel.rangeCount > 0) {
       const node = sel.anchorNode?.parentElement
@@ -188,7 +188,6 @@ export default function ReaderPage() {
           </DropdownMenu>
           
           <Button variant="secondary" size="sm" onClick={() => setShowAnnotate(!showAnnotate)}>
-            {showAnnotate ? 'Close Annotate' : 'Annotate'}
           </Button>
         </div>
       </header>
@@ -203,6 +202,7 @@ export default function ReaderPage() {
           ref={scrollRef}
           onScroll={handleScroll}
           onMouseUp={handleMouseUp}
+          role="presentation"
           className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? 'md:mr-[400px]' : ''}`}
         >
           <article 
@@ -210,7 +210,12 @@ export default function ReaderPage() {
               mx-auto max-w-2xl
               prose prose-stone dark:prose-invert
               ${fontFamily === 'serif' ? 'font-source-serif' : 'font-sans'}
-              ${fontSize === 'sm' ? 'prose-sm' : fontSize === 'base' ? 'prose-base' : fontSize === 'lg' ? 'prose-lg' : 'prose-xl'}
+              ${
+                fontSize === 'sm' ? 'prose-sm' : 
+                fontSize === 'base' ? 'prose-base' : 
+                fontSize === 'lg' ? 'prose-lg' : 
+                'prose-xl'
+              }
             `}
           >
             {article.cover_image && (

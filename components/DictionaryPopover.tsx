@@ -10,7 +10,7 @@ interface DictionaryPopoverProps {
   onHighlight: () => void
 }
 
-export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: DictionaryPopoverProps) {
+export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: Readonly<DictionaryPopoverProps>) {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -25,6 +25,7 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
           setData({ word, error: 'Definition not found' })
         }
       } catch(e) {
+        console.error(e)
         setData({ word, error: 'Error fetching definition' })
       } finally {
         setLoading(false)
@@ -54,13 +55,15 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
       </div>
 
       <div className="p-4 flex flex-col gap-4">
-        {loading ? (
+        {loading && (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           </div>
-        ) : data?.error ? (
+        )}
+        {!loading && data?.error && (
           <p className="text-sm text-muted-foreground italic">{data.error}</p>
-        ) : (
+        )}
+        {!loading && !data?.error && (
           <>
             <p className="text-sm text-[#333] leading-relaxed font-source-serif">
               {data.definition}

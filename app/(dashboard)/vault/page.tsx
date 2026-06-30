@@ -56,7 +56,7 @@ export default async function VaultPage() {
           {/* Vertical timeline line */}
           <div className="absolute left-0 top-2 bottom-0 w-px bg-border -ml-4 hidden sm:block"></div>
           
-          {vaultEntries.map((entry) => {
+          {vaultEntries.map((entry: any) => {
             const firstTrail = entry.trails[0]
             
             return (
