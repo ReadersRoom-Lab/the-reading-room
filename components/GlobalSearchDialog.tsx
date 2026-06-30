@@ -1,0 +1,155 @@
+"use client"
+
+import { useEffect, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import { FileText, Folder, BookOpen, Search } from "lucide-react"
+
+export function GlobalSearchDialog() {
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState<{
+    articles: any[],
+    rooms: any[],
+    concepts: any[]
+  }>({ articles: [], rooms: [], concepts: [] })
+  
+  const router = useRouter()
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((open) => !open)
+      }
+    }
+
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+
+  useEffect(() => {
+    if (!query) {
+      setResults({ articles: [], rooms: [], concepts: [] })
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        if (res.ok) {
+          const data = await res.json()
+          setResults(data)
+        }
+      } catch (error) {
+        console.error("Search failed:", error)
+      } finally {
+        setLoading(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [query])
+
+  const runCommand = useCallback((command: () => unknown) => {
+    setOpen(false)
+    command()
+  }, [])
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground bg-muted hover:bg-muted/80 rounded-md border border-border w-64 transition-colors"
+      >
+        <Search className="w-4 h-4" />
+        <span>Search library...</span>
+        <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+          <span className="text-xs">⌘</span>K
+        </kbd>
+      </button>
+
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
+          <CommandInput 
+            placeholder="Search articles, rooms, and concepts..." 
+            value={query}
+            onValueChange={setQuery}
+          />
+          <CommandList>
+            <CommandEmpty>
+              {loading ? "Searching..." : "No results found."}
+            </CommandEmpty>
+            
+            {results.articles.length > 0 && (
+              <CommandGroup heading="Articles">
+                {results.articles.map((article) => (
+                  <CommandItem
+                    key={article.id}
+                    value={`article-${article.id}-${article.title}`}
+                    onSelect={() => {
+                      runCommand(() => router.push(`/read/${article.id}`))
+                    }}
+                  >
+                    <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span>{article.title}</span>
+                    {article.author && (
+                      <span className="ml-2 text-xs text-muted-foreground">- {article.author}</span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+
+            {results.rooms.length > 0 && (
+              <CommandGroup heading="Rooms">
+                {results.rooms.map((room) => (
+                  <CommandItem
+                    key={room.id}
+                    value={`room-${room.id}-${room.name}`}
+                    onSelect={() => {
+                      runCommand(() => router.push(`/rooms/${room.id}`))
+                    }}
+                  >
+                    <Folder className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span>{room.name}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+
+            {results.concepts.length > 0 && (
+              <CommandGroup heading="Vocabulary Vault">
+                {results.concepts.map((concept) => (
+                  <CommandItem
+                    key={concept.id}
+                    value={`concept-${concept.id}-${concept.term}`}
+                    onSelect={() => {
+                      runCommand(() => router.push(`/vault`))
+                    }}
+                  >
+                    <BookOpen className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <span className="font-semibold">{concept.term}</span>
+                    <span className="ml-2 text-xs text-muted-foreground truncate max-w-[200px]">
+                      {concept.definition}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      </CommandDialog>
+    </>
+  )
+}
