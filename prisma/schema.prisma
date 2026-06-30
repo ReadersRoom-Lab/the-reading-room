@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerk_id   String   @unique
+  email      String   @unique
+  name       String
+  tier       String   @default("free")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  rooms        Room[]
+  articles     Article[]
+  highlights   Highlight[]
+  vaultEntries VaultEntry[]
+}
+
+model Room {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String   @db.Uuid
+  name        String
+  description String?
+  cover_color String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  mode        String   @default("reading")
+
+  user        User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  articles    Article[]
+  vaultTrails VaultTrail[]
+}
+
+model Article {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String   @db.Uuid
+  room_id           String?  @db.Uuid
+  title             String
+  author            String?
+  source_url        String
+  source_type       String   @default("url")
+  content           String
+  cover_image       String?
+  reading_progress  Int      @default(0)
+  status            String   @default("unread")
+  word_count        Int
+  read_time_minutes Int
+  date_accessed     DateTime
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  user        User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  room        Room?        @relation(fields: [room_id], references: [id], onDelete: SetNull)
+  highlights  Highlight[]
+  vaultTrails VaultTrail[]
+}
+
+model Highlight {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  article_id      String   @db.Uuid
+  user_id         String   @db.Uuid
+  content         String
+  colour          String
+  note            String?
+  position_start  Int
+  position_end    Int
+  created_at      DateTime @default(now())
+  annotation_type String?
+
+  article Article @relation(fields: [article_id], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model VaultEntry {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id          String   @db.Uuid
+  term             String
+  type             String
+  definition       String
+  pronunciation    String?
+  etymology        String?
+  example_sentence String?
+  user_note        String?
+  created_at       DateTime @default(now())
+
+  user   User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  trails VaultTrail[]
+}
+
+model VaultTrail {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  vault_entry_id String   @db.Uuid
+  article_id     String   @db.Uuid
+  room_id        String?  @db.Uuid
+  passage        String
+  found_at       DateTime @default(now())
+
+  vault_entry VaultEntry @relation(fields: [vault_entry_id], references: [id], onDelete: Cascade)
+  article     Article    @relation(fields: [article_id], references: [id], onDelete: Cascade)
+  room        Room?      @relation(fields: [room_id], references: [id], onDelete: SetNull)
+}
