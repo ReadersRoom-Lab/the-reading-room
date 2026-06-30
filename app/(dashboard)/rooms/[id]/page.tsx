@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Edit, MoreVertical, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ExportRoomButton } from '@/components/ExportRoomButton'
 import { ArticleCard } from '@/components/ArticleCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -66,6 +67,7 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <ExportRoomButton roomId={room.id} roomName={room.name} />
             <Button variant="outline" size="sm" className="gap-2">
               <Settings className="w-4 h-4" /> Manage
             </Button>
