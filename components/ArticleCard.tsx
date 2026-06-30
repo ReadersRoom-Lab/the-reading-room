@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Clock } from "lucide-react"
 import Link from "next/link"
+import { RoomAssignDropdown } from "./RoomAssignDropdown"
 
 export interface ArticleProps {
   article: {
@@ -14,6 +15,7 @@ export interface ArticleProps {
     read_time_minutes: number
     reading_progress: number
     status: string
+    room_id?: string | null
   }
 }
 
@@ -40,12 +42,15 @@ export function ArticleCard({ article }: ArticleProps) {
       )}
       <CardHeader className="flex-1 pb-4">
         <div className="flex justify-between items-start gap-2 mb-2">
-          <Badge variant="secondary" className="text-xs font-normal">
-            {domain}
-          </Badge>
-          {article.status === 'finished' && (
-            <Badge className="text-xs bg-emerald-600 hover:bg-emerald-700">Finished</Badge>
-          )}
+          <div className="flex gap-2">
+            <Badge variant="secondary" className="text-[10px] font-semibold tracking-widest uppercase">
+              {domain}
+            </Badge>
+            {article.status === 'finished' && (
+              <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-600 hover:bg-emerald-700">Finished</Badge>
+            )}
+          </div>
+          <RoomAssignDropdown articleId={article.id} currentRoomId={article.room_id} />
         </div>
         <CardTitle className="line-clamp-2 leading-tight text-lg font-heading">{article.title}</CardTitle>
         {article.author && (

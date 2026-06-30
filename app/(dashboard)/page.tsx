@@ -1,45 +1,74 @@
-import { BookOpen, Bookmark, Library, PenTool, Sparkles, BookA, TrendingUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from '@clerk/nextjs/server'
+import prisma from '@/lib/prisma'
+import Link from 'next/link'
+import { Bookmark, RefreshCw } from 'lucide-react'
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth()
+  const user = await prisma.user.findUnique({ where: { clerk_id: userId! } })
+  
+  const recentArticles = user ? await prisma.article.findMany({
+    where: { user_id: user.id, status: 'in-progress' },
+    orderBy: { updated_at: 'desc' },
+    take: 2
+  }) : []
+
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-4xl font-heading font-bold">Good morning, Reader.</h1>
+    <div className="max-w-3xl mx-auto py-12 px-6 flex flex-col gap-16 w-full">
+      {/* Today's Rediscovery */}
+      <section>
+        <h2 className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-6 flex items-center gap-2">
+          <RefreshCw className="w-3.5 h-3.5" /> Today's Rediscovery
+        </h2>
+        <div className="border border-border bg-card p-8">
+          <div className="flex justify-between items-start mb-6">
+            <span className="text-xs font-medium px-2 py-1 bg-secondary text-secondary-foreground uppercase tracking-widest border border-border/50">Vocabulary</span>
+            <span className="text-xs text-muted-foreground">30 days ago</span>
+          </div>
+          <h3 className="text-3xl font-heading font-bold mb-4">schadenfreude</h3>
+          <p className="text-lg text-foreground/80 mb-8 font-source-serif">Pleasure derived by someone from another person's misfortune.</p>
+          <div className="pt-4 border-t border-border/50 text-xs text-muted-foreground">
+            Encountered in <span className="italic font-medium text-foreground">"The Psychology of Envy"</span> › Chapter 4
+          </div>
+        </div>
+      </section>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Main Column */}
-        <div className="md:col-span-2 flex flex-col gap-6">
-          <SectionSkeleton title="Continue Reading" icon={<BookOpen className="w-5 h-5 text-muted-foreground" />} message="You have no articles in progress. Save an article to start reading." />
-          <SectionSkeleton title="Recently Saved" icon={<Bookmark className="w-5 h-5 text-muted-foreground" />} message="Your library is empty. Save something interesting from the web." />
-          <SectionSkeleton title="My Rooms" icon={<Library className="w-5 h-5 text-muted-foreground" />} message="Create a room to organize your reading by theme." />
-          <SectionSkeleton title="Highlights Review" icon={<PenTool className="w-5 h-5 text-muted-foreground" />} message="Highlight text while reading to see your notes here." />
-        </div>
-
-        {/* Sidebar Column */}
-        <div className="flex flex-col gap-6">
-          <SectionSkeleton title="Today's Rediscovery" icon={<Sparkles className="w-5 h-5 text-muted-foreground" />} message="Old highlights and insights will surface here over time." />
-          <SectionSkeleton title="Vocabulary From Reading" icon={<BookA className="w-5 h-5 text-muted-foreground" />} message="Save words you want to remember to your Vault." />
-          <SectionSkeleton title="Weekly Progress" icon={<TrendingUp className="w-5 h-5 text-muted-foreground" />} message="Read your first article to start tracking your reading habit." />
-        </div>
+      {/* Divider */}
+      <div className="flex items-center justify-center text-muted-foreground gap-4">
+        <div className="w-6 h-px bg-border"></div>
+        <div className="w-6 h-px bg-border"></div>
+        <div className="w-6 h-px bg-border"></div>
       </div>
-    </div>
-  );
-}
 
-function SectionSkeleton({ title, icon, message }: { title: string, icon: React.ReactNode, message: string }) {
-  return (
-    <Card className="shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="font-heading text-xl flex items-center gap-2">
-          {icon}
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center justify-center py-8 text-center px-4 rounded-md border border-dashed border-border bg-muted/30">
-          <p className="text-sm text-muted-foreground">{message}</p>
+      {/* Recently Read */}
+      <section>
+        <h2 className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-6">Recently Read</h2>
+        <div className="flex flex-col gap-4">
+          {recentArticles.length === 0 ? (
+            <div className="p-8 text-center border border-dashed border-border text-muted-foreground text-sm">
+              You have no articles in progress. Start reading from your library!
+            </div>
+          ) : recentArticles.map(article => (
+            <Link key={article.id} href={`/read/${article.id}`} className="block border border-border bg-card p-6 hover:shadow-sm transition-shadow">
+                <div className="flex justify-between items-start mb-4">
+                  <span className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
+                    {article.source_type === 'url' ? 'THE ATLANTIC' : 'ARTICLE'}
+                  </span>
+                  <Bookmark className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-heading font-bold mb-8">{article.title}</h3>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-1 bg-muted">
+                    <div className="h-full bg-primary" style={{ width: `${article.reading_progress}%` }}></div>
+                  </div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap min-w-[70px] text-right">
+                    {article.reading_progress}% · {Math.max(1, Math.ceil(article.read_time_minutes * (1 - (article.reading_progress / 100))))}m left
+                  </span>
+                </div>
+            </Link>
+          ))}
         </div>
-      </CardContent>
-    </Card>
-  );
+      </section>
+    </div>
+  )
 }
