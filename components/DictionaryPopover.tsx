@@ -87,7 +87,7 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
       <div className="grid grid-cols-2 border-t border-border">
         <Button 
           variant="default" 
-          className="rounded-none rounded-bl-md border-r border-[#E5E5E5] h-10 gap-2 bg-[#1a1a1a] text-white hover:bg-black hover:text-white"
+          className="rounded-none rounded-bl-md border-r border-[#E5E5E5] h-10 gap-2 bg-[#1a1a1a] text-white hover:bg-[#444444] hover:text-white transition-colors"
           onClick={() => onSave(data?.word || word, data?.definition || '')}
         >
           <Bookmark className="w-4 h-4" /> Save to Vault

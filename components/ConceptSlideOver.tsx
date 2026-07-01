@@ -158,7 +158,7 @@ export function ConceptSlideOver({ term, definition = "", contextSnippet, articl
       
       <div className="p-6 border-t border-border bg-white mt-auto flex flex-col gap-3">
         <Button 
-          className="w-full h-12 text-base font-semibold bg-[#1a1a1a] text-white hover:bg-black hover:text-white rounded-none"
+          className="w-full h-12 text-base font-semibold bg-[#1a1a1a] text-white hover:bg-[#444444] hover:text-white rounded-none transition-colors"
           onClick={handleSave}
           disabled={loading || isFetching}
         >
