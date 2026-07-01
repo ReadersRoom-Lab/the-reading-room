@@ -31,7 +31,7 @@ export default function LandingPage() {
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-8">
           <p className="font-sans text-xs font-medium tracking-[0.15em] text-[#747878] uppercase">
-            Est. 2026 &nbsp;›&nbsp; A Digital Sanctuary
+            {"Est. 2026 › A Digital Sanctuary"}
           </p>
 
           <h1 className="font-heading text-5xl lg:text-7xl font-bold text-[#1A1A1A] leading-[1.05] tracking-tight">

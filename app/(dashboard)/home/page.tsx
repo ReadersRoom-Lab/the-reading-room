@@ -40,9 +40,9 @@ export default async function Home() {
           </p>
           <div className="pt-5 border-t border-[#E5E5E5]">
             <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878]">
-              Encountered in&nbsp;
+              {"Encountered in "}
               <span className="italic font-serif text-[#1A1A1A] text-sm">&quot;The Psychology of Envy&quot;</span>
-              &nbsp;›&nbsp;Chapter 4
+              {" › Chapter 4"}
             </p>
           </div>
         </div>
