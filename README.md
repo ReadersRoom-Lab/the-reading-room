@@ -25,21 +25,12 @@ npm install
 
 ### 3. Environment variables
 
-Copy `.env.example` to `.env` and fill in every value:
+The `.env` file already exists but has placeholders. You need real values for:
 
-```bash
-cp .env.example .env
-```
-
-| Variable | Where to get it |
-|---|---|
-| `DATABASE_URL` | Local Postgres or Supabase → Project Settings → Database → URI |
-| `CLERK_SECRET_KEY` | Clerk Dashboard → API Keys |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk Dashboard → API Keys |
-| `CLERK_WEBHOOK_SECRET` | Clerk Dashboard → Webhooks → your endpoint secret |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) |
-
-**Clerk webhook setup:** in your Clerk dashboard, create a webhook pointing to `https://your-domain/api/webhooks/clerk`. Enable the `user.created` and `user.updated` events. For local development use [ngrok](https://ngrok.com) or the Clerk CLI tunnel.
+- **`DATABASE_URL`** — easiest option: create a free Supabase project → Project Settings → Database → Connection string (URI)
+- **`CLERK_SECRET_KEY`** and **`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`** — create a free app at clerk.com → API Keys
+- **`CLERK_WEBHOOK_SECRET`** — in Clerk dashboard → Webhooks → create an endpoint pointing to your domain (for local dev, skip this initially — sign-up will work but user sync won't fire)
+- **`GOOGLE_GENERATIVE_AI_API_KEY`** — [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) (free)
 
 ### 4. Database migrations
 
