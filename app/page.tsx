@@ -1,7 +1,14 @@
 import Link from "next/link"
 import { ArrowRight, BookOpen, Brain, FolderArchive } from "lucide-react"
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth()
+
+  if (userId) {
+    redirect("/home")
+  }
   return (
     <div className="min-h-screen bg-[#F9F7F2] flex flex-col w-full">
 

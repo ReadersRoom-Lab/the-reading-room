@@ -2,12 +2,33 @@ import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { auth } from '@clerk/nextjs/server';
+import prisma from '@/lib/prisma';
+import { redirect } from 'next/navigation';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    redirect('/sign-in');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { clerk_id: userId },
+    include: {
+      _count: {
+        select: { rooms: true }
+      }
+    }
+  });
+
+  if (!user || user._count.rooms === 0) {
+    redirect('/onboarding');
+  }
   return (
     <div className="flex h-screen w-full bg-[#F9F7F2] overflow-hidden">
 
