@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useRef, useCallback, useMemo } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { ChevronLeft, Type, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -66,6 +66,9 @@ export default function ReaderPage() {
   // Progress tracking
   const [progress, setProgress] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const highlightedHtml = useMemo(() => {
+    return generateHighlightedHtml(article, highlights)
+  }, [article, highlights])
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -293,7 +296,7 @@ export default function ReaderPage() {
               <img src={article.cover_image} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />
             )}
             <h1 className="font-heading mb-8">{article.title}</h1>
-            <div dangerouslySetInnerHTML={generateHighlightedHtml(article, highlights)} />
+            <div dangerouslySetInnerHTML={highlightedHtml} />
           </article>
         </div>
 
