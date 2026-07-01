@@ -6,6 +6,7 @@ import { MoreVertical, Library, Check, Loader2 } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
@@ -77,21 +78,23 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
           <MoreVertical className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider">Move to Room</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => assignRoom(null)} className="justify-between cursor-pointer">
-            <span>No Room (Library)</span>
-            {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
-          </DropdownMenuItem>
-          {rooms.map(room => (
-            <DropdownMenuItem key={room.id} onClick={() => assignRoom(room.id)} className="justify-between cursor-pointer">
-              <div className="flex items-center gap-2">
-                <Library className="w-4 h-4 text-muted-foreground" />
-                <span>{room.name}</span>
-              </div>
-              {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
+          <DropdownMenuGroup>
+            <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider">Move to Room</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => assignRoom(null)} className="justify-between cursor-pointer">
+              <span>No Room (Library)</span>
+              {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
             </DropdownMenuItem>
-          ))}
+            {rooms.map(room => (
+              <DropdownMenuItem key={room.id} onClick={() => assignRoom(room.id)} className="justify-between cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <Library className="w-4 h-4 text-muted-foreground" />
+                  <span>{room.name}</span>
+                </div>
+                {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
             onClick={deleteArticle} 
