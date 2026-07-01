@@ -3,9 +3,9 @@ import prisma from '@/lib/prisma'
 import type { ArticleProps } from '@/components/ArticleCard'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Settings } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 import { ExportRoomButton } from '@/components/ExportRoomButton'
+import { ManageRoomDialog } from '@/components/ManageRoomDialog'
 import { ArticleCard } from '@/components/ArticleCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -32,7 +32,12 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
     },
     include: {
       articles: {
-        orderBy: { updated_at: 'desc' }
+        orderBy: { updated_at: 'desc' },
+        include: {
+          _count: {
+            select: { highlights: true }
+          }
+        }
       }
     }
   })
@@ -40,6 +45,8 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
   if (!room) {
     redirect('/rooms')
   }
+
+  const highlightsCount = room.articles.reduce((acc: number, curr: any) => acc + curr._count.highlights, 0)
 
   const unreadArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'unread')
   const inProgressArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'in-progress')
@@ -64,14 +71,12 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
             <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground uppercase tracking-widest font-semibold">
               <span>{room.articles.length} Articles</span>
               <span>•</span>
-              <span>0 Highlights</span> {/* Placeholder for Phase 5 */}
+              <span>{highlightsCount} Highlights</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <ExportRoomButton roomId={room.id} roomName={room.name} />
-            <Button variant="outline" size="sm" className="gap-2">
-              <Settings className="w-4 h-4" /> Manage
-            </Button>
+            <ManageRoomDialog roomId={room.id} initialName={room.name} initialDescription={room.description} />
           </div>
         </div>
       </div>
