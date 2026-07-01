@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --import tsx --test",
-    "api:smoke": "node --import tsx ./scripts/api-smoke.ts"
+    "api:smoke": "node --import tsx ./scripts/api-smoke.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@ai-sdk/google": "^0.0.52",
