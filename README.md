@@ -1,35 +1,38 @@
 # The Reading Room
 
-The Reading Room is a free-tier personal reading and knowledge workspace. The current backend focus is on article saving, rooms, highlights, and the foundation for vault/archive features from the V1.0 plan.
+The Reading Room is a personal reading and knowledge workspace designed for capturing, organizing, and synthesizing information.
 
-## Current state
-- Next.js + TypeScript app scaffolded
-- Initial REST endpoints for rooms, articles, highlights, and health
-- Prisma schema and generated client configured
-- Hybrid in-memory/Prisma store supports development without a database and persistence when `DATABASE_URL` is set
-- Regression test covering room and article creation
-- Verified with `npm test` and `npm run build`
+## Current State & Features
+The application has moved past initial backend scaffolding and now features a rich frontend dashboard and advanced ingestion capabilities:
+
+- **Core Infrastructure**: Next.js 16 + TypeScript, with a hybrid in-memory/Prisma store for flexible persistence.
+- **Authentication**: User authentication managed via Clerk.
+- **Dashboard & Organization**:
+  - **Home Dashboard**: Central hub for your reading activity.
+  - **Rooms & Vault**: Organize articles into collaborative or topic-based rooms, and store permanent knowledge in the Vault.
+  - **Library & Archive**: Manage your reading backlog and archived materials.
+- **Reader View & Annotations**: Distraction-free reading environment with support for highlights and annotations.
+- **Content Ingestion**: Import articles seamlessly from PDFs, DOI links, and arXiv.
+- **Search & Synthesis**:
+  - **Global Search**: Command palette (Cmd+K) for quick navigation and content discovery.
+  - **AI Insights**: AI Synthesis Engine integrations (via `@ai-sdk/google`) to help analyze and extract knowledge.
+  - **Literature Export**: Easily export your collected research and highlights.
 
 ## Run locally
 ```bash
 npm install
-npm test
 npm run dev
+```
+
+To run tests and verify core API endpoints:
+```bash
+npm test
 npm run api:smoke
 ```
 
-Start the app with `npm run dev`, then run `npm run api:smoke` to verify the core API endpoints against `localhost:3000`.
-
 ## Database setup
-See `docs/DATABASE_SETUP.md` for local Postgres/Supabase setup and migrations.
-
-## Project handoff notes
-- Keep API routes in `src/app/api`.
-- Keep shared domain logic in `src/lib`.
-- Follow the V1.0 scope from the PDF and avoid Pro/PDF/research-room work in this phase.
-- The next backend milestones are Clerk auth, article ingestion, and room/article CRUD persistence.
-- Repository pushed to GitHub at https://github.com/ReadersRoom-Lab/the-reading-room
+See `docs/DATABASE_SETUP.md` for local Postgres/Supabase setup and migrations. The Prisma schema is already configured, and generating the client is handled automatically post-install.
 
 ## Verification
-- npm test
-- npm run build
+- `npm test`
+- `npm run build`
