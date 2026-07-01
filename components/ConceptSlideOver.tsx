@@ -1,5 +1,5 @@
-import { useState, useRef } from "react"
-import { X, Bookmark, Edit3, Loader2 } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { X, Bookmark, Edit3, Loader2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -7,18 +7,49 @@ import { logger } from '@/lib/logger'
 
 interface ConceptSlideOverProps {
   term: string
-  definition: string
+  definition?: string
   contextSnippet: string
   articleId: string
   roomId: string | null
   onClose: () => void
 }
 
-export function ConceptSlideOver({ term, definition, contextSnippet, articleId, roomId, onClose }: Readonly<ConceptSlideOverProps>) {
+export function ConceptSlideOver({ term, definition = "", contextSnippet, articleId, roomId, onClose }: Readonly<ConceptSlideOverProps>) {
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState("")
   const noteInputRef = useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
+
+  const [definitionText, setDefinitionText] = useState(definition)
+  const [thumbnailUrl, setThumbnailUrl] = useState("")
+  const [sourceUrl, setSourceUrl] = useState("")
+  const [isFetching, setIsFetching] = useState(false)
+
+  useEffect(() => {
+    // If no definition is provided, fetch it from Wikipedia
+    if (!definition) {
+      const fetchWikipediaConcept = async () => {
+        setIsFetching(true)
+        try {
+          const res = await fetch(`/api/vault/lookup/concept?term=${encodeURIComponent(term)}`)
+          if (res.ok) {
+            const data = await res.json()
+            setDefinitionText(data.definition || "")
+            setThumbnailUrl(data.thumbnail || "")
+            setSourceUrl(data.sourceUrl || "")
+          } else {
+            setDefinitionText("No Wikipedia article or definition was found for this concept.")
+          }
+        } catch (err) {
+          logger.error("Error fetching Wikipedia concept", err)
+          setDefinitionText("An error occurred while fetching the definition.")
+        } finally {
+          setIsFetching(false)
+        }
+      }
+      fetchWikipediaConcept()
+    }
+  }, [term, definition])
 
   const handleSave = async () => {
     setLoading(true)
@@ -28,7 +59,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           term,
-          definition,
+          definition: definitionText,
           passage: contextSnippet,
           article_id: articleId,
           room_id: roomId,
@@ -68,9 +99,42 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         
         <h2 className="text-4xl font-heading font-bold text-[#1a1a1a] mb-6">{term}</h2>
         
-        <p className="text-[#333] font-source-serif text-lg leading-relaxed mb-10">
-          {definition || "Definition not provided."}
-        </p>
+        {isFetching ? (
+          <div className="space-y-4 animate-pulse mb-10">
+            <div className="h-4 bg-muted rounded w-3/4"></div>
+            <div className="h-4 bg-muted rounded"></div>
+            <div className="h-4 bg-muted rounded"></div>
+            <div className="h-4 bg-muted rounded w-5/6"></div>
+          </div>
+        ) : (
+          <>
+            {thumbnailUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img 
+                src={thumbnailUrl} 
+                alt={term} 
+                className="w-full h-48 object-cover rounded-lg border border-border/50 mb-6 shadow-sm"
+              />
+            )}
+            
+            <p className="text-[#333] font-source-serif text-lg leading-relaxed mb-4">
+              {definitionText || "Definition not provided."}
+            </p>
+            
+            {sourceUrl && (
+              <div className="mb-10">
+                <a 
+                  href={sourceUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary underline transition-colors"
+                >
+                  Read more on Wikipedia <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            )}
+          </>
+        )}
         
         <div className="mb-10">
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-3">Context in Article</p>
@@ -87,6 +151,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
             onChange={(e) => setNote(e.target.value)}
             className="w-full min-h-[100px] p-4 text-sm bg-white border border-input focus:outline-none focus:ring-1 focus:ring-[#1a1a1a] font-source-serif"
             placeholder="Your thoughts..."
+            disabled={isFetching}
           />
         </div>
       </div>
@@ -95,7 +160,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         <Button 
           className="w-full h-12 text-base font-semibold bg-[#1a1a1a] text-white hover:bg-black rounded-none"
           onClick={handleSave}
-          disabled={loading}
+          disabled={loading || isFetching}
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Bookmark className="w-5 h-5 mr-2" />}
           Save to Vault
@@ -105,6 +170,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
             variant="outline" 
             className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-muted-foreground"
             onClick={() => noteInputRef.current?.focus()}
+            disabled={isFetching}
           >
             <Edit3 className="w-4 h-4 mr-2" /> Add Note
           </Button>
