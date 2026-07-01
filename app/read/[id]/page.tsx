@@ -26,6 +26,26 @@ type HighlightType = {
   position_end: number;
 }
 
+function generateHighlightedHtml(article: Record<string, string> | null, highlights: HighlightType[]) {
+  if (!article) return { __html: '' }
+  let html = article.content || article.textContent || ''
+  
+  const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length)
+  
+  sorted.forEach(h => {
+    const colorClass = h.colour === 'yellow' ? 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit' : 
+                       h.colour === 'green' ? 'bg-green-200/60 dark:bg-green-700/60 text-inherit' : 
+                       'bg-blue-200/60 dark:bg-blue-700/60 text-inherit'
+                       
+    const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const regex = new RegExp(`(${safeContent})`, 'g')
+    
+    html = html.replace(regex, `<mark class="${colorClass} rounded-sm px-0.5">$1</mark>`)
+  })
+  
+  return { __html: html }
+}
+
 export default function ReaderPage() {
   const params = useParams()
   const router = useRouter()
@@ -176,29 +196,6 @@ export default function ReaderPage() {
     }
   }
 
-  // Process HTML with highlights
-  const getHighlightedHtml = () => {
-    if (!article) return { __html: '' }
-    let html = article.content || article.textContent || ''
-    
-    // Sort by length descending so we don't accidentally replace partial matches inside longer highlights
-    const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length)
-    
-    sorted.forEach(h => {
-      // Very simple string replace for MVP
-      const colorClass = h.colour === 'yellow' ? 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit' : 
-                         h.colour === 'green' ? 'bg-green-200/60 dark:bg-green-700/60 text-inherit' : 
-                         'bg-blue-200/60 dark:bg-blue-700/60 text-inherit'
-                         
-      const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const regex = new RegExp(`(${safeContent})`, 'g')
-      
-      // Use a special token to avoid replacing inside HTML tags, but for MVP we assume clean text
-      html = html.replace(regex, `<mark class="${colorClass} rounded-sm px-0.5">$1</mark>`)
-    })
-    
-    return { __html: html }
-  }
 
   if (loading) {
     return (
@@ -298,7 +295,7 @@ export default function ReaderPage() {
               <img src={article.cover_image} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />
             )}
             <h1 className="font-heading mb-8">{article.title}</h1>
-            <div dangerouslySetInnerHTML={getHighlightedHtml()} />
+            <div dangerouslySetInnerHTML={generateHighlightedHtml(article, highlights)} />
           </article>
         </div>
 

@@ -38,6 +38,50 @@ async function fetchArxivMetadata(arxivId: string) {
   return { title, author: authors, content: `<p>${abstract}</p>`, url: `https://arxiv.org/abs/${cleanId}`, sourceType: 'arxiv' }
 }
 
+// helper to fetch standard web page
+async function fetchStandardUrl(url: string) {
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; TheReadingRoomBot/1.0)',
+    },
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch URL: ${response.statusText}`)
+  }
+
+  const html = await response.text()
+  const doc = new JSDOM(html, { url })
+  const reader = new Readability(doc.window.document)
+  const article = reader.parse()
+
+  if (!article) {
+    throw new Error('Failed to extract article content')
+  }
+
+  let coverImage = null
+  const metaTags = doc.window.document.getElementsByTagName('meta')
+  for (let i = 0; i < metaTags.length; i++) {
+    const property = metaTags[i].getAttribute('property')
+    const name = metaTags[i].getAttribute('name')
+    if (property === 'og:image' || name === 'twitter:image') {
+      coverImage = metaTags[i].getAttribute('content')
+      break
+    }
+  }
+
+  return {
+    articleData: {
+      title: article.title || 'Untitled Article',
+      author: article.byline || null,
+      content: article.content || '',
+      url: url,
+      sourceType: 'url'
+    },
+    coverImage
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { userId } = await auth()
@@ -69,48 +113,9 @@ export async function POST(req: Request) {
     } else if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
       articleData = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
     } else {
-      // Standard URL ingestion
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; TheReadingRoomBot/1.0)',
-        },
-      })
-      
-      if (!response.ok) {
-        return NextResponse.json({ error: `Failed to fetch URL: ${response.statusText}` }, { status: 400 })
-      }
-
-      const html = await response.text()
-
-      // Parse the DOM
-      const doc = new JSDOM(html, { url })
-      
-      // Extract metadata & content using Readability
-      const reader = new Readability(doc.window.document)
-      const article = reader.parse()
-
-      if (!article) {
-        return NextResponse.json({ error: 'Failed to extract article content' }, { status: 400 })
-      }
-
-      // Determine cover image (attempt to find og:image or twitter:image)
-      const metaTags = doc.window.document.getElementsByTagName('meta')
-      for (let i = 0; i < metaTags.length; i++) {
-        const property = metaTags[i].getAttribute('property')
-        const name = metaTags[i].getAttribute('name')
-        if (property === 'og:image' || name === 'twitter:image') {
-          coverImage = metaTags[i].getAttribute('content')
-          break
-        }
-      }
-
-      articleData = {
-        title: article.title || 'Untitled Article',
-        author: article.byline || null,
-        content: article.content || '',
-        url: url,
-        sourceType: 'url'
-      }
+      const standardRes = await fetchStandardUrl(url)
+      articleData = standardRes.articleData
+      coverImage = standardRes.coverImage
     }
 
     // Sanitize the HTML output
