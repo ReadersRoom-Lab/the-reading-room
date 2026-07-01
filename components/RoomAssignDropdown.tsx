@@ -44,6 +44,27 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
     }
   }
 
+  const deleteArticle = async () => {
+    if (!confirm("Are you sure you want to delete this document?")) return
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, {
+        method: "DELETE"
+      })
+      if (res.ok) {
+        toast.success("Document deleted successfully")
+        router.refresh()
+      } else {
+        const data = await res.json()
+        throw new Error(data.error || "Failed to delete article")
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete article")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -71,11 +92,18 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
               {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
             </DropdownMenuItem>
           ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem 
+            onClick={deleteArticle} 
+            className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer"
+          >
+            Delete Document
+          </DropdownMenuItem>
           {loading && (
             <>
               <DropdownMenuSeparator />
               <div className="p-2 flex items-center justify-center text-muted-foreground text-xs">
-                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Moving...
+                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Working...
               </div>
             </>
           )}

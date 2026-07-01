@@ -14,14 +14,19 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const article = await prisma.article.findUnique({
-      where: {
-        id: id,
-        user_id: userId,
-      }
+    const user = await prisma.user.findUnique({
+      where: { clerk_id: userId }
     })
 
-    if (!article) {
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const article = await prisma.article.findUnique({
+      where: { id: id }
+    })
+
+    if (!article || article.user_id !== user.id) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 })
     }
 
@@ -46,13 +51,26 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const user = await prisma.user.findUnique({
+      where: { clerk_id: userId }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const articleCheck = await prisma.article.findUnique({
+      where: { id: id }
+    })
+
+    if (!articleCheck || articleCheck.user_id !== user.id) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
     const { reading_progress, status } = await req.json()
 
     const article = await prisma.article.update({
-      where: {
-        id: id,
-        user_id: userId,
-      },
+      where: { id: id },
       data: {
         ...(reading_progress !== undefined && { reading_progress }),
         ...(status !== undefined && { status }),
@@ -64,6 +82,47 @@ export async function PATCH(
     logger.error("Error updating article:", error)
     return NextResponse.json(
       { error: 'Failed to update article' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { clerk_id: userId }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const article = await prisma.article.findUnique({
+      where: { id: id }
+    })
+
+    if (!article || article.user_id !== user.id) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    await prisma.article.delete({
+      where: { id: id }
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    logger.error("Error deleting article:", error)
+    return NextResponse.json(
+      { error: 'Failed to delete article' },
       { status: 500 }
     )
   }
