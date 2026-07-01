@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { MoreVertical, Library, Check, Loader2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation"
 
 export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: string, currentRoomId?: string | null }) {
   const router = useRouter()
-  const [rooms, setRooms] = useState<any[]>([])
+  const [rooms, setRooms] = useState<{ id: string, name: string, cover_color: string }[]>([])
   const [loading, setLoading] = useState(false)
   
   useEffect(() => {
@@ -37,7 +37,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
         toast.success(roomId ? "Moved to room" : "Removed from room")
         router.refresh()
       }
-    } catch(err) {
+    } catch {
       toast.error("Failed to move article")
     } finally {
       setLoading(false)

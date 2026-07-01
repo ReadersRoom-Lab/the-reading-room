@@ -31,7 +31,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       word: entry.word,
-      phonetic: entry.phonetic || entry.phonetics?.find((p: any) => p.text)?.text || '',
+      phonetic: entry.phonetic || entry.phonetics?.find((p: { text?: string }) => p.text)?.text || '',
       partOfSpeech: meaning?.partOfSpeech || '',
       definition: definitionObj?.definition || '',
       example: definitionObj?.example || '',

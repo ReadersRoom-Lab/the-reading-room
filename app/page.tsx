@@ -41,7 +41,7 @@ export default function LandingPage() {
               01 / Discourse
             </p>
             <p className="font-source-serif text-xl italic text-[#444] leading-relaxed">
-              "A library is not a luxury but one of the necessities of life."
+              &quot;A library is not a luxury but one of the necessities of life.&quot;
             </p>
           </div>
           <div>

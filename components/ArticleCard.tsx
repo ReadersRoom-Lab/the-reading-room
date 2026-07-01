@@ -23,7 +23,7 @@ export function ArticleCard({ article }: ArticleProps) {
   let domain = ""
   try {
     domain = new URL(article.source_url).hostname.replace('www.', '')
-  } catch(e) {
+  } catch {
     domain = "Unknown"
   }
 

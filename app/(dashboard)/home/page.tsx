@@ -18,7 +18,7 @@ export default async function Home() {
       {/* Today's Rediscovery */}
       <section>
         <h2 className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-6 flex items-center gap-2">
-          <RefreshCw className="w-3.5 h-3.5" /> Today's Rediscovery
+          <RefreshCw className="w-3.5 h-3.5" /> Today&apos;s Rediscovery
         </h2>
         <div className="border border-border bg-card p-8">
           <div className="flex justify-between items-start mb-6">
@@ -26,9 +26,9 @@ export default async function Home() {
             <span className="text-xs text-muted-foreground">30 days ago</span>
           </div>
           <h3 className="text-3xl font-heading font-bold mb-4">schadenfreude</h3>
-          <p className="text-lg text-foreground/80 mb-8 font-source-serif">Pleasure derived by someone from another person's misfortune.</p>
+          <p className="text-lg text-foreground/80 mb-8 font-source-serif">Pleasure derived by someone from another person&apos;s misfortune.</p>
           <div className="pt-4 border-t border-border/50 text-xs text-muted-foreground">
-            Encountered in <span className="italic font-medium text-foreground">"The Psychology of Envy"</span> › Chapter 4
+            Encountered in <span className="italic font-medium text-foreground">&quot;The Psychology of Envy&quot;</span> › Chapter 4
           </div>
         </div>
       </section>

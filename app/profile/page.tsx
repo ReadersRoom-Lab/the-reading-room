@@ -5,6 +5,7 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-6 items-center justify-center w-full">
       <h1 className="text-4xl font-heading font-bold self-start w-full">Account Settings</h1>
       <UserProfile
+        routing="hash"
         appearance={{
           variables: {
             colorPrimary: "#2C2825",

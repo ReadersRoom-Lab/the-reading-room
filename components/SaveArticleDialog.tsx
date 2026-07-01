@@ -59,8 +59,9 @@ export function SaveArticleDialog() {
       // Refresh the current route to fetch new data
       router.refresh()
       
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred")
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message || "An error occurred")
     } finally {
       setLoading(false)
     }

@@ -18,9 +18,9 @@ export function GlobalSearchDialog() {
   const [query, setQuery] = useState("")
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<{
-    articles: any[],
-    rooms: any[],
-    concepts: any[]
+    articles: Record<string, string>[],
+    rooms: Record<string, string>[],
+    concepts: Record<string, string>[]
   }>({ articles: [], rooms: [], concepts: [] })
   
   const router = useRouter()
@@ -39,6 +39,7 @@ export function GlobalSearchDialog() {
 
   useEffect(() => {
     if (!query) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setResults({ articles: [], rooms: [], concepts: [] })
       return
     }

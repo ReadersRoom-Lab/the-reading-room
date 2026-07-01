@@ -30,7 +30,7 @@ export async function PATCH(req: Request) {
   const data = await req.json()
 
   // Only allow updating name and tier for now
-  const allowedData: any = {}
+  const allowedData: Record<string, string> = {}
   if (data.name) allowedData.name = data.name
   if (data.tier) allowedData.tier = data.tier
 

@@ -8,7 +8,7 @@ export default function ProUpgradePage() {
           Pro Researcher
         </span>
         <h1 className="text-5xl md:text-6xl font-heading font-bold text-[#1a1a1a] mb-6 tracking-tight">
-          You're working like a researcher.
+          You&apos;re working like a researcher.
         </h1>
         <p className="text-xl font-source-serif text-[#444] max-w-2xl mx-auto leading-relaxed">
           Your reading habits suggest a deeper need for cross-referencing and persistent synthesis. Unlock the full potential of your library.

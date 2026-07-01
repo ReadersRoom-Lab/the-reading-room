@@ -11,7 +11,7 @@ interface DictionaryPopoverProps {
 }
 
 export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: Readonly<DictionaryPopoverProps>) {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<Record<string, string> | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
             </p>
             {data.example && (
               <p className="text-xs text-muted-foreground italic font-source-serif">
-                "{data.example}"
+                &quot;{data.example}&quot;
               </p>
             )}
             {data.etymology && (

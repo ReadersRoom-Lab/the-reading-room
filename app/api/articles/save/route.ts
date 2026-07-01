@@ -14,7 +14,7 @@ async function fetchDOIMetadata(doi: string) {
   const message = data.message
   
   const title = message.title?.[0] || 'Untitled Article'
-  const author = message.author?.map((a: any) => `${a.given} ${a.family}`).join(', ') || null
+  const author = message.author?.map((a: { given: string; family: string }) => `${a.given} ${a.family}`).join(', ') || null
   const content = message.abstract ? `<p>${message.abstract}</p>` : '<p>No abstract available.</p>'
   
   return { title, author, content, url: `https://doi.org/${cleanDoi}`, sourceType: 'doi' }

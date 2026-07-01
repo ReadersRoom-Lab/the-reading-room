@@ -73,7 +73,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         <div className="mb-10">
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-3">Context in Article</p>
           <div className="p-6 bg-white border border-border/50 text-[#1a1a1a] font-source-serif italic text-sm leading-relaxed shadow-sm">
-            "{contextSnippet}"
+            &quot;{contextSnippet}&quot;
           </div>
         </div>
 

@@ -19,7 +19,7 @@ import { ConceptSlideOver } from "@/components/ConceptSlideOver"
 export default function ReaderPage() {
   const params = useParams()
   const router = useRouter()
-  const [article, setArticle] = useState<any>(null)
+  const [article, setArticle] = useState<Record<string, string> | null>(null)
   const [loading, setLoading] = useState(true)
   
   // Settings
