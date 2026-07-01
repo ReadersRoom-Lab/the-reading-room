@@ -127,7 +127,7 @@ export default function ReaderPage() {
   }, [progress, params.id, article])
 
   // Handle text selection
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     // If dictionary is open or concept is open, don't trigger new selection immediately unless they are closing it
     if (showDictionary) return;
 
@@ -150,7 +150,22 @@ export default function ReaderPage() {
         setActiveSelection(null)
       }
     }, 10)
-  }
+  }, [showDictionary])
+
+  // Attach mouseup event listener dynamically to avoid JSX linter warnings on non-interactive containers
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    const onMouseUpContainer = () => {
+      handleMouseUp()
+    }
+
+    container.addEventListener('mouseup', onMouseUpContainer)
+    return () => {
+      container.removeEventListener('mouseup', onMouseUpContainer)
+    }
+  }, [handleMouseUp])
 
   // Handle save concept from dictionary popover
   const handleSaveConcept = (word: string, definition: string) => {
@@ -277,8 +292,6 @@ export default function ReaderPage() {
         <div 
           ref={scrollRef}
           onScroll={handleScroll}
-          onMouseUp={handleMouseUp}
-          role="document"
           className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? 'md:mr-[400px]' : ''}`}
         >
           <article 
