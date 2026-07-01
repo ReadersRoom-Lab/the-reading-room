@@ -50,72 +50,101 @@
 }
 
 :root {
-  --background: #F9F6F0;
-  --foreground: #2C2825;
-  --card: #FDFBF7;
-  --card-foreground: #2C2825;
-  --popover: #FDFBF7;
-  --popover-foreground: #2C2825;
-  --primary: #2C2825;
-  --primary-foreground: #F9F6F0;
-  --secondary: #EAE4D9;
-  --secondary-foreground: #2C2825;
-  --muted: #EAE4D9;
-  --muted-foreground: #7A726A;
-  --accent: #EAE4D9;
-  --accent-foreground: #2C2825;
-  --destructive: #DC2626;
-  --border: #E0D8C8;
-  --input: #E0D8C8;
-  --ring: #2C2825;
+  /* Core Brand Colors */
+  --parchment-base: #F9F7F2;
+  --ink-text: #1A1A1A;
+  --muted-gold: #E6C79C;
+  --ui-grey-light: #E5E5E5;
+  --ui-grey-medium: #BDBDBD;
+
+  /* Shadcn Semantic Mapping */
+  --background: var(--parchment-base);
+  --foreground: var(--ink-text);
+  
+  --card: #FFFFFF;
+  --card-foreground: var(--ink-text);
+  
+  --popover: #FFFFFF;
+  --popover-foreground: var(--ink-text);
+  
+  --primary: var(--ink-text);
+  --primary-foreground: var(--parchment-base);
+  
+  --secondary: var(--ui-grey-light);
+  --secondary-foreground: var(--ink-text);
+  
+  --muted: var(--ui-grey-light);
+  --muted-foreground: #747878; /* outline from design system */
+  
+  --accent: var(--ui-grey-light);
+  --accent-foreground: var(--ink-text);
+  
+  --destructive: #ba1a1a;
+  
+  --border: var(--ui-grey-light);
+  --input: var(--ui-grey-medium);
+  --ring: var(--ink-text);
+  
   --chart-1: #D4AF37;
   --chart-2: #2DD4BF;
   --chart-3: #FB923C;
   --chart-4: #818CF8;
   --chart-5: #F472B6;
-  --radius: 0.5rem;
-  --sidebar: #F9F6F0;
-  --sidebar-foreground: #2C2825;
-  --sidebar-primary: #2C2825;
-  --sidebar-primary-foreground: #F9F6F0;
-  --sidebar-accent: #EAE4D9;
-  --sidebar-accent-foreground: #2C2825;
-  --sidebar-border: #E0D8C8;
-  --sidebar-ring: #2C2825;
+  
+  /* Strict 0px Border Radius */
+  --radius: 0rem;
+  
+  --sidebar: var(--parchment-base);
+  --sidebar-foreground: var(--ink-text);
+  --sidebar-primary: var(--ink-text);
+  --sidebar-primary-foreground: var(--parchment-base);
+  --sidebar-accent: var(--ui-grey-light);
+  --sidebar-accent-foreground: var(--ink-text);
+  --sidebar-border: var(--ui-grey-light);
+  --sidebar-ring: var(--ink-text);
 }
 
 .dark {
-  --background: #1C1917;
-  --foreground: #EAE4D9;
-  --card: #292524;
-  --card-foreground: #EAE4D9;
-  --popover: #292524;
-  --popover-foreground: #EAE4D9;
-  --primary: #EAE4D9;
-  --primary-foreground: #1C1917;
-  --secondary: #44403C;
-  --secondary-foreground: #EAE4D9;
-  --muted: #44403C;
-  --muted-foreground: #A8A29E;
-  --accent: #44403C;
-  --accent-foreground: #EAE4D9;
-  --destructive: #EF4444;
-  --border: #44403C;
-  --input: #44403C;
-  --ring: #EAE4D9;
+  /* Inverse Colors */
+  --parchment-base: #2f3131; /* inverse-surface */
+  --ink-text: #f1f1f0; /* inverse-on-surface */
+  --muted-gold: #78603d; /* on-secondary-container */
+  --ui-grey-light: #444748; /* on-surface-variant */
+  --ui-grey-medium: #747878; /* outline */
+
+  --background: var(--parchment-base);
+  --foreground: var(--ink-text);
+  --card: #1a1c1c;
+  --card-foreground: var(--ink-text);
+  --popover: #1a1c1c;
+  --popover-foreground: var(--ink-text);
+  --primary: var(--ink-text);
+  --primary-foreground: var(--parchment-base);
+  --secondary: var(--ui-grey-light);
+  --secondary-foreground: var(--ink-text);
+  --muted: var(--ui-grey-light);
+  --muted-foreground: var(--ui-grey-medium);
+  --accent: var(--ui-grey-light);
+  --accent-foreground: var(--ink-text);
+  --destructive: #ffdad6;
+  --border: var(--ui-grey-light);
+  --input: var(--ui-grey-medium);
+  --ring: var(--ink-text);
+  
   --chart-1: #D4AF37;
   --chart-2: #2DD4BF;
   --chart-3: #FB923C;
   --chart-4: #818CF8;
   --chart-5: #F472B6;
-  --sidebar: #1C1917;
-  --sidebar-foreground: #EAE4D9;
-  --sidebar-primary: #EAE4D9;
-  --sidebar-primary-foreground: #1C1917;
-  --sidebar-accent: #44403C;
-  --sidebar-accent-foreground: #EAE4D9;
-  --sidebar-border: #44403C;
-  --sidebar-ring: #EAE4D9;
+  
+  --sidebar: var(--parchment-base);
+  --sidebar-foreground: var(--ink-text);
+  --sidebar-primary: var(--ink-text);
+  --sidebar-primary-foreground: var(--parchment-base);
+  --sidebar-accent: var(--ui-grey-light);
+  --sidebar-accent-foreground: var(--ink-text);
+  --sidebar-border: var(--ui-grey-light);
+  --sidebar-ring: var(--ink-text);
 }
 
 @layer base {
