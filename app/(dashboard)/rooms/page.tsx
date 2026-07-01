@@ -5,6 +5,23 @@ import { Library } from "lucide-react"
 import { CreateRoomDialog } from "@/components/CreateRoomDialog"
 import { format } from 'date-fns'
 
+type RoomWithCounts = {
+  id: string
+  name: string
+  cover_color: string
+  mode: string
+  created_at: Date
+  _count: {
+    articles: number
+    vaultTrails: number
+  }
+  articles: {
+    _count: {
+      highlights: number
+    }
+  }[]
+}
+
 export default async function RoomsPage() {
   const { userId } = await auth()
   
@@ -16,7 +33,7 @@ export default async function RoomsPage() {
     where: { clerk_id: userId }
   })
 
-  const rooms = user ? await prisma.room.findMany({
+  const rooms: RoomWithCounts[] = user ? await prisma.room.findMany({
     where: { user_id: user.id },
     orderBy: { created_at: 'desc' },
     include: {

@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from '../src/generated/prisma/client'
+const prisma = new PrismaClient(undefined as never)
 
 async function main() {
   // Check if test user exists

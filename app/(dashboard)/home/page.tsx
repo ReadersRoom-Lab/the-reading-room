@@ -48,7 +48,7 @@ export default async function Home() {
             <div className="p-8 text-center border border-dashed border-border text-muted-foreground text-sm">
               You have no articles in progress. Start reading from your library!
             </div>
-          ) : recentArticles.map(article => (
+          ) : recentArticles.map((article: { id: string; source_type: string; title: string; reading_progress: number; read_time_minutes: number }) => (
             <Link key={article.id} href={`/read/${article.id}`} className="block border border-border bg-card p-6 hover:shadow-sm transition-shadow">
                 <div className="flex justify-between items-start mb-4">
                   <span className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">

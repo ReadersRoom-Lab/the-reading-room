@@ -9,107 +9,109 @@ datasource db {
 
 model User {
   id            String        @id @default(uuid())
-  clerkId       String        @unique
+  clerk_id      String        @unique
   email         String        @unique
   name          String?
   tier          String        @default("free")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
   rooms         Room[]
   articles      Article[]
   highlights    Highlight[]
   vaultEntries  VaultEntry[]
+
+  @@index([clerk_id])
 }
 
 model Room {
-  id          String       @id @default(uuid())
-  userId      String
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name        String
-  description String?
-  coverColor  String
-  mode        String       @default("reading")
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  articles    Article[]
-  vaultTrails VaultTrail[]
+  id           String       @id @default(uuid())
+  user_id      String
+  user         User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  cover_color  String
+  mode         String       @default("reading")
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  articles     Article[]
+  vaultTrails  VaultTrail[]
 
-  @@index([userId])
+  @@index([user_id])
 }
 
 model Article {
-  id              String       @id @default(uuid())
-  userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  roomId          String?
-  room            Room?        @relation(fields: [roomId], references: [id], onDelete: SetNull)
-  title           String
-  author          String?
-  sourceUrl       String
-  sourceType      String       @default("url")
-  content         String
-  coverImage      String?
-  readingProgress Int          @default(0)
-  status          String       @default("unread")
-  wordCount       Int          @default(0)
-  readTimeMinutes Int          @default(0)
-  dateAccessed    DateTime     @default(now())
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  highlights      Highlight[]
-  vaultTrails     VaultTrail[]
+  id                String       @id @default(uuid())
+  user_id           String
+  user              User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  room_id           String?
+  room              Room?        @relation(fields: [room_id], references: [id], onDelete: SetNull)
+  title             String
+  author            String?
+  source_url        String
+  source_type       String       @default("url")
+  content           String
+  cover_image       String?
+  reading_progress  Int          @default(0)
+  status            String       @default("unread")
+  word_count        Int          @default(0)
+  read_time_minutes Int          @default(0)
+  date_accessed     DateTime     @default(now())
+  created_at        DateTime     @default(now())
+  updated_at        DateTime     @updatedAt
+  highlights        Highlight[]
+  vaultTrails       VaultTrail[]
 
-  @@index([userId])
-  @@index([roomId])
+  @@index([user_id])
+  @@index([room_id])
 }
 
 model Highlight {
-  id             String   @id @default(uuid())
-  articleId      String
-  article        Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content        String
-  colour         String
-  note           String?
-  positionStart  Int
-  positionEnd    Int
-  createdAt      DateTime @default(now())
-  annotationType String?
+  id               String   @id @default(uuid())
+  article_id       String
+  article          Article  @relation(fields: [article_id], references: [id], onDelete: Cascade)
+  user_id          String
+  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  content          String
+  colour           String
+  note             String?
+  position_start   Int
+  position_end     Int
+  created_at       DateTime @default(now())
+  annotation_type  String?
 
-  @@index([articleId])
-  @@index([userId])
+  @@index([article_id])
+  @@index([user_id])
 }
 
 model VaultEntry {
-  id              String       @id @default(uuid())
-  userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  term            String
-  type            String
-  definition      String
-  pronunciation   String?
-  etymology       String?
-  exampleSentence String?
-  userNote        String?
-  createdAt       DateTime     @default(now())
-  vaultTrails     VaultTrail[]
+  id               String       @id @default(uuid())
+  user_id          String
+  user             User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  term             String
+  type             String
+  definition       String
+  pronunciation    String?
+  etymology        String?
+  example_sentence String?
+  user_note        String?
+  created_at       DateTime     @default(now())
+  vaultTrails      VaultTrail[]
 
-  @@index([userId])
+  @@index([user_id])
 }
 
 model VaultTrail {
-  id           String      @id @default(uuid())
-  vaultEntryId String
-  vaultEntry   VaultEntry  @relation(fields: [vaultEntryId], references: [id], onDelete: Cascade)
-  articleId    String
-  article      Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  roomId       String?
-  room         Room?       @relation(fields: [roomId], references: [id], onDelete: SetNull)
-  passage      String
-  foundAt      DateTime    @default(now())
+  id              String      @id @default(uuid())
+  vault_entry_id  String
+  vault_entry     VaultEntry  @relation(fields: [vault_entry_id], references: [id], onDelete: Cascade)
+  article_id      String
+  article         Article     @relation(fields: [article_id], references: [id], onDelete: Cascade)
+  room_id         String?
+  room            Room?       @relation(fields: [room_id], references: [id], onDelete: SetNull)
+  passage         String
+  found_at        DateTime    @default(now())
 
-  @@index([vaultEntryId])
-  @@index([articleId])
-  @@index([roomId])
+  @@index([vault_entry_id])
+  @@index([article_id])
+  @@index([room_id])
 }

@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import type { ArticleProps } from '@/components/ArticleCard'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Edit, MoreVertical, Settings } from 'lucide-react'
@@ -40,9 +41,9 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
     redirect('/rooms')
   }
 
-  const unreadArticles = room.articles.filter(a => a.status === 'unread')
-  const inProgressArticles = room.articles.filter(a => a.status === 'in-progress')
-  const completedArticles = room.articles.filter(a => a.status === 'finished')
+  const unreadArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'unread')
+  const inProgressArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'in-progress')
+  const completedArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'finished')
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto py-8 px-6">
@@ -99,7 +100,7 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {room.articles.map(article => (
+              {room.articles.map((article: ArticleProps['article']) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
@@ -108,7 +109,7 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
         
         <TabsContent value="unread" className="mt-0 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {unreadArticles.map(article => (
+            {unreadArticles.map((article: ArticleProps['article']) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>
@@ -116,7 +117,7 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
         
         <TabsContent value="in-progress" className="mt-0 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {inProgressArticles.map(article => (
+            {inProgressArticles.map((article: ArticleProps['article']) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>
@@ -124,7 +125,7 @@ export default async function RoomViewPage({ params }: { params: Promise<{ id: s
         
         <TabsContent value="completed" className="mt-0 outline-none">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {completedArticles.map(article => (
+            {completedArticles.map((article: ArticleProps['article']) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>

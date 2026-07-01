@@ -48,10 +48,10 @@ export async function POST(req: Request) {
     Here is some recent context from their library:
     
     Recent Articles:
-    ${recentArticles.map(a => `- Title: ${a.title}\nContent snippet: ${a.content.substring(0, 500)}...`).join('\n\n')}
+    ${recentArticles.map((a: { title: string; content: string }) => `- Title: ${a.title}\nContent snippet: ${a.content.substring(0, 500)}...`).join('\n\n')}
     
     Recent Vocabulary Concepts:
-    ${vaultEntries.map(v => `- ${v.term}: ${v.definition}`).join('\n')}
+    ${vaultEntries.map((v: { term: string; definition: string }) => `- ${v.term}: ${v.definition}`).join('\n')}
     
     Always be concise, academic, and insightful. If they ask about something not in the context, answer generally but remind them you only have partial context injected right now.
     `

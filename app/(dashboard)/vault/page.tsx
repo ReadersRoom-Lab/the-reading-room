@@ -19,7 +19,7 @@ export default async function VaultPage() {
     where: { user_id: user.id },
     orderBy: { created_at: 'desc' },
     include: {
-      trails: {
+      vaultTrails: {
         include: {
           article: true,
           room: true
@@ -57,7 +57,7 @@ export default async function VaultPage() {
           <div className="absolute left-0 top-2 bottom-0 w-px bg-border -ml-4 hidden sm:block"></div>
           
           {vaultEntries.map((entry: any) => {
-            const firstTrail = entry.trails[0]
+            const firstTrail = entry.vaultTrails[0]
             
             return (
               <div key={entry.id} className="relative">

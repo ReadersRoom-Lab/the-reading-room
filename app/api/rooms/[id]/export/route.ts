@@ -45,7 +45,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     
     markdown += `## Articles (${room.articles.length})\n\n`
     
-    room.articles.forEach(article => {
+    room.articles.forEach((article: { title: string; author?: string | null; source_url: string; status: string }) => {
       markdown += `### ${article.title}\n`
       if (article.author) markdown += `**Author:** ${article.author}\n`
       markdown += `**Source:** ${article.source_url}\n`
@@ -54,7 +54,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     markdown += `## Concepts & Highlights (${room.vaultTrails.length})\n\n`
     
-    room.vaultTrails.forEach(trail => {
+    room.vaultTrails.forEach((trail: { vault_entry: { term: string; definition?: string | null; user_note?: string | null }; passage?: string | null }) => {
       markdown += `### ${trail.vault_entry.term}\n`
       if (trail.vault_entry.definition) {
         markdown += `> ${trail.vault_entry.definition}\n\n`
