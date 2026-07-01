@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { MoreVertical, Library, Check, Loader2 } from "lucide-react"
+import { MoreVertical, Library, Check, Loader2, Trash2, FolderOpen } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -74,21 +74,24 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
   return (
     <div onClick={handleClick}>
       <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-muted/50 hover:text-accent-foreground h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent">
+        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
           <MoreVertical className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider">Move to Room</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider font-semibold">Move to Room</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => assignRoom(null)} className="justify-between cursor-pointer">
-              <span>No Room (Library)</span>
+              <div className="flex items-center gap-2">
+                <Library className="w-4 h-4 text-muted-foreground" />
+                <span>No Room (Library)</span>
+              </div>
               {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
             </DropdownMenuItem>
             {rooms.map(room => (
               <DropdownMenuItem key={room.id} onClick={() => assignRoom(room.id)} className="justify-between cursor-pointer">
                 <div className="flex items-center gap-2">
-                  <Library className="w-4 h-4 text-muted-foreground" />
+                  <FolderOpen className="w-4 h-4 text-muted-foreground" />
                   <span>{room.name}</span>
                 </div>
                 {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
@@ -98,9 +101,10 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
           <DropdownMenuSeparator />
           <DropdownMenuItem 
             onClick={deleteArticle} 
-            className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer"
+            className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"
           >
-            Delete Document
+            <Trash2 className="w-4 h-4" />
+            <span>Delete Document</span>
           </DropdownMenuItem>
           {loading && (
             <>

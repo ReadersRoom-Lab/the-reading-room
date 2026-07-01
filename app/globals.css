@@ -493,4 +493,10 @@
   display: none !important;
 }
 
+/* ── Custom Selection Highlighting ── */
+::selection {
+  background-color: #E6C79C !important; /* var(--muted-gold) */
+  color: #1A1A1A !important;
+}
+
 
