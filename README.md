@@ -139,10 +139,31 @@ See `docs/DATABASE_SETUP.md` for migration and seeding steps.
 |---|---|
 | `npm run dev` | Start dev server at localhost:3000 |
 | `npm run build` | Production build (requires real DATABASE_URL) |
-| `npm test` | Run unit tests |
+| `npm test` | Run unit tests (using Node's native `node:test` runner) |
 | `npm run api:smoke` | Run API smoke tests (server must be running) |
+| `npm run coverage` | Run unit tests with C8 test coverage reporting |
 | `npx prisma studio` | Open database GUI |
 | `npx prisma migrate dev` | Apply schema changes |
+
+---
+
+## Code Quality & CI
+
+The project uses **SonarCloud** for continuous code quality inspection. The configuration is found in `sonar-project.properties`.
+
+- Test coverage is generated via the Node.js native `node:test` framework combined with C8 coverage reporting.
+- Next.js UI components and API route files (`app/**` and `components/**`) are excluded from the test coverage requirements because they require separate E2E testing strategies.
+- To view code smells or coverage metrics, check the SonarCloud Quality Gate dashboard.
+
+---
+
+## UI / UX Aesthetic
+
+The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
+- A `0px` border-radius policy on all interactive elements (buttons, inputs, cards).
+- Flat backgrounds with simple ink borders instead of heavily layered drop-shadows.
+- Typography prioritizes high legibility with classic serif reading options and crisp sans-serif menus.
+- Consistent metadata trailing borders to group related information intuitively.
 
 ---
 
