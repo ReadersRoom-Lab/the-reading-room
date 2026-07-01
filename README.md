@@ -167,6 +167,36 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 
 ---
 
+## Features Log (Implemented)
+
+1. **Onboarding Flow & Enforcement**:
+   - Multi-step client onboarding flow capturing Name and positive Goals, creating the user's first Room.
+   - Layout-level enforcement restricting access to the dashboard until onboarding is complete.
+   - Development fallback automatically registering the Clerk user in Prisma on database mismatch.
+2. **Room Management & Curated Shelves**:
+   - Create, update name/description, and permanently delete rooms (moving items to library).
+   - Dynamic highlights count aggregated and displayed in the Room view.
+   - Room exporting to Markdown downloads (including articles and highlighted quotes).
+3. **Reader & Wikipedia Concept Lookup**:
+   - Custom memoized selection hook to prevent React 19 re-rendering from clearing highlight selections.
+   - Popover dictionary with Wikipedia REST integration to dynamically fetch definitions, thumbs, and desktop page backlinks.
+4. **Insights Studio Dashboard**:
+   - Stats compiler endpoint (`/api/insights/stats`) calculating reading streak history (current vs longest streak).
+   - 365-day contribution heatmap grid, custom SVG Knowledge Growth line chart, and horizontal active rooms bar chart.
+
+---
+
+## Recommended Next Steps for Developers
+
+1. **Vector Search & RAG Integration**:
+   - Connect the AI chat in the **Synthesis Engine** to a vector store (e.g. pgvector) containing chunked article content and highlighted passages.
+2. **Social Reading Rooms**:
+   - Add a collaborative mode to rooms allowing users to invite others, share highlights, and discuss articles.
+3. **Highlight Customizer**:
+   - Allow users to customize highlight colors (e.g. Sage, Crimson, Ochre) and tag highlights with custom metadata.
+
+---
+
 ## Deployment
 
 Tested for Vercel. The `postinstall` script runs `prisma generate` automatically on deploy. Set all `.env.example` variables in Vercel's environment variables panel. Point your Clerk webhook to your production domain.
