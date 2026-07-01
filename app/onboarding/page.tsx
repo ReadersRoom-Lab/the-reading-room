@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
@@ -20,17 +21,70 @@ export default function OnboardingPage() {
     roomColor: "#D4AF37",
   });
 
-  const handleNext = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleNext = async () => {
     if (step < totalSteps) {
+      if (step === 1 && !formData.name.trim()) {
+        setError("Please enter your name.");
+        return;
+      }
+      if (step === 2 && (!formData.readingGoal || parseInt(formData.readingGoal) <= 0)) {
+        setError("Please enter a valid reading goal.");
+        return;
+      }
+      setError(null);
       setStep(step + 1);
     } else {
-      // Mock submit and redirect to home
-      router.push("/");
+      if (!formData.roomName.trim()) {
+        setError("Please enter a room name.");
+        return;
+      }
+      setIsLoading(true);
+      setError(null);
+      try {
+        // 1. Update user profile name
+        const userRes = await fetch("/api/user", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: formData.name }),
+        });
+
+        if (!userRes.ok) {
+          const errData = await userRes.json();
+          throw new Error(errData.error || "Failed to save user name.");
+        }
+
+        // 2. Create the first room
+        const roomRes = await fetch("/api/rooms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.roomName,
+            cover_color: formData.roomColor,
+            description: "My first reading room, created during onboarding.",
+          }),
+        });
+
+        if (!roomRes.ok) {
+          const errData = await roomRes.json();
+          throw new Error(errData.error || "Failed to create your first room.");
+        }
+
+        setError(null);
+        router.push("/");
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred during onboarding.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const handleBack = () => {
     if (step > 1) {
+      setError(null);
       setStep(step - 1);
     }
   };
@@ -54,6 +108,12 @@ export default function OnboardingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-200">
+              {error}
+            </div>
+          )}
+
           {step === 1 && (
             <div className="space-y-4">
               <div className="space-y-2">
@@ -63,6 +123,7 @@ export default function OnboardingPage() {
                   placeholder="Your name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -79,6 +140,7 @@ export default function OnboardingPage() {
                   placeholder="e.g. 5"
                   value={formData.readingGoal}
                   onChange={(e) => setFormData({ ...formData, readingGoal: e.target.value })}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -93,6 +155,7 @@ export default function OnboardingPage() {
                   placeholder="e.g. Technology, Philosophy, Fiction"
                   value={formData.roomName}
                   onChange={(e) => setFormData({ ...formData, roomName: e.target.value })}
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -105,6 +168,7 @@ export default function OnboardingPage() {
                       style={{ backgroundColor: color }}
                       onClick={() => setFormData({ ...formData, roomColor: color })}
                       aria-label={`Select color ${color}`}
+                      disabled={isLoading}
                     />
                   ))}
                 </div>
@@ -113,11 +177,20 @@ export default function OnboardingPage() {
           )}
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleBack} disabled={step === 1}>
+          <Button variant="outline" onClick={handleBack} disabled={step === 1 || isLoading}>
             Back
           </Button>
-          <Button onClick={handleNext}>
-            {step === totalSteps ? "Finish" : "Next"}
+          <Button onClick={handleNext} disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : step === totalSteps ? (
+              "Finish"
+            ) : (
+              "Next"
+            )}
           </Button>
         </CardFooter>
       </Card>

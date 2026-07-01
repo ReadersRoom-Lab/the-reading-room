@@ -59,7 +59,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const { name, description } = await req.json()
+    const body = await req.json()
+    const name = body.name
+    const description = body.description
+    const cover_color = body.cover_color || body.coverColor || '#F4F4F5'
 
     if (!name) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 })
@@ -70,7 +73,7 @@ export async function POST(req: Request) {
         user_id: user.id,
         name,
         description,
-        cover_color: '#F4F4F5' // default subtle color
+        cover_color
       }
     })
 
