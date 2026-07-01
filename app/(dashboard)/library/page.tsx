@@ -34,17 +34,19 @@ export default function LibraryPage() {
         <p className="font-sans text-sm text-[#747878]">Your saved articles and documents.</p>
       </div>
       
-      {loading ? (
+      {loading && (
         <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="w-6 h-6 animate-spin text-[#BDBDBD]" />
         </div>
-      ) : articles.length > 0 ? (
+      )}
+      {!loading && articles.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
         </div>
-      ) : (
+      )}
+      {!loading && articles.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
           <BookMarked className="w-8 h-8 text-[#BDBDBD] mb-4" />
           <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Your library is empty</h2>

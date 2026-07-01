@@ -34,9 +34,9 @@ function generateHighlightedHtml(article: Record<string, string> | null, highlig
   const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length)
   
   sorted.forEach(h => {
-    const colorClass = h.colour === 'yellow' ? 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit' : 
-                       h.colour === 'green' ? 'bg-green-200/60 dark:bg-green-700/60 text-inherit' : 
-                       'bg-blue-200/60 dark:bg-blue-700/60 text-inherit'
+    let colorClass = 'bg-blue-200/60 dark:bg-blue-700/60 text-inherit';
+    if (h.colour === 'yellow') colorClass = 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit';
+    else if (h.colour === 'green') colorClass = 'bg-green-200/60 dark:bg-green-700/60 text-inherit';
                        
     const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     const regex = new RegExp(`(${safeContent})`, 'g')
@@ -275,7 +275,6 @@ export default function ReaderPage() {
           ref={scrollRef}
           onScroll={handleScroll}
           onMouseUp={handleMouseUp}
-          role="presentation"
           className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? 'md:mr-[400px]' : ''}`}
         >
           <article 
@@ -283,12 +282,10 @@ export default function ReaderPage() {
               mx-auto max-w-2xl
               prose prose-stone dark:prose-invert
               ${fontFamily === 'serif' ? 'font-source-serif' : 'font-sans'}
-              ${
-                fontSize === 'sm' ? 'prose-sm' : 
-                fontSize === 'base' ? 'prose-base' : 
-                fontSize === 'lg' ? 'prose-lg' : 
-                'prose-xl'
-              }
+              ${fontSize === 'sm' ? 'prose-sm' : ''}
+              ${fontSize === 'base' ? 'prose-base' : ''}
+              ${fontSize === 'lg' ? 'prose-lg' : ''}
+              ${fontSize === 'xl' ? 'prose-xl' : ''}
             `}
           >
             {article.cover_image && (

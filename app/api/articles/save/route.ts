@@ -123,16 +123,9 @@ export async function POST(req: Request) {
     const cleanContent = DOMPurify.sanitize(articleData.content || '')
 
     // Calculate word count and read time
-    // Create a temporary JSDOM just to extract textContent for word count if not standard URL
-    let textContent = cleanContent;
-    if (articleData.sourceType !== 'url') {
-       const tempDoc = new JSDOM(cleanContent).window.document;
-       textContent = tempDoc.body.textContent || '';
-    } else {
-       // From Readability we might have textContent but let's just standardize on the clean DOM
-       const tempDoc = new JSDOM(cleanContent).window.document;
-       textContent = tempDoc.body.textContent || '';
-    }
+    // Create a temporary JSDOM just to extract textContent for word count
+    const tempDoc = new JSDOM(cleanContent).window.document;
+    const textContent = tempDoc.body.textContent || '';
     
     const wordCount = textContent.trim().split(/\s+/).length
     const readTimeMinutes = Math.ceil(wordCount / 200) // Assumes ~200 WPM
