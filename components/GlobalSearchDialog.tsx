@@ -12,6 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { FileText, Folder, BookOpen, Search } from "lucide-react"
+import { logger } from '@/lib/logger'
 
 export function GlobalSearchDialog() {
   const [open, setOpen] = useState(false)
@@ -53,7 +54,7 @@ export function GlobalSearchDialog() {
           setResults(data)
         }
       } catch (error) {
-        console.error("Search failed:", error)
+        logger.error("Search failed:", error)
       } finally {
         setLoading(false)
       }

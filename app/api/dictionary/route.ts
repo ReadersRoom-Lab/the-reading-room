@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -38,7 +39,7 @@ export async function GET(req: Request) {
       etymology: etymology
     })
   } catch (error) {
-    console.error('Dictionary API Error:', error)
+    logger.error('Dictionary API Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

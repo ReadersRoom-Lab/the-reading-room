@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function PATCH(
   req: Request,
@@ -47,7 +48,7 @@ export async function PATCH(
 
     return NextResponse.json(article)
   } catch (error) {
-    console.error('Error updating article room:', error)
+    logger.error('Error updating article room:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
 import { Plus, Loader2 } from "lucide-react"
+import { logger } from '@/lib/logger'
 
 export function CreateRoomDialog() {
   const router = useRouter()
@@ -43,7 +44,7 @@ export function CreateRoomDialog() {
       setDescription("")
       router.refresh()
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       toast.error("An error occurred")
     } finally {
       setLoading(false)

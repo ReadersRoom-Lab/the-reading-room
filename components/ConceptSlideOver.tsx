@@ -3,6 +3,7 @@ import { X, Bookmark, Edit3, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { logger } from '@/lib/logger'
 
 interface ConceptSlideOverProps {
   term: string
@@ -43,7 +44,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         toast.error("Failed to save to Vault")
       }
     } catch (e: unknown) {
-      console.error(e)
+      logger.error(e)
       toast.error("Error saving to Vault")
     } finally {
       setLoading(false)

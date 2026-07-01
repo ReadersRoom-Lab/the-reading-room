@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
   try {
@@ -28,7 +29,7 @@ export async function GET() {
 
     return NextResponse.json(articles)
   } catch (error) {
-    console.error('Error fetching articles:', error)
+    logger.error('Error fetching articles:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

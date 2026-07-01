@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { logger } from '@/lib/logger'
 
 interface ExportRoomButtonProps {
   roomId: string
@@ -34,7 +35,7 @@ export function ExportRoomButton({ roomId, roomName }: ExportRoomButtonProps) {
       
       toast.success("Room exported successfully!")
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       toast.error("An error occurred during export")
     } finally {
       setExporting(false)

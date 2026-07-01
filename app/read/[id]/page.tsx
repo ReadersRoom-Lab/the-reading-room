@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress"
 import { DictionaryPopover } from "@/components/DictionaryPopover"
 import { ConceptSlideOver } from "@/components/ConceptSlideOver"
 import { TextSelectionMenu } from "@/components/TextSelectionMenu"
+import { logger } from '@/lib/logger'
 
 type HighlightType = {
   id: string;
@@ -80,7 +81,7 @@ export default function ReaderPage() {
           setHighlights(await hlRes.json())
         }
       } catch (err) {
-        console.error("Error fetching article or highlights", err)
+        logger.error("Error fetching article or highlights", err)
       } finally {
         setLoading(false)
       }
@@ -191,7 +192,7 @@ export default function ReaderPage() {
         setHighlights(prev => prev.filter(h => h.id !== tempId))
       }
     } catch (e) {
-      console.error(e)
+      logger.error(e)
       setHighlights(prev => prev.filter(h => h.id !== tempId))
     }
   }

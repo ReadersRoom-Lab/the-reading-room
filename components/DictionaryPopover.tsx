@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Bookmark, Edit3, Loader2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { logger } from '@/lib/logger'
 
 interface DictionaryPopoverProps {
   word: string
@@ -25,7 +26,7 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
           setData({ word, error: 'Definition not found' })
         }
       } catch(e) {
-        console.error(e)
+        logger.error(e)
         setData({ word, error: 'Error fetching definition' })
       } finally {
         setLoading(false)

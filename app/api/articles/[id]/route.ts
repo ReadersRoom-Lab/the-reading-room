@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET(
   req: Request,
@@ -26,7 +27,7 @@ export async function GET(
 
     return NextResponse.json(article)
   } catch (error) {
-    console.error("Error fetching article:", error)
+    logger.error("Error fetching article:", error)
     return NextResponse.json(
       { error: 'Failed to fetch article' },
       { status: 500 }
@@ -60,7 +61,7 @@ export async function PATCH(
 
     return NextResponse.json(article)
   } catch (error) {
-    console.error("Error updating article:", error)
+    logger.error("Error updating article:", error)
     return NextResponse.json(
       { error: 'Failed to update article' },
       { status: 500 }

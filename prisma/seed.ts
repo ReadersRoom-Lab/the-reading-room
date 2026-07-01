@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import prisma from '../lib/prisma'
+import { logger } from '@/lib/logger'
 
 async function main() {
   // Check if test user exists
@@ -8,7 +9,7 @@ async function main() {
   })
 
   if (existingUser) {
-    console.log('Test user already exists. Skipping seed.')
+    logger.log('Test user already exists. Skipping seed.')
   } else {
     const user = await prisma.user.create({
       data: {
@@ -29,13 +30,13 @@ async function main() {
       }
     })
 
-    console.log(`Created test user: ${user.email}`)
+    logger.log(`Created test user: ${user.email}`)
   }
 }
 
 main()
   .catch((e) => {
-    console.error(e)
+    logger.error(e)
     process.exit(1)
   })
   .finally(async () => {

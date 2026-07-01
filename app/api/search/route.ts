@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET(req: Request) {
   try {
@@ -85,7 +86,7 @@ export async function GET(req: Request) {
       concepts
     })
   } catch (error) {
-    console.error('Error in search:', error)
+    logger.error('Error in search:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

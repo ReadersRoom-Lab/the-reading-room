@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { logger } from '@/lib/logger'
 
 const globalForPrisma = globalThis as unknown as { prisma2?: PrismaClient };
 
@@ -15,7 +16,7 @@ function getTcpUrl(url: string | undefined) {
         return decoded.databaseUrl;
       }
     } catch (e) {
-      console.error('Failed to parse api_key', e);
+      logger.error('Failed to parse api_key', e);
     }
   }
   return url;

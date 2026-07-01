@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { ArticleCard, ArticleProps } from "@/components/ArticleCard"
 import { BookMarked, Loader2 } from "lucide-react"
+import { logger } from '@/lib/logger'
 
 export default function LibraryPage() {
   const [articles, setArticles] = useState<ArticleProps['article'][]>([])
@@ -17,7 +18,7 @@ export default function LibraryPage() {
           setArticles(data)
         }
       } catch (error) {
-        console.error("Failed to fetch articles:", error)
+        logger.error("Failed to fetch articles:", error)
       } finally {
         setLoading(false)
       }

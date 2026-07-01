@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET(req: Request) {
   try {
@@ -35,7 +36,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(highlights, { status: 200 })
   } catch (error) {
-    console.error('Error fetching highlights:', error)
+    logger.error('Error fetching highlights:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(highlight, { status: 201 })
   } catch (error) {
-    console.error('Error creating highlight:', error)
+    logger.error('Error creating highlight:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

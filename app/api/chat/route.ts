@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { streamText } from 'ai'
 import { google } from '@ai-sdk/google'
+import { logger } from '@/lib/logger'
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
 
     return result.toDataStreamResponse()
   } catch (error) {
-    console.error('Error in chat route:', error)
+    logger.error('Error in chat route:', error)
     return new Response('Internal Server Error', { status: 500 })
   }
 }

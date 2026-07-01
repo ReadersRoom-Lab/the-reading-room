@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function DELETE(
   req: Request,
@@ -41,7 +42,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
-    console.error('Error deleting highlight:', error)
+    logger.error('Error deleting highlight:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma'
 import { JSDOM } from 'jsdom'
 import { Readability } from '@mozilla/readability'
 import DOMPurify from 'isomorphic-dompurify'
+import { logger } from '@/lib/logger'
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
@@ -157,7 +158,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {
-    console.error('Error saving article:', error)
+    logger.error('Error saving article:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

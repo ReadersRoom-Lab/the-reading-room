@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { PDFParse } from 'pdf-parse'
 import DOMPurify from 'isomorphic-dompurify'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: Request) {
   try {
@@ -79,7 +80,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {
-    console.error('Error saving PDF:', error)
+    logger.error('Error saving PDF:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

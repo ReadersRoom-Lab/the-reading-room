@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -91,7 +92,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     })
 
   } catch (error) {
-    console.error('Error exporting room:', error)
+    logger.error('Error exporting room:', error)
     return new NextResponse('Internal Server Error', { status: 500 })
   }
 }

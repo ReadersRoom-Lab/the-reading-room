@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { logger } from '@/lib/logger'
 
 export async function GET(
   req: Request,
@@ -40,7 +41,7 @@ export async function GET(
 
     return NextResponse.json(room)
   } catch (error) {
-    console.error('Error fetching room:', error)
+    logger.error('Error fetching room:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
@@ -80,7 +81,7 @@ export async function PATCH(
 
     return NextResponse.json(room)
   } catch (error) {
-    console.error('Error updating room:', error)
+    logger.error('Error updating room:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
@@ -114,7 +115,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting room:', error)
+    logger.error('Error deleting room:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

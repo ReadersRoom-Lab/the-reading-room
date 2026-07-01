@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 const base = 'http://localhost:3000';
 
 async function assert(condition: boolean, message: string) {
@@ -7,13 +8,13 @@ async function assert(condition: boolean, message: string) {
 }
 
 async function run() {
-  console.log('Starting API smoke test...');
+  logger.log('Starting API smoke test...');
 
   const healthRes = await fetch(`${base}/api/health`);
   const healthJson = await healthRes.json();
   await assert(healthRes.ok, 'Health endpoint failed');
   await assert(healthJson.status === 'ok', 'Health response invalid');
-  console.log('✔ Health endpoint');
+  logger.log('✔ Health endpoint');
 
   const roomPayload = {
     userId: 'smoke-test-user',
@@ -29,13 +30,13 @@ async function run() {
   const roomJson = await roomRes.json();
   await assert(roomRes.ok, 'Create room failed');
   await assert(roomJson.room?.id, 'Create room response missing id');
-  console.log('✔ Create room');
+  logger.log('✔ Create room');
 
   const roomsRes = await fetch(`${base}/api/rooms`);
   const roomsJson = await roomsRes.json();
   await assert(roomsRes.ok, 'List rooms failed');
   await assert(Array.isArray(roomsJson.rooms), 'List rooms response invalid');
-  console.log('✔ List rooms');
+  logger.log('✔ List rooms');
 
   const articlePayload = {
     userId: 'smoke-test-user',
@@ -51,13 +52,13 @@ async function run() {
   const articleJson = await articleRes.json();
   await assert(articleRes.ok, 'Create article failed');
   await assert(articleJson.article?.id, 'Create article response missing id');
-  console.log('✔ Create article');
+  logger.log('✔ Create article');
 
   const articlesRes = await fetch(`${base}/api/articles`);
   const articlesJson = await articlesRes.json();
   await assert(articlesRes.ok, 'List articles failed');
   await assert(Array.isArray(articlesJson.articles), 'List articles response invalid');
-  console.log('✔ List articles');
+  logger.log('✔ List articles');
 
   const highlightPayload = {
     userId: 'smoke-test-user',
@@ -75,18 +76,18 @@ async function run() {
   const highlightJson = await highlightRes.json();
   await assert(highlightRes.ok, 'Create highlight failed');
   await assert(highlightJson.highlight?.id, 'Create highlight response missing id');
-  console.log('✔ Create highlight');
+  logger.log('✔ Create highlight');
 
   const highlightsRes = await fetch(`${base}/api/highlights?articleId=${articleJson.article.id}`);
   const highlightsJson = await highlightsRes.json();
   await assert(highlightsRes.ok, 'List highlights failed');
   await assert(Array.isArray(highlightsJson.highlights), 'List highlights response invalid');
-  console.log('✔ List highlights');
+  logger.log('✔ List highlights');
 
-  console.log('API smoke test passed.');
+  logger.log('API smoke test passed.');
 }
 
 run().catch((error) => {
-  console.error('Smoke test failed:', error.message);
+  logger.error('Smoke test failed:', error.message);
   process.exit(1);
 });
