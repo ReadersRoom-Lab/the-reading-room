@@ -60,3 +60,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
+
+export async function GET() {
+  try {
+    const { userId } = await auth()
+    
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { clerk_id: userId }
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const vaultEntries = await prisma.vaultEntry.findMany({
+      where: { user_id: user.id },
+      include: {
+        vaultTrails: {
+          include: {
+            article: true,
+            room: true
+          }
+        }
+      },
+      orderBy: { created_at: 'desc' }
+    })
+
+    return NextResponse.json(vaultEntries, { status: 200 })
+  } catch (error) {
+    console.error('Error fetching vault entries:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}

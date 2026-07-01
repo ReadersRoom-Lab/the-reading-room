@@ -1,5 +1,5 @@
-import { PrismaClient } from '../src/generated/prisma/client'
-const prisma = new PrismaClient(undefined as never)
+import 'dotenv/config'
+import prisma from '../lib/prisma'
 
 async function main() {
   // Check if test user exists
@@ -7,7 +7,9 @@ async function main() {
     where: { email: 'test@thereadingroom.com' }
   })
 
-  if (!existingUser) {
+  if (existingUser) {
+    console.log('Test user already exists. Skipping seed.')
+  } else {
     const user = await prisma.user.create({
       data: {
         clerk_id: 'user_2mTESTuserID123',
@@ -28,8 +30,6 @@ async function main() {
     })
 
     console.log(`Created test user: ${user.email}`)
-  } else {
-    console.log('Test user already exists. Skipping seed.')
   }
 }
 

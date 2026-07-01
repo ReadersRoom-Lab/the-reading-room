@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { X, Bookmark, Edit3, Link as LinkIcon, Loader2 } from "lucide-react"
+import { useState, useRef } from "react"
+import { X, Bookmark, Edit3, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,7 @@ interface ConceptSlideOverProps {
 export function ConceptSlideOver({ term, definition, contextSnippet, articleId, roomId, onClose }: Readonly<ConceptSlideOverProps>) {
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState("")
+  const noteInputRef = useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
 
   const handleSave = async () => {
@@ -80,6 +81,7 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
         <div className="mb-8">
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-3">Add Note</p>
           <textarea 
+            ref={noteInputRef}
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className="w-full min-h-[100px] p-4 text-sm bg-white border border-input focus:outline-none focus:ring-1 focus:ring-[#1a1a1a] font-source-serif"
@@ -97,12 +99,13 @@ export function ConceptSlideOver({ term, definition, contextSnippet, articleId, 
           {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Bookmark className="w-5 h-5 mr-2" />}
           Save to Vault
         </Button>
-        <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-muted-foreground">
+        <div className="grid grid-cols-1 gap-3">
+          <Button 
+            variant="outline" 
+            className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-muted-foreground"
+            onClick={() => noteInputRef.current?.focus()}
+          >
             <Edit3 className="w-4 h-4 mr-2" /> Add Note
-          </Button>
-          <Button variant="outline" className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-muted-foreground">
-            <LinkIcon className="w-4 h-4 mr-2" /> Link to Room
           </Button>
         </div>
       </div>

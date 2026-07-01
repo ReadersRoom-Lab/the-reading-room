@@ -15,6 +15,16 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { DictionaryPopover } from "@/components/DictionaryPopover"
 import { ConceptSlideOver } from "@/components/ConceptSlideOver"
+import { TextSelectionMenu } from "@/components/TextSelectionMenu"
+
+type HighlightType = {
+  id: string;
+  article_id: string;
+  content: string;
+  colour: string;
+  position_start: number;
+  position_end: number;
+}
 
 export default function ReaderPage() {
   const params = useParams()
@@ -26,8 +36,10 @@ export default function ReaderPage() {
   const [fontFamily, setFontFamily] = useState<'serif' | 'sans'>('serif')
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base')
   const [showAnnotate, setShowAnnotate] = useState(false)
-  const [selection, setSelection] = useState<{ word: string, rect: DOMRect } | null>(null)
+  const [activeSelection, setActiveSelection] = useState<{ text: string, rect: DOMRect, contextSnippet: string } | null>(null)
+  const [showDictionary, setShowDictionary] = useState(false)
   const [concept, setConcept] = useState<{ term: string, definition: string, contextSnippet: string } | null>(null)
+  const [highlights, setHighlights] = useState<HighlightType[]>([])
   
   
   // Progress tracking
@@ -43,8 +55,12 @@ export default function ReaderPage() {
           setArticle(data)
           setProgress(data.reading_progress || 0)
         }
+        const hlRes = await fetch(`/api/highlights?articleId=${params.id}`)
+        if (hlRes.ok) {
+          setHighlights(await hlRes.json())
+        }
       } catch (err) {
-        console.error("Error fetching article", err)
+        console.error("Error fetching article or highlights", err)
       } finally {
         setLoading(false)
       }
@@ -73,7 +89,7 @@ export default function ReaderPage() {
   // Save progress when unmounting
   useEffect(() => {
     return () => {
-      if (article && progress > (article.reading_progress || 0)) {
+      if (article && progress > Number(article.reading_progress || 0)) {
         fetch(`/api/articles/${params.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -88,41 +104,100 @@ export default function ReaderPage() {
 
   // Handle text selection
   const handleMouseUp = () => {
-    const sel = globalThis.getSelection()
-    if (sel && sel.toString().trim().length > 0) {
-      const text = sel.toString().trim()
-      // Only show dictionary popover for single words or very short phrases (up to 3 words max)
-      const wordCount = text.split(/\s+/).length
-      if (wordCount <= 3) {
+    // If dictionary is open or concept is open, don't trigger new selection immediately unless they are closing it
+    if (showDictionary) return;
+
+    setTimeout(() => {
+      const sel = globalThis.getSelection()
+      if (sel && sel.toString().trim().length > 0) {
+        const text = sel.toString().trim()
         const range = sel.getRangeAt(0)
         const rect = range.getBoundingClientRect()
-        setSelection({ word: text, rect })
+        
+        let contextSnippet = ""
+        const node = sel.anchorNode?.parentElement
+        contextSnippet = node?.textContent || ""
+        if (contextSnippet.length > 200) {
+          contextSnippet = contextSnippet.substring(0, 200) + "..."
+        }
+
+        setActiveSelection({ text, rect, contextSnippet })
       } else {
-        setSelection(null)
+        setActiveSelection(null)
       }
-    } else {
-      setSelection(null)
-    }
+    }, 10)
   }
 
-  // Handle save concept
+  // Handle save concept from dictionary popover
   const handleSaveConcept = (word: string, definition: string) => {
-    const sel = globalThis.getSelection()
-    let contextSnippet = ""
-    if (sel && sel.rangeCount > 0) {
-      const node = sel.anchorNode?.parentElement
-      contextSnippet = node?.textContent || ""
-      // truncate snippet if too long
-      if (contextSnippet.length > 200) {
-        contextSnippet = contextSnippet.substring(0, 200) + "..."
-      }
-    }
-    setSelection(null) // hide popover
+    setShowDictionary(false)
+    setActiveSelection(null)
     setConcept({
       term: word,
       definition,
-      contextSnippet
+      contextSnippet: activeSelection?.contextSnippet || ""
     })
+  }
+
+  // Handle create highlight
+  const handleCreateHighlight = async (color: string) => {
+    if (!activeSelection || !article) return
+
+    const newHighlight = {
+      article_id: article.id,
+      content: activeSelection.text,
+      colour: color,
+      position_start: 0, // Simplified for MVP
+      position_end: 0
+    }
+
+    // Optimistic UI update
+    const tempId = Date.now().toString()
+    setHighlights([...highlights, { ...newHighlight, id: tempId }])
+    setActiveSelection(null)
+    globalThis.getSelection()?.removeAllRanges()
+
+    try {
+      const res = await fetch('/api/highlights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newHighlight)
+      })
+      if (res.ok) {
+        const saved = await res.json()
+        setHighlights(prev => prev.map(h => h.id === tempId ? saved : h))
+      } else {
+        // Rollback
+        setHighlights(prev => prev.filter(h => h.id !== tempId))
+      }
+    } catch (e) {
+      console.error(e)
+      setHighlights(prev => prev.filter(h => h.id !== tempId))
+    }
+  }
+
+  // Process HTML with highlights
+  const getHighlightedHtml = () => {
+    if (!article) return { __html: '' }
+    let html = article.content || article.textContent || ''
+    
+    // Sort by length descending so we don't accidentally replace partial matches inside longer highlights
+    const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length)
+    
+    sorted.forEach(h => {
+      // Very simple string replace for MVP
+      const colorClass = h.colour === 'yellow' ? 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit' : 
+                         h.colour === 'green' ? 'bg-green-200/60 dark:bg-green-700/60 text-inherit' : 
+                         'bg-blue-200/60 dark:bg-blue-700/60 text-inherit'
+                         
+      const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const regex = new RegExp(`(${safeContent})`, 'g')
+      
+      // Use a special token to avoid replacing inside HTML tags, but for MVP we assume clean text
+      html = html.replace(regex, `<mark class="${colorClass} rounded-sm px-0.5">$1</mark>`)
+    })
+    
+    return { __html: html }
   }
 
   if (loading) {
@@ -223,20 +298,41 @@ export default function ReaderPage() {
               <img src={article.cover_image} alt="Cover" className="w-full h-64 object-cover rounded-xl mb-8" />
             )}
             <h1 className="font-heading mb-8">{article.title}</h1>
-            <div dangerouslySetInnerHTML={{ __html: article.content || article.textContent }} />
+            <div dangerouslySetInnerHTML={getHighlightedHtml()} />
           </article>
         </div>
 
+        {/* Text Selection Menu */}
+        {activeSelection && !showDictionary && !concept && (
+          <TextSelectionMenu 
+            rect={activeSelection.rect}
+            onHighlight={handleCreateHighlight}
+            onDefine={() => setShowDictionary(true)}
+            onSaveConcept={() => {
+              setConcept({
+                term: activeSelection.text,
+                definition: "",
+                contextSnippet: activeSelection.contextSnippet
+              })
+              setActiveSelection(null)
+            }}
+          />
+        )}
+
         {/* Dictionary Popover */}
-        {selection && (
+        {showDictionary && activeSelection && (
           <DictionaryPopover 
-            word={selection.word} 
-            rect={selection.rect} 
-            onClose={() => setSelection(null)}
+            word={activeSelection.text} 
+            rect={activeSelection.rect} 
+            onClose={() => {
+              setShowDictionary(false)
+              setActiveSelection(null)
+              globalThis.getSelection()?.removeAllRanges()
+            }}
             onSave={handleSaveConcept}
             onHighlight={() => {
-              // Highlight logic for Phase 5
-              setSelection(null)
+              setShowDictionary(false)
+              handleCreateHighlight('yellow')
             }}
           />
         )}

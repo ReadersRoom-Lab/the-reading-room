@@ -25,7 +25,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         user_id: user.id
       },
       include: {
-        articles: true,
+        articles: {
+          include: {
+            highlights: true
+          }
+        },
         vaultTrails: {
           include: {
             vault_entry: true
@@ -45,11 +49,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     
     markdown += `## Articles (${room.articles.length})\n\n`
     
-    room.articles.forEach((article: { title: string; author?: string | null; source_url: string; status: string }) => {
+    room.articles.forEach((article: { title: string; author?: string | null; source_url: string; status: string; highlights: { content: string; note?: string | null }[] }) => {
       markdown += `### ${article.title}\n`
       if (article.author) markdown += `**Author:** ${article.author}\n`
       markdown += `**Source:** ${article.source_url}\n`
       markdown += `**Status:** ${article.status}\n\n`
+      
+      if (article.highlights && article.highlights.length > 0) {
+        markdown += `#### Highlights\n\n`
+        article.highlights.forEach(h => {
+          markdown += `> ${h.content}\n`
+          if (h.note) markdown += `\n**Note:** ${h.note}\n`
+          markdown += `\n`
+        })
+      }
     })
 
     markdown += `## Concepts & Highlights (${room.vaultTrails.length})\n\n`

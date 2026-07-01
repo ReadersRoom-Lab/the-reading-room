@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { store } from '../src/lib/store';
+import { store } from '../lib/store';
 
 test('creates a room and ingests an article for the user', async () => {
   const userId = 'test-user';

@@ -63,7 +63,7 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
         {!loading && data?.error && (
           <p className="text-sm text-muted-foreground italic">{data.error}</p>
         )}
-        {!loading && !data?.error && (
+        {!loading && data && !data.error && (
           <>
             <p className="text-sm text-[#333] leading-relaxed font-source-serif">
               {data.definition}
