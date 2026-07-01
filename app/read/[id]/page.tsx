@@ -38,7 +38,7 @@ function generateHighlightedHtml(article: Record<string, string> | null, highlig
     if (h.colour === 'yellow') colorClass = 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit';
     else if (h.colour === 'green') colorClass = 'bg-green-200/60 dark:bg-green-700/60 text-inherit';
                        
-    const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`)
     const regex = new RegExp(`(${safeContent})`, 'g')
     
     html = html.replace(regex, `<mark class="${colorClass} rounded-sm px-0.5">$1</mark>`)
@@ -278,6 +278,7 @@ export default function ReaderPage() {
           ref={scrollRef}
           onScroll={handleScroll}
           onMouseUp={handleMouseUp}
+          role="document"
           className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? 'md:mr-[400px]' : ''}`}
         >
           <article 
