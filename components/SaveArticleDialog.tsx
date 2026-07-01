@@ -81,7 +81,7 @@ export function SaveArticleDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) { setFile(null); setUrl(""); } }}>
-      <DialogTrigger className="w-full flex justify-start gap-2 mb-4 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors">
+      <DialogTrigger className="w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors">
         <Plus className="w-4 h-4" />
         <span>Save Document</span>
       </DialogTrigger>

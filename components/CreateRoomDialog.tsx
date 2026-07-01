@@ -52,13 +52,13 @@ export function CreateRoomDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4">
+      <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-sans font-medium transition-colors border border-[#1A1A1A] bg-transparent hover:bg-[#E5E5E5] text-[#1A1A1A] h-9 px-4">
         <Plus className="w-4 h-4" />
         Create Room
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
         <DialogHeader>
-          <DialogTitle>Create a New Room</DialogTitle>
+          <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Create a New Room</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
           <div className="flex flex-col gap-2">

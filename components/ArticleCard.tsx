@@ -29,7 +29,7 @@ export function ArticleCard({ article }: ArticleProps) {
 
   return (
     <Link href={`/read/${article.id}`} className="block h-full">
-      <Card className="flex flex-col h-full overflow-hidden hover:shadow-md transition-shadow cursor-pointer border-border bg-card">
+      <Card className="flex flex-col h-full overflow-hidden hover:bg-[#F4F3F3] transition-colors cursor-pointer border border-[#E5E5E5] bg-white rounded-none shadow-none">
       {article.cover_image && (
         <div className="h-40 w-full overflow-hidden bg-muted">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -1,6 +1,6 @@
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
-import { Home, Library, LayoutGrid, BookMarked, User } from "lucide-react";
+import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardLayout({
@@ -9,44 +9,79 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <aside className="w-64 border-r border-border bg-sidebar shrink-0 p-6 flex flex-col gap-4">
-        <div className="font-heading font-bold text-xl mb-6 text-sidebar-primary">
-          The Reading Room
-        </div>
-        
-        <GlobalSearchDialog />
-        <div className="mt-2" />
-        
-        <SaveArticleDialog />
+    <div className="flex h-screen w-full bg-[#F9F7F2] overflow-hidden">
 
-        <nav className="flex flex-col gap-1 font-sans">
-          <Link href="/home" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-            <Home className="w-4 h-4" /> Home
+      {/* Sidebar */}
+      <aside className="w-64 border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-col">
+
+        {/* Brand */}
+        <div className="border-b border-[#E5E5E5] px-6 py-5">
+          <span className="font-heading text-base font-semibold text-[#1A1A1A] tracking-tight">
+            The Reading Room
+          </span>
+        </div>
+
+        {/* Search */}
+        <div className="border-b border-[#E5E5E5] px-4 py-3">
+          <GlobalSearchDialog />
+        </div>
+
+        {/* Save button */}
+        <div className="border-b border-[#E5E5E5] px-4 py-3">
+          <SaveArticleDialog />
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5">
+          <Link
+            href="/home"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <Home className="w-4 h-4 shrink-0" /> Home
           </Link>
-          <Link href="/library" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-            <Library className="w-4 h-4" /> Library
+          <Link
+            href="/library"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <Library className="w-4 h-4 shrink-0" /> Library
           </Link>
-          <Link href="/rooms" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-            <LayoutGrid className="w-4 h-4" /> My Rooms
+          <Link
+            href="/rooms"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <LayoutGrid className="w-4 h-4 shrink-0" /> My Rooms
           </Link>
-          <Link href="/vault" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-            <BookMarked className="w-4 h-4" /> Vault
+          <Link
+            href="/vault"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <BookMarked className="w-4 h-4 shrink-0" /> Vault
           </Link>
-          <Link href="/insights" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
-            <span className="text-lg leading-none font-serif">✨</span> Insights
-          </Link>
-          <Link href="/profile" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors mt-2">
-            <User className="w-4 h-4" /> Profile
+          <Link
+            href="/insights"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <Sparkles className="w-4 h-4 shrink-0" /> Insights
           </Link>
         </nav>
+
+        {/* Profile at bottom */}
+        <div className="border-t border-[#E5E5E5] px-3 py-3">
+          <Link
+            href="/profile"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <User className="w-4 h-4 shrink-0" /> Profile
+          </Link>
+        </div>
       </aside>
-      
-      <main className="flex-1 min-w-0 overflow-y-auto">
-        <div className="mx-auto max-w-5xl p-8">
+
+      {/* Main content */}
+      <main className="flex-1 min-w-0 overflow-y-auto bg-[#FAFAFA]">
+        <div className="max-w-6xl mx-auto px-10 py-10">
           {children}
         </div>
       </main>
-    </>
+    </div>
   );
 }

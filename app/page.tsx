@@ -1,59 +1,116 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { ArrowRight, BookOpen, Brain, FolderArchive } from "lucide-react"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAF8] flex flex-col items-center pt-32 px-6">
-      <main className="flex flex-col items-center text-center max-w-4xl w-full">
-        <p className="text-sm font-semibold tracking-widest text-[#9A8F82] uppercase mb-8">
-          Est. 2024 — A Digital Sanctuary
-        </p>
-        
-        <h1 className="text-6xl md:text-7xl font-heading font-bold text-[#1a1a1a] mb-6">
-          The Reading Room
-        </h1>
-        
-        <p className="text-2xl font-source-serif text-[#333333] mb-2">
-          Read. Archive. Think. Learn.
-        </p>
-        <p className="text-xl font-source-serif italic text-[#666666] mb-12">
-          Turn articles into lasting knowledge.
-        </p>
+    <div className="min-h-screen bg-[#F9F7F2] flex flex-col w-full">
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-24 w-full justify-center max-w-lg">
-          <Link href="/sign-up" className="flex-1">
-            <Button className="w-full h-14 text-base font-semibold bg-[#1a1a1a] text-white hover:bg-black rounded-none">
-              Start Reading Free
-            </Button>
-          </Link>
-          <Link href="/pro" className="flex-1">
-            <Button variant="outline" className="w-full h-14 text-base font-semibold border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-zinc-100 rounded-none bg-transparent">
-              Explore Pro
-            </Button>
-          </Link>
+      {/* Top Navigation Bar */}
+      <header className="border-b border-[#E5E5E5] bg-[#F9F7F2]">
+        <div className="max-w-5xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
+          <span className="font-heading text-lg font-semibold text-[#1A1A1A] tracking-tight">
+            The Reading Room
+          </span>
+          <nav className="flex items-center gap-8">
+            <Link href="/sign-in" className="font-sans text-sm text-[#747878] hover:text-[#1A1A1A] transition-colors">
+              Sign In
+            </Link>
+            <Link
+              href="/sign-up"
+              className="font-sans text-sm font-medium bg-[#1A1A1A] text-[#F9F7F2] px-5 py-2 hover:bg-[#333] transition-colors"
+            >
+              Get Started
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-8 flex flex-col justify-center">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+          {/* Left Column: Hero Text */}
+          <div className="lg:col-span-5 flex flex-col gap-8">
+          <p className="font-sans text-xs font-medium tracking-[0.15em] text-[#747878] uppercase">
+            Est. 2026 &nbsp;›&nbsp; A Digital Sanctuary
+          </p>
+
+          <h1 className="font-heading text-5xl lg:text-7xl font-bold text-[#1A1A1A] leading-[1.05] tracking-tight">
+            The<br />Reading Room
+          </h1>
+
+          <p className="font-serif text-lg lg:text-xl text-[#444748] leading-relaxed max-w-md">
+            Read. Archive. Think. Learn.{" "}
+            <span className="italic">Turn articles into lasting knowledge.</span>
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center justify-center gap-2 bg-[#1A1A1A] text-[#F9F7F2] font-sans text-sm font-semibold px-8 py-4 hover:bg-[#333] transition-colors"
+            >
+              Start Reading Free <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center justify-center gap-2 border border-[#1A1A1A] text-[#1A1A1A] font-sans text-sm font-semibold px-8 py-4 hover:bg-[#E5E5E5] transition-colors"
+            >
+              Sign In
+            </Link>
+          </div>
         </div>
 
-        <div className="w-full h-px bg-zinc-200 mb-16" />
+        {/* Right Column: Feature Panels */}
+        <div className="lg:col-span-7 flex flex-col gap-px border border-[#E5E5E5]">
+          {/* Quote Panel */}
+          <div className="bg-white border-b border-[#E5E5E5] p-8 lg:p-12">
+            <BookOpen className="w-6 h-6 text-[#747878] mb-6" />
+            <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6">
+              &ldquo;A library is not a luxury but one of the necessities of life.&rdquo;
+            </blockquote>
+            <p className="font-sans text-xs tracking-[0.05em] text-[#747878] uppercase font-medium">
+              Henry Ward Beecher
+            </p>
+          </div>
 
-        <div className="grid md:grid-cols-2 gap-16 text-left mb-24 w-full">
-          <div>
-            <p className="text-xs font-semibold tracking-widest text-[#9A8F82] uppercase mb-4">
-              01 / Discourse
-            </p>
-            <p className="font-source-serif text-xl italic text-[#444] leading-relaxed">
-              &quot;A library is not a luxury but one of the necessities of life.&quot;
-            </p>
+          {/* Three-column features */}
+          <div className="grid sm:grid-cols-3 gap-px bg-[#E5E5E5]">
+            <div className="bg-white p-6 lg:p-8">
+              <FolderArchive className="w-5 h-5 text-[#747878] mb-5" />
+              <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Archive</h3>
+              <p className="font-sans text-sm text-[#444748] leading-relaxed">
+                Build a personal, lasting vault of knowledge.
+              </p>
+            </div>
+            <div className="bg-white p-6 lg:p-8">
+              <Brain className="w-5 h-5 text-[#747878] mb-5" />
+              <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Think</h3>
+              <p className="font-sans text-sm text-[#444748] leading-relaxed">
+                Structural scaffolding for deep intellectual exploration.
+              </p>
+            </div>
+            <div className="bg-white p-6 lg:p-8">
+              <BookOpen className="w-5 h-5 text-[#747878] mb-5" />
+              <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Learn</h3>
+              <p className="font-sans text-sm text-[#444748] leading-relaxed">
+                Transform passive reading into active understanding.
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-semibold tracking-widest text-[#9A8F82] uppercase mb-4">
-              02 / Mission
-            </p>
-            <p className="font-source-serif text-xl text-[#444] leading-relaxed">
-              We provide the structural scaffolding for deep intellectual exploration in an age of fragmented attention.
-            </p>
-          </div>
+        </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-[#E5E5E5] bg-[#F9F7F2]">
+        <div className="max-w-5xl mx-auto px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-sans text-xs text-[#747878] tracking-[0.03em]">
+            © 2026 The Reading Room
+          </p>
+          <p className="font-serif text-xs italic text-[#BDBDBD]">
+            Read deeply. Think clearly.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -30,24 +30,24 @@ export default async function VaultPage() {
 
   return (
     <div className="flex flex-col w-full max-w-4xl mx-auto py-12 px-6 font-sans">
-      <div className="flex items-center justify-between border-b border-border pb-8 mb-12">
-        <h1 className="text-4xl font-heading font-bold text-[#1a1a1a]">Vocabulary Vault</h1>
+      <div className="flex items-center justify-between border-b border-[#E5E5E5] pb-8 mb-12">
+        <h1 className="font-heading text-5xl font-bold text-[#1A1A1A]">Vocabulary Vault</h1>
         
         <div className="relative w-72">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
           <input 
             type="text" 
             placeholder="Search saved concepts..." 
-            className="w-full pl-9 pr-4 py-2 border-b border-border bg-transparent focus:outline-none focus:border-[#1a1a1a] transition-colors text-sm"
+            className="w-full pl-9 pr-4 py-2 border-b border-[#BDBDBD] bg-transparent focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm font-sans text-[#1A1A1A] placeholder:text-[#BDBDBD]"
           />
         </div>
       </div>
 
       {vaultEntries.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-border bg-[#FCFBF8]">
-          <BookMarked className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-          <h2 className="text-xl font-heading font-semibold mb-2">Your Vault is empty</h2>
-          <p className="text-muted-foreground max-w-md">
+        <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
+          <BookMarked className="w-8 h-8 text-[#BDBDBD] mb-4" />
+          <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Your Vault is empty</h2>
+          <p className="font-sans text-sm text-[#747878] max-w-md">
             Highlight words while reading to save concepts, definitions, and contexts directly to your vault.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default async function VaultPage() {
           })}
           
           <div className="flex justify-center mt-8">
-            <button className="px-6 py-3 border border-border text-sm font-semibold hover:bg-muted transition-colors">
+            <button className="px-8 py-3 border border-[#1A1A1A] bg-transparent hover:bg-[#E5E5E5] text-[#1A1A1A] text-sm font-sans font-medium transition-colors">
               Load More Entries
             </button>
           </div>
