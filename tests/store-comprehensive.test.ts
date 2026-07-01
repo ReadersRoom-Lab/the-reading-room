@@ -83,7 +83,7 @@ test('ingestArticle defaults content to empty string when not provided', () => {
 test('ingestArticle calculates word count correctly', () => {
   const store = new InMemoryStore();
   // 200 words → 1 minute read time
-  const twoHundredWords = Array(200).fill('word').join(' ');
+  const twoHundredWords = new Array(200).fill('word').join(' ');
   const article = store.ingestArticle('user-1', {
     url: 'https://example.com',
     content: twoHundredWords,
@@ -132,8 +132,8 @@ test('getArticle returns the correct article by id', () => {
   });
 
   const found = store.getArticle('user-1', article.id);
-  assert.ok(found !== undefined);
-  assert.equal(found!.title, 'My Article');
+  assert.ok(found);
+  assert.equal(found.title, 'My Article');
 });
 
 test('getArticle returns undefined for wrong user', () => {

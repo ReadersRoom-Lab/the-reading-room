@@ -17,7 +17,8 @@ test('cn handles conditional classes with undefined', () => {
 });
 
 test('cn handles boolean false conditional', () => {
-  const result = cn('base', false && 'hidden');
+  const isHidden = false;
+  const result = cn('base', isHidden && 'hidden');
   assert.ok(result.includes('base'));
   assert.ok(!result.includes('hidden'));
 });
