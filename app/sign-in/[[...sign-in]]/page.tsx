@@ -26,8 +26,6 @@ export default function SignInPage() {
           </div>
 
           <SignIn
-            routing="path"
-            path="/sign-in"
             forceRedirectUrl="/home"
             appearance={{
               variables: {
