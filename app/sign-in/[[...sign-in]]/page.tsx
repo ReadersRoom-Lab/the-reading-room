@@ -30,10 +30,13 @@ export default function SignInPage() {
 
         {/* Logo in center */}
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="animate-typing pr-2">
-            <h1 className="font-heading text-5xl xl:text-6xl font-bold text-white drop-shadow-xl">
-              The Reading Room
-            </h1>
+          <div className="flex flex-col items-start leading-[1.1]">
+            <span className="animate-typing-1 font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl">
+              The
+            </span>
+            <span className="animate-typing-2 font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl pr-2">
+              Reading Room
+            </span>
           </div>
         </div>
       </div>
