@@ -40,19 +40,62 @@ export default function RootLayout({
           borderRadius: "0px",
         },
         elements: {
-          card: "!shadow-none !border !border-[#E5E5E5] !bg-white !rounded-none",
-          headerTitle: "!font-heading !text-2xl !font-bold !text-[#1A1A1A]",
-          headerSubtitle: "!font-sans !text-sm !text-[#747878]",
-          formButtonPrimary: "!bg-[#1A1A1A] hover:!bg-[#333333] !text-[#F9F7F2] !font-sans !font-semibold !rounded-none",
-          socialButtonsBlockButton: "!border !border-[#E5E5E5] hover:!bg-gray-50 !rounded-none !font-sans !font-medium !text-[#1A1A1A]",
-          formFieldInput: "!border-[#E5E5E5] focus:!border-[#1A1A1A] !rounded-none !bg-[#F9F7F2]/50 !font-sans",
-          formFieldLabel: "!font-sans !font-medium !text-[#1A1A1A]",
-          dividerLine: "!bg-[#E5E5E5]",
-          dividerText: "!font-sans !text-[#747878]",
-          footerActionText: "!font-sans !text-[#747878]",
-          footerActionLink: "!font-sans !font-semibold !text-[#1A1A1A] hover:!text-[#333333]",
-          identityPreviewText: "!font-sans !text-[#1A1A1A]",
-          identityPreviewEditButton: "!text-[#747878] hover:!text-[#1A1A1A]",
+          card: {
+            boxShadow: "none",
+            border: "1px solid #E5E5E5",
+            backgroundColor: "#FFFFFF",
+            borderRadius: "0px",
+          },
+          headerTitle: {
+            fontFamily: "var(--font-source-serif)",
+            fontSize: "1.5rem",
+            color: "#1A1A1A",
+          },
+          headerSubtitle: {
+            fontFamily: "var(--font-inter)",
+            color: "#747878",
+          },
+          formButtonPrimary: {
+            backgroundColor: "#1A1A1A",
+            color: "#F9F7F2",
+            borderRadius: "0px",
+            textTransform: "none",
+            fontWeight: "600",
+            fontFamily: "var(--font-inter)",
+          },
+          socialButtonsBlockButton: {
+            borderRadius: "0px",
+            border: "1px solid #E5E5E5",
+            fontFamily: "var(--font-inter)",
+            color: "#1A1A1A",
+          },
+          formFieldInput: {
+            borderRadius: "0px",
+            borderColor: "#E5E5E5",
+            backgroundColor: "#FDFBF7",
+            fontFamily: "var(--font-inter)",
+          },
+          formFieldLabel: {
+            fontFamily: "var(--font-inter)",
+            fontWeight: "500",
+            color: "#1A1A1A",
+          },
+          dividerLine: {
+            background: "#E5E5E5",
+          },
+          dividerText: {
+            fontFamily: "var(--font-inter)",
+            color: "#747878",
+          },
+          footerActionText: {
+            fontFamily: "var(--font-inter)",
+            color: "#747878",
+          },
+          footerActionLink: {
+            fontFamily: "var(--font-inter)",
+            fontWeight: "600",
+            color: "#1A1A1A",
+          }
         }
       }}
     >
