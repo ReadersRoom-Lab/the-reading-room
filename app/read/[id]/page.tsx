@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress"
 import { DictionaryPopover } from "@/components/DictionaryPopover"
 import { ConceptSlideOver } from "@/components/ConceptSlideOver"
 import { TextSelectionMenu } from "@/components/TextSelectionMenu"
+import { EditHighlightPopover } from "@/components/EditHighlightPopover"
 import { logger } from '@/lib/logger'
 
 type HighlightType = {
@@ -23,6 +24,8 @@ type HighlightType = {
   article_id: string;
   content: string;
   colour: string;
+  note?: string | null;
+  annotation_type?: string | null;
   position_start: number;
   position_end: number;
 }
@@ -34,14 +37,19 @@ function generateHighlightedHtml(article: Record<string, string> | null, highlig
   const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length)
   
   sorted.forEach(h => {
-    let colorClass = 'bg-blue-200/60 dark:bg-blue-700/60 text-inherit';
-    if (h.colour === 'yellow') colorClass = 'bg-yellow-200/60 dark:bg-yellow-700/60 text-inherit';
-    else if (h.colour === 'green') colorClass = 'bg-green-200/60 dark:bg-green-700/60 text-inherit';
+    let colorClass = 'bg-[#FCD116]/40 dark:bg-[#FCD116]/30 text-inherit'; // Default to ochre
+    if (h.colour === 'sage') colorClass = 'bg-[#8DA399]/50 dark:bg-[#8DA399]/40 text-inherit';
+    else if (h.colour === 'crimson') colorClass = 'bg-[#9A3B3B]/40 dark:bg-[#9A3B3B]/30 text-inherit';
+    else if (h.colour === 'indigo') colorClass = 'bg-[#4F709C]/40 dark:bg-[#4F709C]/30 text-inherit';
                        
     const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`)
     const regex = new RegExp(`(${safeContent})`, 'g')
     
-    html = html.replace(regex, `<mark class="${colorClass} rounded-sm px-0.5">$1</mark>`)
+    // Check if it has a note or tag
+    const hasMetadata = Boolean(h.note || h.annotation_type);
+    const borderClass = hasMetadata ? 'border-b-2 border-foreground/30' : '';
+    
+    html = html.replace(regex, `<mark data-highlight-id="${h.id}" class="${colorClass} ${borderClass} rounded-sm px-0.5 cursor-pointer hover:opacity-80 transition-opacity">$1</mark>`)
   })
   
   return { __html: html }
@@ -61,7 +69,7 @@ export default function ReaderPage() {
   const [showDictionary, setShowDictionary] = useState(false)
   const [concept, setConcept] = useState<{ term: string, definition: string, contextSnippet: string } | null>(null)
   const [highlights, setHighlights] = useState<HighlightType[]>([])
-  
+  const [editingHighlight, setEditingHighlight] = useState<{ highlight: HighlightType, rect: DOMRect } | null>(null)
   
   // Progress tracking
   const [progress, setProgress] = useState(0)
@@ -152,7 +160,7 @@ export default function ReaderPage() {
     }, 10)
   }, [showDictionary])
 
-  // Attach mouseup event listener dynamically to avoid JSX linter warnings on non-interactive containers
+  // Attach mouseup and click event listeners dynamically
   useEffect(() => {
     const container = scrollRef.current
     if (!container) return
@@ -161,11 +169,33 @@ export default function ReaderPage() {
       handleMouseUp()
     }
 
+    const onClickContainer = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === 'MARK' && target.hasAttribute('data-highlight-id')) {
+        const id = target.getAttribute('data-highlight-id')
+        const highlight = highlights.find(h => h.id === id)
+        if (highlight) {
+          const rect = target.getBoundingClientRect()
+          setEditingHighlight({ highlight, rect })
+          // Clear any active selection so TextSelectionMenu doesn't also appear
+          setActiveSelection(null)
+          globalThis.getSelection()?.removeAllRanges()
+        }
+      } else {
+        // If they click somewhere else in the article, close the popover
+        if (editingHighlight) {
+          setEditingHighlight(null)
+        }
+      }
+    }
+
     container.addEventListener('mouseup', onMouseUpContainer)
+    container.addEventListener('click', onClickContainer)
     return () => {
       container.removeEventListener('mouseup', onMouseUpContainer)
+      container.removeEventListener('click', onClickContainer)
     }
-  }, [handleMouseUp])
+  }, [handleMouseUp, highlights, editingHighlight])
 
   // Handle save concept from dictionary popover
   const handleSaveConcept = (word: string, definition: string) => {
@@ -212,6 +242,31 @@ export default function ReaderPage() {
     } catch (e) {
       logger.error(e)
       setHighlights(prev => prev.filter(h => h.id !== tempId))
+    }
+  }
+
+  const handleUpdateHighlight = async (id: string, data: Partial<HighlightType>) => {
+    // Optimistic update
+    setHighlights(prev => prev.map(h => h.id === id ? { ...h, ...data } : h))
+    try {
+      await fetch(`/api/highlights/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+    } catch (e) {
+      logger.error('Failed to update highlight', e)
+    }
+  }
+
+  const handleDeleteHighlight = async (id: string) => {
+    // Optimistic delete
+    setHighlights(prev => prev.filter(h => h.id !== id))
+    setEditingHighlight(null)
+    try {
+      await fetch(`/api/highlights/${id}`, { method: 'DELETE' })
+    } catch (e) {
+      logger.error('Failed to delete highlight', e)
     }
   }
 
@@ -344,8 +399,19 @@ export default function ReaderPage() {
             onSave={handleSaveConcept}
             onHighlight={() => {
               setShowDictionary(false)
-              handleCreateHighlight('yellow')
+              handleCreateHighlight('ochre')
             }}
+          />
+        )}
+
+        {/* Edit Highlight Popover */}
+        {editingHighlight && (
+          <EditHighlightPopover
+            highlight={editingHighlight.highlight}
+            rect={editingHighlight.rect}
+            onClose={() => setEditingHighlight(null)}
+            onUpdate={handleUpdateHighlight}
+            onDelete={handleDeleteHighlight}
           />
         )}
 

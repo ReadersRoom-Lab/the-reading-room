@@ -20,25 +20,32 @@ export function TextSelectionMenu({ rect, onHighlight, onDefine, onSaveConcept }
     >
       <div className="flex items-center border-r border-gray-700 pr-1">
         <button 
-          onClick={() => onHighlight('yellow')}
+          onClick={() => onHighlight('ochre')}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
-          title="Highlight Yellow"
+          title="Highlight Ochre"
         >
-          <div className="w-4 h-4 rounded-full bg-yellow-400" />
+          <div className="w-4 h-4 rounded-full bg-[#FCD116]" />
         </button>
         <button 
-          onClick={() => onHighlight('green')}
+          onClick={() => onHighlight('sage')}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
-          title="Highlight Green"
+          title="Highlight Sage"
         >
-          <div className="w-4 h-4 rounded-full bg-green-400" />
+          <div className="w-4 h-4 rounded-full bg-[#8DA399]" />
         </button>
         <button 
-          onClick={() => onHighlight('blue')}
+          onClick={() => onHighlight('crimson')}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
-          title="Highlight Blue"
+          title="Highlight Crimson"
         >
-          <div className="w-4 h-4 rounded-full bg-blue-400" />
+          <div className="w-4 h-4 rounded-full bg-[#9A3B3B]" />
+        </button>
+        <button 
+          onClick={() => onHighlight('indigo')}
+          className="p-2 hover:bg-white/20 rounded-sm transition-colors"
+          title="Highlight Indigo"
+        >
+          <div className="w-4 h-4 rounded-full bg-[#4F709C]" />
         </button>
       </div>
       
