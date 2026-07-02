@@ -4,7 +4,10 @@ import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"
 
-const QUOTES = [
+import { generateText } from "ai"
+import { google } from "@ai-sdk/google"
+
+const FALLBACK_QUOTES = [
   { text: "A library is not a luxury but one of the necessities of life.", author: "Henry Ward Beecher" },
   { text: "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.", author: "Haruki Murakami" },
   { text: "A book is like a garden carried in the pocket.", author: "Chinese Proverb" },
@@ -22,8 +25,29 @@ export default async function LandingPage() {
     redirect("/home")
   }
 
-  // Select a random quote for this render
-  const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)]
+  // Start with a random fallback quote in case AI generation fails
+  let quote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
+
+  try {
+    const { text } = await generateText({
+      model: google("gemini-2.5-flash"),
+      prompt: "Generate a profound, unique, and culturally diverse quote about reading, books, literature, or libraries. Output exactly in this format: \"[Quote Text]\" - [Author Name]. Do not include any other text.",
+      temperature: 0.9,
+    })
+
+    const match = text.match(/"([^"]+)"\s*-\s*(.+)/)
+    if (match) {
+      quote = { text: match[1], author: match[2] }
+    } else {
+      const parts = text.split("-")
+      if (parts.length >= 2) {
+        quote = { text: parts[0].replace(/"/g, "").trim(), author: parts[1].trim() }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to generate AI quote:", error)
+    // Silently fall back to the pre-selected random quote
+  }
 
   return (
     <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
