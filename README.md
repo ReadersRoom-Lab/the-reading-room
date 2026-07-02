@@ -6,7 +6,31 @@ A personal reading and knowledge workspace. Save articles from the web, organise
 
 ---
 
-## Quick start
+## 📖 Core Workflow
+
+The Reading Room is built around a simple, powerful 4-step workflow:
+
+1. **Build Your Library**: Save articles directly from your browser using the Chrome Extension (bypassing paywalls), or manually upload PDFs and paste URLs.
+2. **Read & Annotate**: Experience a minimalist, editorial reader. Highlight important passages, add personal notes, and categorize them.
+3. **Grow Your Vault**: Select any unfamiliar word or concept while reading to instantly fetch its Wikipedia definition. It is automatically saved to your Vault for spaced rediscovery.
+4. **Organize into Rooms**: Curate your knowledge by grouping related articles into thematic Spaces (Rooms). Export entire rooms to Markdown for easy sharing.
+
+---
+
+## 🧩 The Reading Room Chrome Extension
+
+The absolute best way to save articles to your library is using the companion Chrome Extension. It saves exactly what is rendered on your screen, which completely bypasses paywalls and anti-bot protections.
+
+**How to install:**
+1. Navigate to `chrome://extensions/` in your Chrome browser.
+2. Toggle on **Developer mode** in the top right corner.
+3. Click **Load unpacked** in the top left.
+4. Select the `chrome-extension` folder located inside this repository.
+5. Pin the extension to your toolbar. Log in, click the icon on any article, and hit "Save to Reading Room"!
+
+---
+
+## 🚀 Quick Start
 
 ### 1. Prerequisites
 
@@ -48,116 +72,7 @@ App runs at `http://localhost:3000`.
 
 ---
 
-## Project structure
-
-```
-readers-room/
-├── app/                        # Next.js App Router (primary)
-│   ├── (dashboard)/            # Protected pages — sidebar layout
-│   │   ├── home/               # Dashboard landing
-│   │   ├── library/            # Saved articles
-│   │   ├── rooms/              # Reading rooms
-│   │   ├── vault/              # Vocabulary vault
-│   │   ├── archive/            # Archived articles
-│   │   └── insights/           # AI synthesis view
-│   ├── api/                    # REST API endpoints
-│   │   ├── articles/           # Article CRUD + save/PDF ingestion
-│   │   ├── rooms/              # Room CRUD + export
-│   │   ├── chat/               # AI chat (Google Gemini)
-│   │   ├── dictionary/         # Word lookup
-│   │   ├── search/             # Global search
-│   │   ├── user/               # User profile
-│   │   ├── vault/              # Vocabulary vault entries
-│   │   └── webhooks/clerk/     # Clerk user sync
-│   ├── read/[id]/              # Full article reader
-│   ├── onboarding/             # Post sign-up onboarding
-│   ├── sign-in/ sign-up/       # Clerk auth pages
-│   └── page.tsx                # Public landing page
-│
-├── components/                 # Reusable UI components
-│   ├── ui/                     # Base UI primitives (Button, Dialog, etc.)
-│   ├── ArticleCard.tsx
-│   ├── GlobalSearchDialog.tsx
-│   ├── SaveArticleDialog.tsx
-│   ├── CreateRoomDialog.tsx
-│   └── ...
-│
-├── lib/                        # Root-level re-exports (used by @/* alias)
-│   ├── prisma.ts               # Re-exports from src/lib/prisma
-│   ├── store.ts                # Re-exports from src/lib/store
-│   └── utils.ts                # cn() utility
-│
-├── src/lib/                    # Core library code
-│   ├── prisma.ts               # Prisma client singleton
-│   └── store.ts                # Type definitions (Room, Article, Highlight, etc.)
-│
-├── prisma/
-│   └── schema.prisma           # Database schema
-│
-├── proxy.ts                    # Clerk middleware (Next.js 16: named proxy.ts)
-├── docs/                       # Developer documentation
-└── scripts/                    # API smoke tests
-```
-
----
-
-## Authentication flow
-
-All routes are protected by Clerk via `proxy.ts` (the middleware file). Public routes are:
-
-- `/` — landing page
-- `/sign-in`, `/sign-up`
-- `/api/webhooks/clerk`
-
-Every API route starts with `auth()` from `@clerk/nextjs/server`, then looks up the internal `User` record by `clerk_id`. The Clerk webhook at `/api/webhooks/clerk` creates/syncs `User` rows when accounts are created or updated.
-
----
-
-## Database
-
-Six Prisma models: **User → Room → Article → Highlight**, **VaultEntry → VaultTrail**.
-
-All queries are scoped to `user.id` — the internal UUID, not the Clerk `userId`. Pattern used in every API route:
-
-```typescript
-const { userId } = await auth()                          // Clerk ID
-const user = await prisma.user.findUnique({
-  where: { clerk_id: userId }                            // internal User
-})
-const rooms = await prisma.room.findMany({
-  where: { user_id: user.id }                            // scoped to user
-})
-```
-
-See `docs/DATABASE_SETUP.md` for migration and seeding steps.
-
----
-
-## Available scripts
-
-| Command | What it does |
-|---|---|
-| `npm run dev` | Start dev server at localhost:3000 |
-| `npm run build` | Production build (requires real DATABASE_URL) |
-| `npm test` | Run unit tests (using Node's native `node:test` runner) |
-| `npm run api:smoke` | Run API smoke tests (server must be running) |
-| `npm run coverage` | Run unit tests with C8 test coverage reporting |
-| `npx prisma studio` | Open database GUI |
-| `npx prisma migrate dev` | Apply schema changes |
-
----
-
-## Code Quality & CI
-
-The project uses **SonarCloud** for continuous code quality inspection. The configuration is found in `sonar-project.properties`.
-
-- Test coverage is generated via the Node.js native `node:test` framework combined with C8 coverage reporting.
-- Next.js UI components and API route files (`app/**` and `components/**`) are excluded from the test coverage requirements because they require separate E2E testing strategies.
-- To view code smells or coverage metrics, check the SonarCloud Quality Gate dashboard.
-
----
-
-## UI / UX Aesthetic
+## 🎨 UI / UX Aesthetic
 
 The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 - A `0px` border-radius policy on all interactive elements (buttons, inputs, cards).
@@ -167,36 +82,17 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 
 ---
 
-## Features Log (Implemented)
+## ✨ Features Log (Implemented)
 
-1. **Onboarding Flow & Enforcement**:
-   - Multi-step client onboarding flow capturing Name and positive Goals, creating the user's first Room.
-   - Layout-level enforcement restricting access to the dashboard until onboarding is complete.
-   - Development fallback automatically registering the Clerk user in Prisma on database mismatch.
-2. **Room Management & Curated Shelves**:
-   - Create, update name/description, and permanently delete rooms (moving items to library).
-   - Dynamic highlights count aggregated and displayed in the Room view.
-   - Room exporting to Markdown downloads (including articles and highlighted quotes).
-3. **Reader & Wikipedia Concept Lookup**:
-   - Custom memoized selection hook to prevent React 19 re-rendering from clearing highlight selections.
-   - Popover dictionary with Wikipedia REST integration to dynamically fetch definitions, thumbs, and desktop page backlinks.
-4. **Insights Studio Dashboard**:
-   - Stats compiler endpoint (`/api/insights/stats`) calculating reading streak history (current vs longest streak).
-   - 365-day contribution heatmap grid, custom SVG Knowledge Growth line chart, and horizontal active rooms bar chart.
+1. **Dashboard & Extension Integration**: Clean hero layouts with direct instructions for the companion Chrome extension.
+2. **Onboarding Flow & Enforcement**: Multi-step client onboarding flow capturing Name and positive Goals, creating the user's first Room.
+3. **Room Management & Curated Shelves**: Create, update, and permanently delete rooms. Dynamic highlights count and Room Markdown exporting.
+4. **Reader & Vault Concept Lookup**: Custom memoized selection hook to highlight text. Popover dictionary with Wikipedia REST integration to dynamically fetch definitions and save them directly to the Vault for spaced rediscovery.
+5. **Insights Studio Dashboard**: Stats compiler endpoint calculating reading streak history. 365-day contribution heatmap grid, custom SVG Knowledge Growth line chart, and horizontal active rooms bar chart.
+6. **Robust AI Chat**: An intelligent chat assistant to query your saved documents using Google's Gemini SDK.
 
 ---
 
-## Recommended Next Steps for Developers
-
-1. **Vector Search & RAG Integration**:
-   - Connect the AI chat in the **Synthesis Engine** to a vector store (e.g. pgvector) containing chunked article content and highlighted passages.
-2. **Social Reading Rooms**:
-   - Add a collaborative mode to rooms allowing users to invite others, share highlights, and discuss articles.
-3. **Highlight Customizer**:
-   - Allow users to customize highlight colors (e.g. Sage, Crimson, Ochre) and tag highlights with custom metadata.
-
----
-
-## Deployment
+## 🚀 Deployment
 
 Tested for Vercel. The `postinstall` script runs `prisma generate` automatically on deploy. Set all `.env.example` variables in Vercel's environment variables panel. Point your Clerk webhook to your production domain.
