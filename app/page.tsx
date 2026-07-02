@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { ArrowRight, BookOpen, Brain, FolderArchive } from "lucide-react"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
@@ -25,30 +26,6 @@ export default async function LandingPage() {
     redirect("/home")
   }
 
-  // Start with a random fallback quote in case AI generation fails
-  let quote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
-
-  try {
-    const { text } = await generateText({
-      model: google("gemini-2.5-flash"),
-      prompt: "Generate a profound, unique, and culturally diverse quote about reading, books, literature, or libraries. Output exactly in this format: \"[Quote Text]\" - [Author Name]. Do not include any other text.",
-      temperature: 0.9,
-    })
-
-    const match = text.match(/"([^"]+)"\s*-\s*(.+)/)
-    if (match) {
-      quote = { text: match[1], author: match[2] }
-    } else {
-      const parts = text.split("-")
-      if (parts.length >= 2) {
-        quote = { text: parts[0].replace(/"/g, "").trim(), author: parts[1].trim() }
-      }
-    }
-  } catch (error) {
-    console.error("Failed to generate AI quote:", error)
-    // Silently fall back to the pre-selected random quote
-  }
-
   return (
     <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
@@ -60,6 +37,9 @@ export default async function LandingPage() {
           backgroundPosition: "center",
         }}
       />
+      {/* Subtle Grain Texture Overlay */}
+      <div className="absolute inset-0 z-0 mix-blend-overlay opacity-20 pointer-events-none" style={{ backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')", backgroundRepeat: 'repeat' }} />
+      
       {/* Dark Overlay to ensure white text readability */}
       <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[4px]" />
 
@@ -125,12 +105,15 @@ export default async function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative z-10">
               <BookOpen className="w-6 h-6 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-6" />
-              <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6">
-                &ldquo;{quote.text}&rdquo;
-              </blockquote>
-              <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold">
-                {quote.author}
-              </p>
+              <Suspense fallback={
+                <div className="animate-pulse flex flex-col gap-4">
+                  <div className="h-6 bg-gray-200 rounded w-full"></div>
+                  <div className="h-6 bg-gray-200 rounded w-5/6 mb-4"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              }>
+                <DynamicQuote />
+              </Suspense>
             </div>
           </div>
 
@@ -175,5 +158,40 @@ export default async function LandingPage() {
       </footer>
       </div>
     </div>
+  )
+}
+
+async function DynamicQuote() {
+  let quote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
+
+  try {
+    const { text } = await generateText({
+      model: google("gemini-2.5-flash"),
+      prompt: "Generate a profound, unique, and culturally diverse quote about reading, books, literature, or libraries. Output exactly in this format: \"[Quote Text]\" - [Author Name]. Do not include any other text.",
+      temperature: 0.9,
+    })
+
+    const match = text.match(/"([^"]+)"\s*-\s*(.+)/)
+    if (match) {
+      quote = { text: match[1], author: match[2] }
+    } else {
+      const parts = text.split("-")
+      if (parts.length >= 2) {
+        quote = { text: parts[0].replace(/"/g, "").trim(), author: parts[1].trim() }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to generate AI quote:", error)
+  }
+
+  return (
+    <>
+      <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6 animate-in fade-in duration-1000">
+        &ldquo;{quote.text}&rdquo;
+      </blockquote>
+      <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold animate-in fade-in duration-1000 delay-150">
+        {quote.author}
+      </p>
+    </>
   )
 }
