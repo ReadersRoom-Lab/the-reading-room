@@ -1,6 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { TypewriterLogo } from "@/components/TypewriterLogo";
 
 export default function SignInPage() {
   return (
@@ -21,7 +22,7 @@ export default function SignInPage() {
         <div className="absolute top-8 left-8 z-20">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-white/70 hover:text-white transition-colors drop-shadow-md"
+            className="inline-flex items-center gap-2 font-sans text-sm font-medium bg-black/40 hover:bg-black/60 text-white px-4 py-2 backdrop-blur-sm border border-white/10 transition-colors drop-shadow-md"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -30,14 +31,7 @@ export default function SignInPage() {
 
         {/* Logo in center */}
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="flex flex-col items-start leading-[1.1]">
-            <span className="animate-typing-1 font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl">
-              The
-            </span>
-            <span className="animate-typing-2 font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl pr-2">
-              Reading Room
-            </span>
-          </div>
+          <TypewriterLogo />
         </div>
       </div>
 
