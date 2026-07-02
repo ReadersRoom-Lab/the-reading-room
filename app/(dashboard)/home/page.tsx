@@ -39,6 +39,21 @@ export default async function Home() {
         <p className="font-sans text-sm text-[#747878]">Here is what awaits your attention.</p>
       </div>
 
+      {/* Extension Promo */}
+      <section className="bg-[#1A1A1A] text-white p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <h2 className="font-heading text-2xl font-bold mb-2 text-[#F9F7F2]">The Reading Room Extension</h2>
+          <p className="font-sans text-sm text-[#BDBDBD] max-w-xl leading-relaxed">
+            Save articles directly from your browser. Bypasses paywalls and anti-bot protections by saving exactly what you see.
+          </p>
+        </div>
+        <div className="flex-shrink-0">
+          <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-6 py-3 text-sm font-bold tracking-[0.05em] uppercase hover:bg-[#F9F7F2] transition-colors whitespace-nowrap">
+            View Instructions
+          </Link>
+        </div>
+      </section>
+
       {/* Today's Rediscovery */}
       <section>
         <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5 flex items-center gap-2">
