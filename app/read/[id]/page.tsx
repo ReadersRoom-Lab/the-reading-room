@@ -17,6 +17,7 @@ import { DictionaryPopover } from "@/components/DictionaryPopover"
 import { ConceptSlideOver } from "@/components/ConceptSlideOver"
 import { TextSelectionMenu } from "@/components/TextSelectionMenu"
 import { EditHighlightPopover } from "@/components/EditHighlightPopover"
+import { ExportArticleButton } from "@/components/ExportArticleButton"
 import { logger } from '@/lib/logger'
 
 type HighlightType = {
@@ -333,8 +334,7 @@ export default function ReaderPage() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button variant="secondary" size="sm" onClick={() => setShowAnnotate(!showAnnotate)}>
-          </Button>
+          <ExportArticleButton articleId={article.id} articleTitle={article.title} />
         </div>
       </header>
 
