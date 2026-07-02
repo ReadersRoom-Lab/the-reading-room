@@ -177,6 +177,9 @@ export async function POST(req: Request) {
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {
     logger.error('Error saving article:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    const err = error as Error
+    // Return the actual error message to the client instead of a generic 500
+    const errorMessage = err.message || 'Internal Server Error'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
