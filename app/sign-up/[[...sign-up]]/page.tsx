@@ -6,7 +6,7 @@ import { DustMotes } from "@/components/DustMotes";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex w-full bg-[#F9F7F2]">
+    <div className="h-[100dvh] overflow-hidden flex w-full bg-[#1A1A1A]">
       {/* Left Side: Animated Background (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden bg-[#1A1A1A]">
         <div 
@@ -38,19 +38,19 @@ export default function SignUpPage() {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col bg-[#F9F7F2] relative z-20 shadow-2xl">
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col bg-[#1A1A1A] relative z-20 border-l border-white/10 overflow-y-auto">
         {/* Mobile Header */}
-        <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
-          <Link href="/" className="font-heading text-xl font-bold text-[#1A1A1A]">
+        <header className="lg:hidden px-6 py-6 border-b border-white/10 flex items-center justify-between">
+          <Link href="/" className="font-heading text-xl font-bold text-[#FDFBF7]">
             The Reading Rooms
           </Link>
-          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#747878]">
+          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-gray-400">
             <ArrowLeft className="w-4 h-4" />
             Back
           </Link>
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12">
+        <main className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 min-h-[max-content]">
           <div className="w-full max-w-[400px]">
 
           <SignUp
@@ -59,19 +59,19 @@ export default function SignUpPage() {
               elements: {
                 rootBox: "w-full",
                 card: "w-full shadow-none bg-transparent m-0 p-0",
-                headerTitle: "font-heading text-2xl font-bold text-[#1A1A1A]",
-                headerSubtitle: "font-sans text-sm text-[#747878]",
-                socialButtonsBlockButton: "rounded-none border border-[#E5E5E5] bg-white text-[#1A1A1A] font-sans font-medium hover:bg-gray-50 transition-colors shadow-none",
+                headerTitle: "font-heading text-2xl font-bold text-[#FDFBF7]",
+                headerSubtitle: "font-sans text-sm text-gray-400",
+                socialButtonsBlockButton: "rounded-none border border-white/20 bg-transparent text-[#FDFBF7] font-sans font-medium hover:bg-white/5 transition-colors shadow-none",
                 socialButtonsBlockButtonText: "font-sans font-semibold text-sm",
-                dividerLine: "bg-[#E5E5E5]",
-                dividerText: "font-sans text-xs text-[#BDBDBD] uppercase tracking-widest",
-                formFieldLabel: "font-sans text-xs font-bold uppercase tracking-wider text-[#1A1A1A]",
-                formFieldInput: "rounded-none border-[#BDBDBD] bg-white focus:border-[#1A1A1A] focus:ring-[#1A1A1A] font-sans text-sm",
-                formButtonPrimary: "rounded-none bg-[#1A1A1A] text-[#F9F7F2] font-sans font-semibold hover:bg-black transition-colors shadow-none py-3 text-sm",
-                footerActionText: "font-sans text-sm text-[#747878]",
-                footerActionLink: "font-sans text-sm font-semibold text-[#1A1A1A] hover:text-black",
-                identityPreviewText: "font-sans text-sm font-semibold text-[#1A1A1A]",
-                identityPreviewEditButtonIcon: "text-[#747878] hover:text-[#1A1A1A]"
+                dividerLine: "bg-white/20",
+                dividerText: "font-sans text-xs text-gray-500 uppercase tracking-widest",
+                formFieldLabel: "font-sans text-xs font-bold uppercase tracking-wider text-gray-400",
+                formFieldInput: "rounded-none border-white/20 bg-transparent text-white focus:border-[#FDFBF7] focus:ring-[#FDFBF7] font-sans text-sm",
+                formButtonPrimary: "rounded-none bg-[#FDFBF7] text-[#1A1A1A] font-sans font-bold hover:bg-white transition-colors shadow-none py-3 text-sm",
+                footerActionText: "font-sans text-sm text-gray-400",
+                footerActionLink: "font-sans text-sm font-bold text-[#FDFBF7] hover:text-white",
+                identityPreviewText: "font-sans text-sm font-semibold text-[#FDFBF7]",
+                identityPreviewEditButtonIcon: "text-gray-400 hover:text-white"
               },
             }}
           />
