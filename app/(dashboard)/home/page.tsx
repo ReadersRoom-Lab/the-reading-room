@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
-import { Bookmark, RefreshCw } from 'lucide-react'
+import { Bookmark, RefreshCw, BookOpen, Highlighter, Library, Layout } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { RefreshButton } from './RefreshButton'
 
@@ -129,6 +129,59 @@ export default async function Home() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="text-[#BDBDBD] font-sans text-sm tracking-widest text-center mt-6">───</div>
+
+      {/* How to use */}
+      <section>
+        <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5">
+          How to Use The Reading Room
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
+            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
+              <Library className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">1. Build Your Library</h3>
+            <p className="font-sans text-sm text-[#747878] leading-relaxed">
+              Use the Chrome Extension to save web articles with one click, bypassing paywalls. You can also manually upload PDFs or paste URLs.
+            </p>
+          </div>
+
+          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
+            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
+              <Highlighter className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">2. Read & Annotate</h3>
+            <p className="font-sans text-sm text-[#747878] leading-relaxed">
+              Experience a minimalist, editorial reader. Highlight important passages, add personal notes, and categorize them by tags.
+            </p>
+          </div>
+
+          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
+            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
+              <BookOpen className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">3. Grow Your Vault</h3>
+            <p className="font-sans text-sm text-[#747878] leading-relaxed">
+              Select any unfamiliar word or concept while reading to look up its definition. It is automatically saved to your Vault for spaced rediscovery.
+            </p>
+          </div>
+
+          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
+            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
+              <Layout className="w-4 h-4" />
+            </div>
+            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">4. Organize into Rooms</h3>
+            <p className="font-sans text-sm text-[#747878] leading-relaxed">
+              Curate your knowledge by grouping related articles into thematic Rooms. Perfect for research projects or specific areas of interest.
+            </p>
+          </div>
+
         </div>
       </section>
     </div>
