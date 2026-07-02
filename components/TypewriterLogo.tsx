@@ -11,17 +11,19 @@ export function TypewriterLogo() {
 
   useEffect(() => {
     if (typedChars < fullText.length) {
-      const timeout = setTimeout(() => setTypedChars(prev => prev + 1), 70)
+      const timeout = setTimeout(() => setTypedChars(prev => prev + 1), 120)
       return () => clearTimeout(timeout)
     }
   }, [typedChars, fullText.length])
 
   const showCursor = (lineIndex: number, lineLength: number, startIndex: number) => {
-    const isTypingThisLine = typedChars >= startIndex && typedChars <= startIndex + lineLength;
-    const isFinished = typedChars === fullText.length;
+    if (typedChars === fullText.length) return false; // Hide cursor when finished
     
-    if (lineIndex === 2 && isFinished) return true; // Keep blinking on last line
-    return isTypingThisLine && typedChars !== fullText.length || (lineIndex === 2 && isFinished);
+    if (lineIndex < 2) {
+      return typedChars >= startIndex && typedChars < startIndex + lineLength;
+    } else {
+      return typedChars >= startIndex && typedChars <= startIndex + lineLength;
+    }
   }
 
   const renderLine = (text: string, startIndex: number, lineIndex: number) => {
