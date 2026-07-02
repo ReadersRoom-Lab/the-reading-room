@@ -15,23 +15,37 @@ export default function SignInPage() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 z-10 bg-black/10" />
+        <div className="absolute inset-0 z-10 bg-black/30" />
+        
+        {/* Back Button over image */}
+        <div className="absolute top-8 left-8 z-20">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-white/70 hover:text-white transition-colors drop-shadow-md"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Link>
+        </div>
+
+        {/* Logo in center */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+          <div className="animate-typing pr-2">
+            <h1 className="font-heading text-5xl xl:text-6xl font-bold text-white drop-shadow-xl">
+              The Reading Room
+            </h1>
+          </div>
+        </div>
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col">
-        {/* Header */}
-        <header className="px-8 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
-          <Link
-            href="/"
-            className="font-heading text-xl font-bold text-[#1A1A1A] hover:text-[#333] transition-colors"
-          >
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col bg-white">
+        {/* Mobile Header */}
+        <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
+          <Link href="/" className="font-heading text-xl font-bold text-[#1A1A1A]">
             The Reading Room
           </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#747878] hover:text-[#1A1A1A] transition-colors"
-          >
+          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#747878]">
             <ArrowLeft className="w-4 h-4" />
             Back
           </Link>
