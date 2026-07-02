@@ -91,7 +91,7 @@ export default function SignUpPage() {
                   textTransform: 'uppercase',
                   fontWeight: '600'
                 },
-                formFieldInput: { backgroundColor: 'rgba(0, 0, 0, 0.2)', color: '#FDFBF7', border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.2)' },
+                formFieldInput: { color: '#FDFBF7' },
                 formButtonPrimary: { backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#111111', border: 'none', borderRadius: '0px', fontWeight: 'bold' },
                 socialButtonsBlockButton: { color: '#FDFBF7', border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0px' },
                 socialButtonsBlockButtonText: { color: '#FDFBF7', fontWeight: '500' },
