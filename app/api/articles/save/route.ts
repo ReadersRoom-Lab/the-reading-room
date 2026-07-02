@@ -5,6 +5,7 @@ import { JSDOM } from 'jsdom'
 import { Readability } from '@mozilla/readability'
 import DOMPurify from 'isomorphic-dompurify'
 import { logger } from '@/lib/logger'
+import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
@@ -148,6 +149,30 @@ export async function POST(req: Request) {
         reading_progress: 0,
       }
     })
+
+    // --- Vector Search & RAG: Generate Embeddings ---
+    try {
+      const textChunks = chunkText(textContent, 1000)
+      if (textChunks.length > 0) {
+        const embeddings = await generateEmbeddings(textChunks)
+        
+        for (let i = 0; i < textChunks.length; i++) {
+          const chunk = textChunks[i]
+          const embedding = embeddings[i]
+          
+          if (embedding && embedding.length > 0) {
+            const embeddingString = `[${embedding.join(',')}]`
+            await prisma.$executeRaw`
+              INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
+              VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
+            `
+          }
+        }
+      }
+    } catch (embedError) {
+      logger.error('Failed to generate embeddings for article:', embedError)
+      // We don't fail the save if embeddings fail, just log it.
+    }
 
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {

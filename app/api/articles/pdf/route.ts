@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma'
 import { PDFParse } from 'pdf-parse'
 import DOMPurify from 'isomorphic-dompurify'
 import { logger } from '@/lib/logger'
+import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
 export async function POST(req: Request) {
   try {
@@ -77,6 +78,29 @@ export async function POST(req: Request) {
         reading_progress: 0,
       }
     })
+
+    // --- Vector Search & RAG: Generate Embeddings ---
+    try {
+      const textChunks = chunkText(textContent, 1000)
+      if (textChunks.length > 0) {
+        const embeddings = await generateEmbeddings(textChunks)
+        
+        for (let i = 0; i < textChunks.length; i++) {
+          const chunk = textChunks[i]
+          const embedding = embeddings[i]
+          
+          if (embedding && embedding.length > 0) {
+            const embeddingString = `[${embedding.join(',')}]`
+            await prisma.$executeRaw`
+              INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
+              VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
+            `
+          }
+        }
+      }
+    } catch (embedError) {
+      logger.error('Failed to generate embeddings for PDF article:', embedError)
+    }
 
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {

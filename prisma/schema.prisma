@@ -1,9 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 model User {
@@ -59,9 +61,21 @@ model Article {
   updated_at        DateTime     @updatedAt
   highlights        Highlight[]
   vaultTrails       VaultTrail[]
+  chunks            ArticleChunk[]
 
   @@index([user_id])
   @@index([room_id])
+}
+
+model ArticleChunk {
+  id         String   @id @default(uuid())
+  article_id String
+  article    Article  @relation(fields: [article_id], references: [id], onDelete: Cascade)
+  content    String
+  embedding  Unsupported("vector(768)")
+  created_at DateTime @default(now())
+
+  @@index([article_id])
 }
 
 model Highlight {
