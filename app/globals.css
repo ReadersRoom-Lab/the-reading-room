@@ -589,17 +589,17 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .auth-container .cl-formFieldInput {
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
   color: #FDFBF7 !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 0px !important;
   transition: all 0.2s ease-in-out !important;
 }
 
 .auth-container .cl-formFieldInput:focus {
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  background-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  border-color: #C4A882 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 0 0 0 1px #C4A882 !important;
 }
 
 /* Fix Chrome autofill turning inputs white in dark mode */
