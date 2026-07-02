@@ -610,3 +610,30 @@
   -webkit-text-fill-color: #FDFBF7 !important;
   transition: background-color 9999s ease-in-out 0s !important;
 }
+
+/* Film Grain / Noise Overlay for Auth */
+.auth-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: overlay;
+}
+
+/* Gold hover states for links */
+.auth-container .cl-formFieldAction,
+.auth-container .cl-footerActionLink {
+  color: #BDBDBD !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.auth-container .cl-formFieldAction:hover,
+.auth-container .cl-footerActionLink:hover {
+  color: #C4A882 !important;
+  text-shadow: 0 0 8px rgba(196, 168, 130, 0.4) !important;
+}
+
