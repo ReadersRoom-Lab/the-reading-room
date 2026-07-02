@@ -24,9 +24,17 @@ export function GlobalSearchDialog() {
     concepts: Record<string, string>[]
   }>({ articles: [], rooms: [], concepts: [] })
   
+  const [isMac, setIsMac] = useState(true)
+  const [mounted, setMounted] = useState(false)
+  
   const router = useRouter()
 
   useEffect(() => {
+    setMounted(true)
+    if (typeof window !== "undefined") {
+      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform))
+    }
+
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -77,7 +85,7 @@ export function GlobalSearchDialog() {
         <Search className="w-3.5 h-3.5 shrink-0" />
         <span className="flex-1 text-left">Search library...</span>
         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-0.5 border border-[#E5E5E5] bg-[#F4F3F3] px-1.5 font-mono text-[10px] font-medium text-[#747878]">
-          <span className="text-xs">⌘</span>K
+          <span className="text-xs">{mounted ? (isMac ? "⌘" : "Ctrl") : "⌘"}</span>K
         </kbd>
       </button>
 

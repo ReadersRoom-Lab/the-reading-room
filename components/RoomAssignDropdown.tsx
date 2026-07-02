@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { MoreVertical, Library, Check, Loader2, Trash2, FolderOpen } from "lucide-react"
+import { MoreVertical, Library, Check, Loader2, Trash2, FolderOpen, Plus } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { CreateRoomDialog } from "./CreateRoomDialog"
 
 interface RoomAssignDropdownProps {
   articleId: string
@@ -24,6 +25,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
   const router = useRouter()
   const [rooms, setRooms] = useState<{ id: string, name: string, cover_color: string }[]>([])
   const [loading, setLoading] = useState(false)
+  const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false)
   
   useEffect(() => {
     fetch('/api/rooms').then(res => res.json()).then(data => {
@@ -77,7 +79,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
   }
 
   return (
-    <div onClickCapture={handleClick} onKeyDownCapture={handleClick}>
+    <div onClick={handleClick} onKeyDown={handleClick}>
       <DropdownMenu>
         <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
           <MoreVertical className="w-4 h-4" />
@@ -102,10 +104,20 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
                 {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setIsCreateRoomOpen(true)} className="justify-between cursor-pointer">
+              <div className="flex items-center gap-2">
+                <Plus className="w-4 h-4 text-muted-foreground" />
+                <span>Create New Room</span>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
-            onClick={deleteArticle} 
+            onClick={() => {
+              // Base-ui uses onClick.
+              deleteArticle();
+            }} 
             className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
@@ -121,6 +133,18 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           )}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <CreateRoomDialog 
+        open={isCreateRoomOpen} 
+        onOpenChange={setIsCreateRoomOpen} 
+        hideTrigger 
+        onSuccess={() => {
+          // Re-fetch rooms when a new one is created
+          fetch('/api/rooms').then(res => res.json()).then(data => {
+            if (Array.isArray(data)) setRooms(data)
+          })
+        }}
+      />
     </div>
   )
 }

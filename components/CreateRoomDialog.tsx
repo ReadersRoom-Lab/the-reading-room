@@ -10,9 +10,19 @@ import { toast } from "sonner"
 import { Plus, Loader2 } from "lucide-react"
 import { logger } from '@/lib/logger'
 
-export function CreateRoomDialog() {
+interface CreateRoomDialogProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  hideTrigger?: boolean
+  onSuccess?: () => void
+}
+
+export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setControlledOpen, hideTrigger, onSuccess }: Readonly<CreateRoomDialogProps> = {}) {
   const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen
+  const setOpen = setControlledOpen || setUncontrolledOpen
+
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
@@ -42,6 +52,7 @@ export function CreateRoomDialog() {
       setOpen(false)
       setName("")
       setDescription("")
+      onSuccess?.()
       router.refresh()
     } catch (error) {
       logger.error(error)
@@ -53,10 +64,12 @@ export function CreateRoomDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-sans font-medium transition-colors border border-[#1A1A1A] bg-transparent hover:bg-[#E5E5E5] text-[#1A1A1A] h-9 px-4">
-        <Plus className="w-4 h-4" />
-        Create Room
-      </DialogTrigger>
+      {!hideTrigger && (
+        <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-sans font-medium transition-colors border border-[#1A1A1A] bg-transparent hover:bg-[#E5E5E5] text-[#1A1A1A] h-9 px-4">
+          <Plus className="w-4 h-4" />
+          Create Room
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
         <DialogHeader>
           <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Create a New Room</DialogTitle>
