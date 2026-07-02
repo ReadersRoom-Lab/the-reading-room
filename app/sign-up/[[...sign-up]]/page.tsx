@@ -2,10 +2,11 @@ import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { TypewriterLogo } from "@/components/TypewriterLogo";
+import { DustMotes } from "@/components/DustMotes";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex w-full bg-white">
+    <div className="min-h-screen flex w-full bg-[#F9F7F2]">
       {/* Left Side: Animated Background (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative overflow-hidden bg-[#1A1A1A]">
         <div 
@@ -16,7 +17,8 @@ export default function SignUpPage() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 z-10 bg-black/30" />
+        <div className="absolute inset-0 z-10 bg-black/40" />
+        <DustMotes />
         
         {/* Back Button over image */}
         <div className="absolute top-8 left-8 z-20">
@@ -36,7 +38,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col bg-white">
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col bg-[#F9F7F2] relative z-20 shadow-2xl">
         {/* Mobile Header */}
         <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
           <Link href="/" className="font-heading text-xl font-bold text-[#1A1A1A]">
@@ -53,6 +55,25 @@ export default function SignUpPage() {
 
           <SignUp
             forceRedirectUrl="/onboarding"
+            appearance={{
+              elements: {
+                rootBox: "w-full",
+                card: "w-full shadow-none bg-transparent m-0 p-0",
+                headerTitle: "font-heading text-2xl font-bold text-[#1A1A1A]",
+                headerSubtitle: "font-sans text-sm text-[#747878]",
+                socialButtonsBlockButton: "rounded-none border border-[#E5E5E5] bg-white text-[#1A1A1A] font-sans font-medium hover:bg-gray-50 transition-colors shadow-none",
+                socialButtonsBlockButtonText: "font-sans font-semibold text-sm",
+                dividerLine: "bg-[#E5E5E5]",
+                dividerText: "font-sans text-xs text-[#BDBDBD] uppercase tracking-widest",
+                formFieldLabel: "font-sans text-xs font-bold uppercase tracking-wider text-[#1A1A1A]",
+                formFieldInput: "rounded-none border-[#BDBDBD] bg-white focus:border-[#1A1A1A] focus:ring-[#1A1A1A] font-sans text-sm",
+                formButtonPrimary: "rounded-none bg-[#1A1A1A] text-[#F9F7F2] font-sans font-semibold hover:bg-black transition-colors shadow-none py-3 text-sm",
+                footerActionText: "font-sans text-sm text-[#747878]",
+                footerActionLink: "font-sans text-sm font-semibold text-[#1A1A1A] hover:text-black",
+                identityPreviewText: "font-sans text-sm font-semibold text-[#1A1A1A]",
+                identityPreviewEditButtonIcon: "text-[#747878] hover:text-[#1A1A1A]"
+              },
+            }}
           />
         </div>
       </main>
