@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
   DropdownMenuLabel,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
 import { Progress } from "@/components/ui/progress"
 import { DictionaryPopover } from "@/components/DictionaryPopover"
@@ -310,27 +311,31 @@ export default function ReaderPage() {
               <span>Appearance</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Font Family</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setFontFamily('serif')}>
-                <span className={`font-serif ${fontFamily === 'serif' ? 'font-bold' : ''}`}>Serif</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFontFamily('sans')}>
-                <span className={`font-sans ${fontFamily === 'sans' ? 'font-bold' : ''}`}>Sans-serif</span>
-              </DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Font Family</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => setFontFamily('serif')}>
+                  <span className={`font-serif ${fontFamily === 'serif' ? 'font-bold' : ''}`}>Serif</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFontFamily('sans')}>
+                  <span className={`font-sans ${fontFamily === 'sans' ? 'font-bold' : ''}`}>Sans-serif</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Font Size</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setFontSize('sm')}>
-                <span className={fontSize === 'sm' ? 'font-bold' : ''}>Small</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFontSize('base')}>
-                <span className={fontSize === 'base' ? 'font-bold' : ''}>Medium</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFontSize('lg')}>
-                <span className={fontSize === 'lg' ? 'font-bold' : ''}>Large</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFontSize('xl')}>
-                <span className={fontSize === 'xl' ? 'font-bold' : ''}>Extra Large</span>
-              </DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Font Size</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => setFontSize('sm')}>
+                  <span className={fontSize === 'sm' ? 'font-bold' : ''}>Small</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFontSize('base')}>
+                  <span className={fontSize === 'base' ? 'font-bold' : ''}>Medium</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFontSize('lg')}>
+                  <span className={fontSize === 'lg' ? 'font-bold' : ''}>Large</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFontSize('xl')}>
+                  <span className={fontSize === 'xl' ? 'font-bold' : ''}>Extra Large</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
           
