@@ -40,15 +40,15 @@ export default async function Home() {
       </div>
 
       {/* Extension Promo */}
-      <section className="bg-[#1A1A1A] text-white p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <section className="bg-[#1A1A1A] text-white px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="font-heading text-2xl font-bold mb-2 text-[#F9F7F2]">The Reading Room Extension</h2>
-          <p className="font-sans text-sm text-[#BDBDBD] max-w-xl leading-relaxed">
+          <h2 className="font-heading text-lg font-bold mb-1 text-[#F9F7F2]">The Reading Room Extension</h2>
+          <p className="font-sans text-xs text-[#BDBDBD] max-w-xl leading-relaxed">
             Save articles directly from your browser. Bypasses paywalls and anti-bot protections by saving exactly what you see.
           </p>
         </div>
         <div className="flex-shrink-0">
-          <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-6 py-3 text-sm font-bold tracking-[0.05em] uppercase hover:bg-[#F9F7F2] transition-colors whitespace-nowrap">
+          <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-4 py-2 text-[11px] font-bold tracking-[0.05em] uppercase hover:bg-[#E5E5E5] transition-colors whitespace-nowrap">
             View Instructions
           </Link>
         </div>
