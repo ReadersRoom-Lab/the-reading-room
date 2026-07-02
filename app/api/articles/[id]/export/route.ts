@@ -22,8 +22,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     const article = await prisma.article.findUnique({
       where: { 
-        id: id,
-        user_id: user.id
+        id: id
       },
       include: {
         highlights: true,
@@ -32,15 +31,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             vault_entry: true
           }
         },
-        rooms: {
-          include: {
-            room: true
-          }
-        }
+        room: true
       }
     })
 
-    if (!article) {
+    if (!article || article.user_id !== user.id) {
       return new NextResponse('Article not found', { status: 404 })
     }
 
@@ -48,7 +43,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     if (article.author) markdown += `**Author:** ${article.author}\n`
     markdown += `**Source:** [Link](${article.source_url})\n`
     markdown += `**Saved On:** ${article.created_at.toISOString().split('T')[0]}\n`
-    markdown += `**Rooms:** ${article.rooms.map(r => r.room.name).join(', ') || 'Unorganized'}\n\n`
+    markdown += `**Room:** ${article.room?.name || 'Unorganized'}\n\n`
     
     markdown += `---\n\n`
     

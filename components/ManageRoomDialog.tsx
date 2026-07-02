@@ -84,12 +84,14 @@ export function ManageRoomDialog({ roomId, initialName, initialDescription }: Re
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
-          <Settings className="w-4 h-4" />
-          Manage
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
+            <Settings className="w-4 h-4" />
+            Manage
+          </Button>
+        }
+      />
       <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
         <DialogHeader>
           <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Manage Room Settings</DialogTitle>
