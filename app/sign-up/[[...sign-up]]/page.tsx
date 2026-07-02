@@ -71,11 +71,12 @@ export default function SignUpPage() {
               baseTheme: dark,
               variables: {
                 colorBackground: 'transparent',
-                colorInputBackground: 'transparent',
+                colorInputBackground: 'rgba(0, 0, 0, 0.25)',
                 colorText: '#FDFBF7',
                 colorInputText: '#FDFBF7',
                 colorTextSecondary: '#9ca3af',
                 colorPrimary: '#FDFBF7',
+                borderRadius: '0px',
               },
               elements: {
                 rootBox: "w-full",
@@ -83,6 +84,7 @@ export default function SignUpPage() {
                 footer: { background: 'transparent' },
                 headerTitle: { color: '#FDFBF7', fontFamily: 'var(--font-source-serif)', fontSize: '1.75rem', fontWeight: 'bold', letterSpacing: '-0.02em' },
                 headerSubtitle: { color: '#9ca3af', fontFamily: 'var(--font-inter)', fontSize: '0.875rem' },
+                formFieldRow: { display: 'flex', flexDirection: 'column', gap: '8px' },
                 formFieldLabel: { 
                   color: '#BDBDBD', 
                   fontFamily: 'var(--font-inter)', 
@@ -91,7 +93,7 @@ export default function SignUpPage() {
                   textTransform: 'uppercase',
                   fontWeight: '600'
                 },
-                formFieldInput: { color: '#FDFBF7' },
+                formFieldInput: { color: '#FDFBF7', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: 'none' },
                 formButtonPrimary: { backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#111111', border: 'none', borderRadius: '0px', fontWeight: 'bold' },
                 socialButtonsBlockButton: { color: '#FDFBF7', border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0px' },
                 socialButtonsBlockButtonText: { color: '#FDFBF7', fontWeight: '500' },

@@ -588,43 +588,7 @@
    AUTH PAGES — Premium Editorial Styling
    ═══════════════════════════════════════════════════════════════ */
 
-/* 1. Force spacing between label and input */
-.auth-container .cl-formFieldRow {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-}
-
-/* 2. Style the input wrapper (for password fields with eye icons) */
-.auth-container .cl-formFieldInputGroup {
-  background-color: rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0px !important;
-  box-shadow: none !important;
-  transition: all 0.2s ease !important;
-}
-
-/* 3. Style the input itself (and remove background if inside group) */
-.auth-container .cl-formFieldInput {
-  background-color: rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(12px) !important;
-  color: #FDFBF7 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0px !important;
-  box-shadow: none !important;
-  outline: none !important;
-  transition: all 0.2s ease !important;
-}
-
-/* Prevent double borders/backgrounds when input is wrapped in a group */
-.auth-container .cl-formFieldInputGroup .cl-formFieldInput {
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  border: none !important;
-}
-
-/* 4. Focus states */
+/* Focus states (Clerk elements API doesn't handle hover/focus states easily) */
 .auth-container .cl-formFieldInput:focus,
 .auth-container .cl-formFieldInputGroup:focus-within {
   background-color: rgba(0, 0, 0, 0.4) !important;
