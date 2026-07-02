@@ -75,10 +75,12 @@ export default function SignUpPage() {
                 colorText: '#FDFBF7',
                 colorInputText: '#FDFBF7',
                 colorTextSecondary: '#9ca3af',
+                colorPrimary: '#FDFBF7',
               },
               elements: {
                 rootBox: "w-full",
                 card: { backgroundColor: 'transparent', border: 'none', boxShadow: 'none', padding: '0px' },
+                footer: { background: 'transparent' },
                 headerTitle: { color: '#FDFBF7', fontFamily: 'var(--font-source-serif)', fontSize: '1.5rem', fontWeight: 'bold' },
                 headerSubtitle: { color: '#9ca3af' },
                 formFieldLabel: { color: '#FDFBF7' },
@@ -91,7 +93,9 @@ export default function SignUpPage() {
                 footerActionText: { color: '#9ca3af' },
                 footerActionLink: { color: '#FDFBF7', fontWeight: 'bold' },
                 formFieldInputShowPasswordButton: { color: '#9ca3af' },
+                formFieldAction: { color: '#FDFBF7' },
                 identityPreviewText: { color: '#FDFBF7', fontWeight: 'bold' },
+                identityPreviewEditButtonIcon: { color: '#9ca3af' }
               },
             }}
           />
