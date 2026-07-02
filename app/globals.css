@@ -597,7 +597,22 @@
   border-radius: 0px !important;
   box-shadow: none !important;
   outline: none !important;
+  margin-top: 10px !important; /* Force space away from label */
   transition: all 0.2s ease-in-out !important;
+}
+
+/* Ensure the input itself doesn't squash text */
+.auth-container .cl-formFieldInput {
+  height: auto !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+}
+
+/* Prevent double backgrounds when input is wrapped in a group */
+.auth-container .cl-formFieldInputGroup .cl-formFieldInput {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  margin-top: 0 !important;
 }
 
 .auth-container .cl-formFieldInput:focus,
@@ -606,13 +621,7 @@
   border-bottom: 1px solid #C4A882 !important;
 }
 
-/* Fix label spacing by targeting the raw label tag */
-.auth-container label {
-  padding-bottom: 12px !important;
-  display: block !important;
-  margin-bottom: 0 !important;
-}
-
+/* Remove label spacing overrides to prevent breaking Clerk layout */
 .auth-container .cl-formFieldRow {
   display: flex !important;
   flex-direction: column !important;
