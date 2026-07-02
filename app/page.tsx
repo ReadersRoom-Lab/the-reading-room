@@ -4,12 +4,24 @@ import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"
 
+const QUOTES = [
+  { text: "A library is not a luxury but one of the necessities of life.", author: "Henry Ward Beecher" },
+  { text: "Reading is to the mind what exercise is to the body.", author: "Joseph Addison" },
+  { text: "The reading of all good books is like conversation with the finest men of past centuries.", author: "René Descartes" },
+  { text: "Some books leave us free and some books make us free.", author: "Ralph Waldo Emerson" },
+  { text: "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.", author: "Haruki Murakami" },
+]
+
 export default async function LandingPage() {
   const { userId } = await auth()
 
   if (userId) {
     redirect("/home")
   }
+
+  // Select a random quote for this render
+  const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)]
+
   return (
     <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
@@ -87,10 +99,10 @@ export default async function LandingPage() {
             <div className="relative z-10">
               <BookOpen className="w-6 h-6 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-6" />
               <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6">
-                &ldquo;A library is not a luxury but one of the necessities of life.&rdquo;
+                &ldquo;{quote.text}&rdquo;
               </blockquote>
               <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold">
-                Henry Ward Beecher
+                {quote.author}
               </p>
             </div>
           </div>
