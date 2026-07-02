@@ -172,8 +172,8 @@ export default function ReaderPage() {
     }
 
     const onClickContainer = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (target.tagName === 'MARK' && target.hasAttribute('data-highlight-id')) {
+      const target = (e.target as HTMLElement).closest('mark')
+      if (target && target.hasAttribute('data-highlight-id')) {
         const id = target.getAttribute('data-highlight-id')
         const highlight = highlights.find(h => h.id === id)
         if (highlight) {
@@ -182,12 +182,13 @@ export default function ReaderPage() {
           // Clear any active selection so TextSelectionMenu doesn't also appear
           setActiveSelection(null)
           globalThis.getSelection()?.removeAllRanges()
+          return
         }
-      } else {
-        // If they click somewhere else in the article, close the popover
-        if (editingHighlight) {
-          setEditingHighlight(null)
-        }
+      }
+      
+      // If they click somewhere else in the article, close the popover
+      if (editingHighlight) {
+        setEditingHighlight(null)
       }
     }
 
