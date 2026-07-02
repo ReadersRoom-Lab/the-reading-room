@@ -31,17 +31,26 @@ function createPrismaClient(): PrismaClient {
       const adapter = new PrismaPg(pool);
       globalForPrisma.prisma2 = new PrismaCtor({ adapter });
     } else {
-      globalForPrisma.prisma2 = new PrismaCtor();
+      globalForPrisma.prisma2 = new PrismaCtor({
+        datasourceUrl: "postgres://dummy:dummy@dummy:5432/dummy"
+      });
     }
   }
 
   return globalForPrisma.prisma2;
 }
 
-const prisma = createPrismaClient();
+const prisma = new Proxy({} as PrismaClient, {
+  get: (target, prop) => {
+    if (prop === 'then') return undefined; // Prevent Promise chaining issues
+    const client = createPrismaClient();
+    const value = Reflect.get(client, prop);
+    return typeof value === 'function' ? value.bind(client) : value;
+  }
+});
 
 export function getPrisma(): PrismaClient {
-  return prisma;
+  return createPrismaClient();
 }
 
 export default prisma;
