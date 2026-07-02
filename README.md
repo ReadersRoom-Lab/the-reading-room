@@ -90,6 +90,7 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 4. **Reader & Vault Concept Lookup**: Custom memoized selection hook to highlight text. Popover dictionary with Wikipedia REST integration to dynamically fetch definitions and save them directly to the Vault for spaced rediscovery.
 5. **Insights Studio Dashboard**: Stats compiler endpoint calculating reading streak history. 365-day contribution heatmap grid, custom SVG Knowledge Growth line chart, and horizontal active rooms bar chart.
 6. **Robust AI Chat**: An intelligent chat assistant to query your saved documents using Google's Gemini SDK.
+7. **Enhanced UX & Interactions**: OS-aware keyboard shortcuts (e.g., automatically displaying `⌘` or `Ctrl`) and streamlined workflows like creating new rooms directly from the article assignment dropdown without losing context.
 
 ---
 
