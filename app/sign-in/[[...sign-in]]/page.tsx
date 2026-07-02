@@ -22,7 +22,7 @@ export default function SignInPage() {
         <div className="absolute top-8 left-8 z-20">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-sans text-sm font-medium bg-black/40 hover:bg-black/60 text-white px-4 py-2 backdrop-blur-sm border border-white/10 transition-colors drop-shadow-md"
+            className="inline-flex items-center gap-2 font-sans text-sm font-bold text-white hover:text-white/80 transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
           >
             <ArrowLeft className="w-4 h-4" />
             Back

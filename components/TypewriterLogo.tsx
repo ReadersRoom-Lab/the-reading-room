@@ -30,7 +30,7 @@ export function TypewriterLogo() {
     const cursor = showCursor(lineIndex, text.length, startIndex)
     
     return (
-      <div className="flex items-center h-[1.1em] overflow-hidden mt-1">
+      <div className="flex items-center min-h-[1.2em]">
         <span className="font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl tracking-tight">
           {displayedText}
         </span>
@@ -42,7 +42,7 @@ export function TypewriterLogo() {
   }
 
   return (
-    <div className="flex flex-col items-start leading-[1.1]">
+    <div className="flex flex-col items-start gap-2">
       {renderLine(line1, 0, 0)}
       {renderLine(line2, line1.length, 1)}
       {renderLine(line3, line1.length + line2.length, 2)}
