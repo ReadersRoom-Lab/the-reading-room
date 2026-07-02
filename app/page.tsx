@@ -21,7 +21,7 @@ export default async function LandingPage() {
       <div 
         className="absolute inset-0 z-0 animate-kenburns opacity-70" 
         style={{
-          backgroundImage: "url('/library_art_1.png')",
+          backgroundImage: "url('/library_bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
