@@ -1,23 +1,10 @@
 import Link from "next/link"
-import { Suspense } from "react"
 import { ArrowRight, BookOpen, Brain, FolderArchive } from "lucide-react"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"
+import { StreamingQuote } from "@/components/StreamingQuote"
 
-import { generateText } from "ai"
-import { google } from "@ai-sdk/google"
-
-const FALLBACK_QUOTES = [
-  { text: "A library is not a luxury but one of the necessities of life.", author: "Henry Ward Beecher" },
-  { text: "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.", author: "Haruki Murakami" },
-  { text: "A book is like a garden carried in the pocket.", author: "Chinese Proverb" },
-  { text: "I have always imagined that Paradise will be a kind of library.", author: "Jorge Luis Borges" },
-  { text: "To read a poem is to hear it with our eyes; to hear it is to see it with our ears.", author: "Octavio Paz" },
-  { text: "A book is a version of the world. If you do not like it, ignore it; or offer your own version in return.", author: "Salman Rushdie" },
-  { text: "Once you learn to read, you will be forever free.", author: "Frederick Douglass" },
-  { text: "There are worse crimes than burning books. One of them is not reading them.", author: "Joseph Brodsky" },
-]
 
 export default async function LandingPage() {
   const { userId } = await auth()
@@ -105,15 +92,7 @@ export default async function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative z-10">
               <BookOpen className="w-6 h-6 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-6" />
-              <Suspense fallback={
-                <div className="animate-pulse flex flex-col gap-4">
-                  <div className="h-6 bg-gray-200 rounded w-full"></div>
-                  <div className="h-6 bg-gray-200 rounded w-5/6 mb-4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/3"></div>
-                </div>
-              }>
-                <DynamicQuote />
-              </Suspense>
+              <StreamingQuote />
             </div>
           </div>
 
@@ -158,40 +137,5 @@ export default async function LandingPage() {
       </footer>
       </div>
     </div>
-  )
-}
-
-async function DynamicQuote() {
-  let quote = FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
-
-  try {
-    const { text } = await generateText({
-      model: google("gemini-2.5-flash"),
-      prompt: "Generate a profound, unique, and culturally diverse quote about reading, books, literature, or libraries. Output exactly in this format: \"[Quote Text]\" - [Author Name]. Do not include any other text.",
-      temperature: 0.9,
-    })
-
-    const match = text.match(/"([^"]+)"\s*-\s*(.+)/)
-    if (match) {
-      quote = { text: match[1], author: match[2] }
-    } else {
-      const parts = text.split("-")
-      if (parts.length >= 2) {
-        quote = { text: parts[0].replace(/"/g, "").trim(), author: parts[1].trim() }
-      }
-    }
-  } catch (error) {
-    console.error("Failed to generate AI quote:", error)
-  }
-
-  return (
-    <>
-      <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6 animate-in fade-in duration-1000">
-        &ldquo;{quote.text}&rdquo;
-      </blockquote>
-      <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold animate-in fade-in duration-1000 delay-150">
-        {quote.author}
-      </p>
-    </>
   )
 }
