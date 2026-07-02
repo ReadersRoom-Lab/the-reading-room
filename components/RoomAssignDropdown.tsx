@@ -79,60 +79,62 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
   }
 
   return (
-    <div onClick={handleClick} onKeyDown={handleClick}>
-      <DropdownMenu>
-        <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
-          <MoreVertical className="w-4 h-4" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider font-semibold">Move to Room</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => assignRoom(null)} className="justify-between cursor-pointer">
-              <div className="flex items-center gap-2">
-                <Library className="w-4 h-4 text-muted-foreground" />
-                <span>No Room (Library)</span>
-              </div>
-              {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
-            </DropdownMenuItem>
-            {rooms.map(room => (
-              <DropdownMenuItem key={room.id} onClick={() => assignRoom(room.id)} className="justify-between cursor-pointer">
-                <div className="flex items-center gap-2">
-                  <FolderOpen className="w-4 h-4 text-muted-foreground" />
-                  <span>{room.name}</span>
-                </div>
-                {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setIsCreateRoomOpen(true)} className="justify-between cursor-pointer">
-              <div className="flex items-center gap-2">
-                <Plus className="w-4 h-4 text-muted-foreground" />
-                <span>Create New Room</span>
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem 
-            onClick={() => {
-              // Base-ui uses onClick.
-              deleteArticle();
-            }} 
-            className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"
-          >
-            <Trash2 className="w-4 h-4" />
-            <span>Delete Document</span>
-          </DropdownMenuItem>
-          {loading && (
-            <>
+    <>
+      <div onClick={handleClick} onKeyDown={handleClick}>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
+            <MoreVertical className="w-4 h-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider font-semibold">Move to Room</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <div className="p-2 flex items-center justify-center text-muted-foreground text-xs">
-                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Working...
-              </div>
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+              <DropdownMenuItem onClick={() => assignRoom(null)} className="justify-between cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <Library className="w-4 h-4 text-muted-foreground" />
+                  <span>No Room (Library)</span>
+                </div>
+                {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
+              </DropdownMenuItem>
+              {rooms.map(room => (
+                <DropdownMenuItem key={room.id} onClick={() => assignRoom(room.id)} className="justify-between cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <FolderOpen className="w-4 h-4 text-muted-foreground" />
+                    <span>{room.name}</span>
+                  </div>
+                  {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setIsCreateRoomOpen(true)} className="justify-between cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-muted-foreground" />
+                  <span>Create New Room</span>
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              onClick={() => {
+                // Base-ui uses onClick.
+                deleteArticle();
+              }} 
+              className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Delete Document</span>
+            </DropdownMenuItem>
+            {loading && (
+              <>
+                <DropdownMenuSeparator />
+                <div className="p-2 flex items-center justify-center text-muted-foreground text-xs">
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" /> Working...
+                </div>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
       <CreateRoomDialog 
         open={isCreateRoomOpen} 
@@ -145,6 +147,6 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           })
         }}
       />
-    </div>
+    </>
   )
 }
