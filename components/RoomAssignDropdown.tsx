@@ -73,15 +73,22 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
     }
   }
 
-  const handleClick = (e: React.SyntheticEvent) => {
-    e.preventDefault()
+  const handleInteraction = (e: React.SyntheticEvent) => {
+    // Always stop React event bubbling so the parent <Link> doesn't trigger
     e.stopPropagation()
+    
+    // Only prevent native default (which breaks typing in inputs or form submissions)
+    // if the event originated from WITHIN the physical DOM of this div.
+    // Portals (like the Dropdown content and Dialog content) exist outside this div in the DOM,
+    // so we don't need to preventDefault for them, because they aren't natively inside the <a> tag.
+    if (e.currentTarget.contains(e.target as Node)) {
+      e.preventDefault()
+    }
   }
 
   return (
-    <>
-      <div onClick={handleClick} onKeyDown={handleClick}>
-        <DropdownMenu>
+    <div onClick={handleInteraction} onKeyDown={handleInteraction}>
+      <DropdownMenu>
           <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
             <MoreVertical className="w-4 h-4" />
           </DropdownMenuTrigger>
@@ -134,7 +141,6 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
       <CreateRoomDialog 
         open={isCreateRoomOpen} 
@@ -147,6 +153,6 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           })
         }}
       />
-    </>
+    </div>
   )
 }
