@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { TypewriterLogo } from "@/components/TypewriterLogo";
@@ -67,6 +68,7 @@ export default function SignInPage() {
           <SignIn
             forceRedirectUrl="/home"
             appearance={{
+              baseTheme: dark,
               variables: {
                 colorBackground: 'transparent',
                 colorInputBackground: 'transparent',
