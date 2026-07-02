@@ -9,7 +9,7 @@ import { ManageRoomDialog } from '@/components/ManageRoomDialog'
 import { ArticleCard } from '@/components/ArticleCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default async function RoomViewPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function RoomViewPage({ params }: Readonly<{ params: Promise<{ id: string }> }>) {
   const { id } = await params
   const { userId } = await auth()
   

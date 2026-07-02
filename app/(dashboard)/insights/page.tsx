@@ -137,8 +137,7 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      {activeTab === 'analytics' ? (
-        statsLoading ? (
+      {activeTab === 'analytics' && statsLoading && (
           // Loading Skeletons
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
             <div className="h-32 bg-white border border-[#E5E5E5]"></div>
@@ -148,7 +147,9 @@ export default function InsightsPage() {
             <div className="md:col-span-2 h-72 bg-white border border-[#E5E5E5]"></div>
             <div className="h-72 bg-white border border-[#E5E5E5]"></div>
           </div>
-        ) : (
+      )}
+
+      {activeTab === 'analytics' && !statsLoading && (
           <div className="flex flex-col gap-8 animate-in fade-in duration-300">
             
             {/* Stats Dashboard Grid */}
@@ -217,7 +218,7 @@ export default function InsightsPage() {
               <div className="overflow-x-auto w-full pb-2">
                 <div className="flex gap-[3px] min-w-[700px] justify-between">
                   {heatmapWeeks.map((week, wIdx) => (
-                    <div key={wIdx} className="flex flex-col gap-[3px]">
+                    <div key={week[0]?.dayStr || wIdx} className="flex flex-col gap-[3px]">
                       {week.map((day, dIdx) => {
                         let cellBg = 'bg-[#FCFBF8] border border-[#E5E5E5]'
                         if (day.count === 1) cellBg = 'bg-[#E6C79C]/30 border border-[#E6C79C]/40'
@@ -226,7 +227,7 @@ export default function InsightsPage() {
                         
                         return (
                           <div 
-                            key={dIdx} 
+                            key={day.dayStr} 
                             className={`w-3.5 h-3.5 cursor-pointer transition-colors ${cellBg}`}
                             title={`${day.dayStr}: ${day.count} activities`}
                           />
@@ -292,7 +293,7 @@ export default function InsightsPage() {
                       <div className="flex justify-between w-full text-[10px] text-muted-foreground font-semibold px-4 mt-2">
                         <span>{stats.knowledgeGrowth[0]?.date}</span>
                         <span>{stats.knowledgeGrowth[Math.floor(stats.knowledgeGrowth.length / 2)]?.date}</span>
-                        <span>{stats.knowledgeGrowth[stats.knowledgeGrowth.length - 1]?.date}</span>
+                        <span>{stats.knowledgeGrowth.at(-1)?.date}</span>
                       </div>
                     </div>
                   ) : (
@@ -314,7 +315,7 @@ export default function InsightsPage() {
                       {stats.activeRooms.map((room, idx) => {
                         const widthPct = (room.articleCount / maxRoomArticles) * 100
                         return (
-                          <div key={idx} className="flex flex-col gap-1.5">
+                          <div key={room.name || idx} className="flex flex-col gap-1.5">
                             <div className="flex justify-between text-xs font-semibold text-[#1A1A1A]">
                               <span className="line-clamp-1 max-w-[70%]">{room.name}</span>
                               <span className="text-muted-foreground">{room.articleCount} articles</span>
@@ -338,8 +339,9 @@ export default function InsightsPage() {
             </div>
 
           </div>
-        )
-      ) : (
+      )}
+
+      {activeTab === 'chat' && (
         /* Synthesis Engine AI Chat UI */
         <div className="flex flex-col h-[calc(100vh-14rem)] w-full animate-in fade-in duration-300">
           <ScrollArea className="flex-1 pr-4 mb-4">
@@ -371,7 +373,7 @@ export default function InsightsPage() {
                       {m.role === 'user' ? (
                         <p className="whitespace-pre-wrap">{m.content}</p>
                       ) : (
-                        <div dangerouslySetInnerHTML={{ __html: m.content.replace(/\n/g, '<br/>') }} />
+                        <div dangerouslySetInnerHTML={{ __html: m.content.replaceAll('\n', '<br/>') }} />
                       )}
                     </div>
 

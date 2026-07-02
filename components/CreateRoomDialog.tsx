@@ -17,7 +17,7 @@ export function CreateRoomDialog() {
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     
     if (!name.trim()) {

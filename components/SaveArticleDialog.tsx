@@ -16,7 +16,7 @@ export function SaveArticleDialog() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     
     if (!url && !file) {

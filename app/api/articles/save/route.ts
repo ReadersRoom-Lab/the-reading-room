@@ -62,11 +62,11 @@ async function fetchStandardUrl(url: string) {
 
   let coverImage = null
   const metaTags = doc.window.document.getElementsByTagName('meta')
-  for (let i = 0; i < metaTags.length; i++) {
-    const property = metaTags[i].getAttribute('property')
-    const name = metaTags[i].getAttribute('name')
+  for (const metaTag of Array.from(metaTags)) {
+    const property = metaTag.getAttribute('property')
+    const name = metaTag.getAttribute('name')
     if (property === 'og:image' || name === 'twitter:image') {
-      coverImage = metaTags[i].getAttribute('content')
+      coverImage = metaTag.getAttribute('content')
       break
     }
   }

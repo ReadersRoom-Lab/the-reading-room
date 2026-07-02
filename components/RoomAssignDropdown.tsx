@@ -15,7 +15,12 @@ import {
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
-export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: string, currentRoomId?: string | null }) {
+interface RoomAssignDropdownProps {
+  articleId: string
+  currentRoomId?: string | null
+}
+
+export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAssignDropdownProps>) {
   const router = useRouter()
   const [rooms, setRooms] = useState<{ id: string, name: string, cover_color: string }[]>([])
   const [loading, setLoading] = useState(false)
@@ -66,13 +71,13 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: { articleId: st
     }
   }
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.SyntheticEvent) => {
     e.preventDefault()
     e.stopPropagation()
   }
 
   return (
-    <div onClick={handleClick}>
+    <div onClickCapture={handleClick} onKeyDownCapture={handleClick}>
       <DropdownMenu>
         <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none">
           <MoreVertical className="w-4 h-4" />

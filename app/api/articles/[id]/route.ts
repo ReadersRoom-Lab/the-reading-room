@@ -26,7 +26,7 @@ export async function GET(
       where: { id: id }
     })
 
-    if (!article || article.user_id !== user.id) {
+    if (article?.user_id !== user.id) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 })
     }
 
@@ -63,7 +63,7 @@ export async function PATCH(
       where: { id: id }
     })
 
-    if (!articleCheck || articleCheck.user_id !== user.id) {
+    if (articleCheck?.user_id !== user.id) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 })
     }
 
@@ -110,7 +110,7 @@ export async function DELETE(
       where: { id: id }
     })
 
-    if (!article || article.user_id !== user.id) {
+    if (article?.user_id !== user.id) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 })
     }
 

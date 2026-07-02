@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     const formattedHtml = textContent
       .split('\n\n')
       .filter((p: string) => p.trim().length > 0)
-      .map((p: string) => `<p>${p.replace(/\n/g, ' ')}</p>`)
+      .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
       .join('')
 
     const cleanContent = DOMPurify.sanitize(formattedHtml)

@@ -33,17 +33,15 @@ export async function POST(req: Request) {
       }
     })
 
-    if (!vaultEntry) {
-      vaultEntry = await prisma.vaultEntry.create({
-        data: {
-          user_id: user.id,
-          term,
-          type: type || 'concept',
-          definition: definition || '',
-          user_note
-        }
-      })
-    }
+    vaultEntry ??= await prisma.vaultEntry.create({
+      data: {
+        user_id: user.id,
+        term,
+        type: type || 'concept',
+        definition: definition || '',
+        user_note
+      }
+    })
 
     // Create the trail
     const trail = await prisma.vaultTrail.create({

@@ -24,61 +24,65 @@ export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const submitForm = async () => {
+    if (!formData.roomName.trim()) {
+      setError("Please enter a room name.");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      // 1. Update user profile name
+      const userRes = await fetch("/api/user", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: formData.name }),
+      });
+
+      if (!userRes.ok) {
+        const errData = await userRes.json();
+        throw new Error(errData.error || "Failed to save user name.");
+      }
+
+      // 2. Create the first room
+      const roomRes = await fetch("/api/rooms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.roomName,
+          cover_color: formData.roomColor,
+          description: "My first reading room, created during onboarding.",
+        }),
+      });
+
+      if (!roomRes.ok) {
+        const errData = await roomRes.json();
+        throw new Error(errData.error || "Failed to create your first room.");
+      }
+
+      setError(null);
+      router.push("/");
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred during onboarding.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleNext = async () => {
     if (step < totalSteps) {
       if (step === 1 && !formData.name.trim()) {
         setError("Please enter your name.");
         return;
       }
-      if (step === 2 && (!formData.readingGoal || parseInt(formData.readingGoal) <= 0)) {
+      if (step === 2 && (!formData.readingGoal || Number.parseInt(formData.readingGoal) <= 0)) {
         setError("Please enter a valid reading goal.");
         return;
       }
       setError(null);
       setStep(step + 1);
     } else {
-      if (!formData.roomName.trim()) {
-        setError("Please enter a room name.");
-        return;
-      }
-      setIsLoading(true);
-      setError(null);
-      try {
-        // 1. Update user profile name
-        const userRes = await fetch("/api/user", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: formData.name }),
-        });
-
-        if (!userRes.ok) {
-          const errData = await userRes.json();
-          throw new Error(errData.error || "Failed to save user name.");
-        }
-
-        // 2. Create the first room
-        const roomRes = await fetch("/api/rooms", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: formData.roomName,
-            cover_color: formData.roomColor,
-            description: "My first reading room, created during onboarding.",
-          }),
-        });
-
-        if (!roomRes.ok) {
-          const errData = await roomRes.json();
-          throw new Error(errData.error || "Failed to create your first room.");
-        }
-
-        setError(null);
-        router.push("/");
-      } catch (err: any) {
-        setError(err.message || "An unexpected error occurred during onboarding.");
-      } finally {
-        setIsLoading(false);
-      }
+      await submitForm();
     }
   };
 
@@ -88,6 +92,18 @@ export default function OnboardingPage() {
       setStep(step - 1);
     }
   };
+
+  let buttonContent: React.ReactNode = "Next";
+  if (isLoading) {
+    buttonContent = (
+      <>
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Saving...
+      </>
+    );
+  } else if (step === totalSteps) {
+    buttonContent = "Finish";
+  }
 
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
@@ -181,16 +197,7 @@ export default function OnboardingPage() {
             Back
           </Button>
           <Button onClick={handleNext} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : step === totalSteps ? (
-              "Finish"
-            ) : (
-              "Next"
-            )}
+            {buttonContent}
           </Button>
         </CardFooter>
       </Card>

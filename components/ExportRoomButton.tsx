@@ -11,7 +11,7 @@ interface ExportRoomButtonProps {
   roomName: string
 }
 
-export function ExportRoomButton({ roomId, roomName }: ExportRoomButtonProps) {
+export function ExportRoomButton({ roomId, roomName }: Readonly<ExportRoomButtonProps>) {
   const [exporting, setExporting] = useState(false)
 
   const handleExport = async () => {
@@ -24,13 +24,13 @@ export function ExportRoomButton({ roomId, roomName }: ExportRoomButtonProps) {
       }
       
       const blob = await res.blob()
-      const url = window.URL.createObjectURL(blob)
+      const url = globalThis.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
       a.download = `${roomName.replace(/\s+/g, "_").toLowerCase()}_export.md`
       document.body.appendChild(a)
       a.click()
-      window.URL.revokeObjectURL(url)
+      globalThis.URL.revokeObjectURL(url)
       a.remove()
       
       toast.success("Room exported successfully!")

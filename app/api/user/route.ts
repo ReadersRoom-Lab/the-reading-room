@@ -44,7 +44,17 @@ export async function PATCH(req: Request) {
     where: { clerk_id: userId }
   })
 
-  if (!user) {
+  if (user) {
+    // Only allow updating name and tier for now
+    const allowedData: Record<string, string> = {}
+    if (data.name !== undefined) allowedData.name = data.name
+    if (data.tier !== undefined) allowedData.tier = data.tier
+
+    user = await prisma.user.update({
+      where: { clerk_id: userId },
+      data: allowedData,
+    })
+  } else {
     const clerkUser = await currentUser()
     if (clerkUser) {
       user = await prisma.user.create({
@@ -57,16 +67,6 @@ export async function PATCH(req: Request) {
     } else {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
-  } else {
-    // Only allow updating name and tier for now
-    const allowedData: Record<string, string> = {}
-    if (data.name !== undefined) allowedData.name = data.name
-    if (data.tier !== undefined) allowedData.tier = data.tier
-
-    user = await prisma.user.update({
-      where: { clerk_id: userId },
-      data: allowedData,
-    })
   }
 
   return NextResponse.json(user)

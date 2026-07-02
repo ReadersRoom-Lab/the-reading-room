@@ -19,7 +19,7 @@ export interface ArticleProps {
   }
 }
 
-export function ArticleCard({ article }: ArticleProps) {
+export function ArticleCard({ article }: Readonly<ArticleProps>) {
   let domain = ""
   try {
     domain = new URL(article.source_url).hostname.replace('www.', '')
