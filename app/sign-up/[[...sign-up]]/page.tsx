@@ -77,6 +77,8 @@ export default function SignUpPage() {
                 colorTextSecondary: '#9ca3af',
                 colorPrimary: '#FDFBF7',
                 borderRadius: '0px',
+                fontFamily: 'var(--font-inter)',
+                fontFamilyButtons: 'var(--font-inter)',
               },
               elements: {
                 rootBox: "w-full",
