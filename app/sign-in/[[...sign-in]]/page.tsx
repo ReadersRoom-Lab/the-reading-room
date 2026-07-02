@@ -56,6 +56,13 @@ export default function SignInPage() {
           <SignIn
             forceRedirectUrl="/home"
             appearance={{
+              variables: {
+                colorBackground: 'transparent',
+                colorInputBackground: 'transparent',
+                colorText: '#FDFBF7',
+                colorInputText: '#FDFBF7',
+                colorTextSecondary: '#9ca3af',
+              },
               elements: {
                 rootBox: "w-full",
                 card: "w-full shadow-none bg-transparent m-0 p-0",
