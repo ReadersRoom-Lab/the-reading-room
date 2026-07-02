@@ -589,16 +589,16 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .auth-container .cl-formFieldInput {
-  background-color: transparent !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
   color: #FDFBF7 !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: 0px !important;
   transition: all 0.2s ease-in-out !important;
 }
 
 .auth-container .cl-formFieldInput:focus {
-  border-color: rgba(255, 255, 255, 0.7) !important;
-  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
 }
 
