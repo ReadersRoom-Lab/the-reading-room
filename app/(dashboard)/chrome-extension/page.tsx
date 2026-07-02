@@ -20,9 +20,9 @@ export default function ChromeExtensionPage() {
             <div>
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-2">Open Extension Settings</h3>
               <p className="font-sans text-[#747878] mb-3">Copy and paste this URL into your Chrome address bar:</p>
-              <code className="bg-[#F4F3F3] text-[#1A1A1A] px-3 py-1.5 rounded text-sm font-mono block w-fit">
+              <a href="chrome://extensions/" target="_blank" rel="noopener noreferrer" className="bg-[#F4F3F3] text-[#1A1A1A] px-3 py-1.5 rounded text-sm font-mono block w-fit hover:bg-[#E5E5E5] transition-colors cursor-pointer">
                 chrome://extensions/
-              </code>
+              </a>
             </div>
           </div>
 
