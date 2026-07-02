@@ -82,7 +82,7 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
       </div>
 
       {/* Tabs and Content */}
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="all" className="w-full flex-col">
         <TabsList className="mb-6 bg-transparent border-b border-border rounded-none h-auto p-0 justify-start space-x-8">
           <TabsTrigger value="all" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest">
             All ({room.articles.length})
