@@ -76,6 +76,25 @@ function calculateGrowthData(vaultEntries: { created_at: string | Date }[]) {
   return growthData;
 }
 
+function computeActivity(user: { 
+  articles: { created_at: Date | string }[], 
+  highlights: { created_at: Date | string }[], 
+  vaultEntries: { created_at: Date | string }[] 
+}) {
+  const activityDates: string[] = [];
+
+  user.articles.forEach(a => activityDates.push(format(new Date(a.created_at), 'yyyy-MM-dd')));
+  user.highlights.forEach(h => activityDates.push(format(new Date(h.created_at), 'yyyy-MM-dd')));
+  user.vaultEntries.forEach(v => activityDates.push(format(new Date(v.created_at), 'yyyy-MM-dd')));
+
+  const activityCounts: Record<string, number> = {};
+  activityDates.forEach(date => {
+    activityCounts[date] = (activityCounts[date] || 0) + 1;
+  });
+
+  return { activityDates, activityCounts };
+}
+
 export async function GET() {
   try {
     const { userId } = await auth()
@@ -124,22 +143,7 @@ export async function GET() {
     }
 
     // --- Compute Daily Activity Heatmap ---
-    const activityDates: string[] = []
-
-    user.articles.forEach(a => {
-      activityDates.push(format(new Date(a.created_at), 'yyyy-MM-dd'))
-    })
-    user.highlights.forEach(h => {
-      activityDates.push(format(new Date(h.created_at), 'yyyy-MM-dd'))
-    })
-    user.vaultEntries.forEach(v => {
-      activityDates.push(format(new Date(v.created_at), 'yyyy-MM-dd'))
-    })
-
-    const activityCounts: Record<string, number> = {}
-    activityDates.forEach(date => {
-      activityCounts[date] = (activityCounts[date] || 0) + 1
-    })
+    const { activityDates, activityCounts } = computeActivity(user);
 
     // --- Compute Reading Streaks ---
     const activeDaysSorted = Array.from(new Set(activityDates))
