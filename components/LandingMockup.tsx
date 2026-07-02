@@ -25,15 +25,15 @@ function HighlightAd() {
     : "bg-transparent text-gray-600 border-b-2 border-transparent px-1 rounded transition-colors duration-300";
 
   return (
-    <div className="p-8 pb-10 relative h-full flex flex-col justify-center">
-      <h4 className="font-heading font-bold text-xl text-[#1A1A1A] mb-4">
+    <div className="p-6 relative h-full flex flex-col justify-center">
+      <h4 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">
         The Architecture of Thought
       </h4>
       
-      <p className="font-serif text-sm leading-loose text-gray-600 mb-4 transition-colors">
+      <p className="font-serif text-xs leading-relaxed text-gray-600 mb-2 transition-colors">
         When we interact with complex systems, our minds naturally seek to build <mark className={highlightClass}>structural scaffolding</mark>. This allows us to map new concepts onto existing frameworks.
       </p>
-      <p className="font-serif text-sm leading-loose text-gray-600">
+      <p className="font-serif text-xs leading-relaxed text-gray-600">
         The most effective learning environments are those that <mark className="bg-[#D1D9D3]/40 text-black px-1 rounded border-b-2 border-[#D1D9D3]">encourage active synthesis</mark> rather than passive consumption. By highlighting and annotating, we transform the text into our own context.
       </p>
 
@@ -63,10 +63,10 @@ function AIAd() {
   }, []);
 
   return (
-    <div className="p-8 h-full flex flex-col justify-center relative">
-       <div className="flex items-center gap-3 mb-6">
-          <Sparkles className={cn("w-6 h-6 text-indigo-500 transition-all duration-1000", step > 0 ? "animate-pulse shadow-[0_0_20px_rgba(99,102,241,0.5)]" : "")} />
-          <h4 className="font-heading font-bold text-lg text-indigo-950">AI Knowledge Synthesis</h4>
+    <div className="p-6 h-full flex flex-col justify-center relative">
+       <div className="flex items-center gap-2 mb-4">
+          <Sparkles className={cn("w-5 h-5 text-indigo-500 transition-all duration-1000", step > 0 ? "animate-pulse shadow-[0_0_20px_rgba(99,102,241,0.5)]" : "")} />
+          <h4 className="font-heading font-bold text-base text-indigo-950">AI Knowledge Synthesis</h4>
        </div>
        
        <div className="space-y-4">
@@ -80,7 +80,7 @@ function AIAd() {
              <div className="absolute top-0 left-0 h-full bg-indigo-200 transition-all duration-1000 ease-out delay-300" style={{ width: step > 2 ? '100%' : '0%' }} />
           </div>
        </div>
-       <div className={cn("absolute bottom-8 left-8 right-8 p-4 bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-lg text-sm font-serif italic text-indigo-900 transition-all duration-700", step === 3 ? "opacity-100 translate-y-0 shadow-lg" : "opacity-0 translate-y-4")}>
+       <div className={cn("absolute bottom-6 left-6 right-6 p-3 bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-lg text-xs font-serif italic text-indigo-900 transition-all duration-700", step === 3 ? "opacity-100 translate-y-0 shadow-lg" : "opacity-0 translate-y-4")}>
           "A profound conceptual link was found between your highlights on <b>Philosophy</b> and <b>Quantum Mechanics</b>."
        </div>
     </div>
