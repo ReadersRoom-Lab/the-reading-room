@@ -27,19 +27,18 @@
 
 @keyframes page-transition {
   from { 
-    transform-origin: left center;
-    transform: perspective(2500px) rotateY(40deg) translateX(20px);
+    transform: perspective(2000px) rotateY(90deg);
     opacity: 0; 
   }
   to { 
-    transform-origin: left center;
-    transform: perspective(2500px) rotateY(0deg) translateX(0);
+    transform: perspective(2000px) rotateY(0deg);
     opacity: 1; 
   }
 }
 
 .animate-page-transition {
-  animation: page-transition 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: page-transition 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform-origin: left center;
 }
 
 @keyframes typing {
