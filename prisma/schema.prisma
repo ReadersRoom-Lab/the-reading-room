@@ -72,7 +72,7 @@ model ArticleChunk {
   article_id String
   article    Article  @relation(fields: [article_id], references: [id], onDelete: Cascade)
   content    String
-  embedding  Unsupported("vector(768)")
+  embedding  Unsupported("vector(3072)")
   created_at DateTime @default(now())
 
   @@index([article_id])
