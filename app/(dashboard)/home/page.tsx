@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { Bookmark, RefreshCw } from 'lucide-react'
+import { formatDistanceToNow } from 'date-fns'
 
 export default async function Home() {
   const { userId } = await auth()
@@ -12,6 +13,22 @@ export default async function Home() {
     orderBy: { updated_at: 'desc' },
     take: 2
   }) : []
+
+  const vaultCount = user ? await prisma.vaultEntry.count({ where: { user_id: user.id } }) : 0
+  let randomVaultEntry = null
+  
+  if (vaultCount > 0 && user) {
+    const skip = Math.floor(Math.random() * vaultCount)
+    randomVaultEntry = await prisma.vaultEntry.findFirst({
+      where: { user_id: user.id },
+      skip,
+      include: {
+        vaultTrails: {
+          include: { article: true }
+        }
+      }
+    })
+  }
 
   return (
     <div className="flex flex-col gap-12">
@@ -27,25 +44,35 @@ export default async function Home() {
         <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5 flex items-center gap-2">
           <RefreshCw className="w-3 h-3" /> Today&apos;s Rediscovery
         </h2>
-        <div className="border border-[#E5E5E5] bg-white p-10">
-          <div className="flex justify-between items-start mb-6">
-            <span className="font-sans text-[11px] font-medium px-2 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.1em] uppercase">
-              Vocabulary
-            </span>
-            <span className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase">30 days ago</span>
-          </div>
-          <h3 className="font-heading text-4xl font-bold text-[#1A1A1A] mb-3">schadenfreude</h3>
-          <p className="font-serif text-xl text-[#444748] leading-relaxed mb-8">
-            Pleasure derived by someone from another person&apos;s misfortune.
-          </p>
-          <div className="pt-5 border-t border-[#E5E5E5]">
-            <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878]">
-              {"Encountered in "}
-              <span className="italic font-serif text-[#1A1A1A] text-sm">&quot;The Psychology of Envy&quot;</span>
-              {" › Chapter 4"}
+        {randomVaultEntry ? (
+          <div className="border border-[#E5E5E5] bg-white p-10">
+            <div className="flex justify-between items-start mb-6">
+              <span className="font-sans text-[11px] font-medium px-2 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.1em] uppercase">
+                {randomVaultEntry.type === 'concept' ? 'CONCEPT' : 'VOCABULARY'}
+              </span>
+              <span className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase">
+                {formatDistanceToNow(new Date(randomVaultEntry.created_at), { addSuffix: true })}
+              </span>
+            </div>
+            <h3 className="font-heading text-4xl font-bold text-[#1A1A1A] mb-3">{randomVaultEntry.term}</h3>
+            <p className="font-serif text-xl text-[#444748] leading-relaxed mb-8">
+              {randomVaultEntry.definition}
             </p>
+            {randomVaultEntry.vaultTrails && randomVaultEntry.vaultTrails.length > 0 && (
+              <div className="pt-5 border-t border-[#E5E5E5]">
+                <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878]">
+                  {"Encountered in "}
+                  <span className="italic font-serif text-[#1A1A1A] text-sm">&quot;{randomVaultEntry.vaultTrails[0].article.title}&quot;</span>
+                </p>
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <div className="border border-[#E5E5E5] bg-white p-10 text-center">
+            <p className="font-sans text-sm text-[#747878] mb-4">Your Vault is currently empty.</p>
+            <p className="font-sans text-xs text-[#BDBDBD]">Highlight and define words while reading to build your vocabulary.</p>
+          </div>
+        )}
       </section>
 
       {/* Divider */}
