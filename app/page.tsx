@@ -10,10 +10,22 @@ export default async function LandingPage() {
     redirect("/home")
   }
   return (
-    <div className="min-h-screen bg-[#F9F7F2] flex flex-col w-full">
+    <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#F9F7F2]">
+      {/* Background with subtle animation */}
+      <div 
+        className="absolute inset-0 z-0 animate-kenburns opacity-80" 
+        style={{
+          backgroundImage: "url('/library_bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      {/* Overlay to ensure text readability */}
+      <div className="absolute inset-0 z-0 bg-[#F9F7F2]/75 backdrop-blur-[3px]" />
 
-      {/* Top Navigation Bar */}
-      <header className="border-b border-[#E5E5E5] bg-[#F9F7F2]">
+      <div className="relative z-10 flex-1 flex flex-col w-full">
+        {/* Top Navigation Bar */}
+        <header className="border-b border-[#1A1A1A]/10 bg-transparent">
         <div className="max-w-5xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
           <span className="font-heading text-lg font-semibold text-[#1A1A1A] tracking-tight">
             The Reading Room
@@ -108,7 +120,7 @@ export default async function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#E5E5E5] bg-[#F9F7F2]">
+      <footer className="border-t border-[#1A1A1A]/10 bg-transparent">
         <div className="max-w-5xl mx-auto px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-sans text-xs text-[#747878] tracking-[0.03em]">
             © 2026 The Reading Room
@@ -118,6 +130,7 @@ export default async function LandingPage() {
           </p>
         </div>
       </footer>
+      </div>
     </div>
   )
 }
