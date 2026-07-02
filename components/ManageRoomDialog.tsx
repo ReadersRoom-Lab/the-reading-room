@@ -84,9 +84,11 @@ export function ManageRoomDialog({ roomId, initialName, initialDescription }: Re
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-sans font-medium transition-colors border border-border bg-white hover:bg-[#E5E5E5] text-[#1A1A1A] h-9 px-4 cursor-pointer rounded-none">
-        <Settings className="w-4 h-4" />
-        Manage
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
+          <Settings className="w-4 h-4" />
+          Manage
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
         <DialogHeader>

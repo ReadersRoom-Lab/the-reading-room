@@ -43,7 +43,7 @@ export function ExportRoomButton({ roomId, roomName }: Readonly<ExportRoomButton
   }
 
   return (
-    <Button variant="outline" size="sm" className="gap-2" onClick={handleExport} disabled={exporting}>
+    <Button variant="outline" size="sm" className="gap-2 rounded-none" onClick={handleExport} disabled={exporting}>
       <Download className="w-4 h-4" /> {exporting ? "Exporting..." : "Export"}
     </Button>
   )

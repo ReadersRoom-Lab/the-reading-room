@@ -84,16 +84,16 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
       {/* Tabs and Content */}
       <Tabs defaultValue="all" className="w-full flex-col">
         <TabsList className="mb-6 bg-transparent border-b border-border rounded-none h-auto p-0 justify-start space-x-8">
-          <TabsTrigger value="all" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest">
+          <TabsTrigger value="all" className="rounded-none border-b-2 border-transparent -mb-[1px] data-[state=active]:border-primary text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest hover:text-foreground transition-colors">
             All ({room.articles.length})
           </TabsTrigger>
-          <TabsTrigger value="unread" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest">
+          <TabsTrigger value="unread" className="rounded-none border-b-2 border-transparent -mb-[1px] data-[state=active]:border-primary text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest hover:text-foreground transition-colors">
             Unread ({unreadArticles.length})
           </TabsTrigger>
-          <TabsTrigger value="in-progress" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest">
+          <TabsTrigger value="in-progress" className="rounded-none border-b-2 border-transparent -mb-[1px] data-[state=active]:border-primary text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest hover:text-foreground transition-colors">
             In Progress ({inProgressArticles.length})
           </TabsTrigger>
-          <TabsTrigger value="completed" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest">
+          <TabsTrigger value="completed" className="rounded-none border-b-2 border-transparent -mb-[1px] data-[state=active]:border-primary text-muted-foreground data-[state=active]:text-foreground data-[state=active]:bg-transparent px-0 pb-3 pt-2 text-sm font-semibold uppercase tracking-widest hover:text-foreground transition-colors">
             Completed ({completedArticles.length})
           </TabsTrigger>
         </TabsList>
@@ -113,27 +113,45 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
         </TabsContent>
         
         <TabsContent value="unread" className="mt-0 outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {unreadArticles.map((article: ArticleProps['article']) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          {unreadArticles.length === 0 ? (
+            <div className="py-12 text-center border border-dashed border-border bg-card">
+              <p className="text-muted-foreground">There are no unread articles in this room.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {unreadArticles.map((article: ArticleProps['article']) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="in-progress" className="mt-0 outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {inProgressArticles.map((article: ArticleProps['article']) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          {inProgressArticles.length === 0 ? (
+            <div className="py-12 text-center border border-dashed border-border bg-card">
+              <p className="text-muted-foreground">There are no articles in progress.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {inProgressArticles.map((article: ArticleProps['article']) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="completed" className="mt-0 outline-none">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {completedArticles.map((article: ArticleProps['article']) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          {completedArticles.length === 0 ? (
+            <div className="py-12 text-center border border-dashed border-border bg-card">
+              <p className="text-muted-foreground">There are no completed articles in this room.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {completedArticles.map((article: ArticleProps['article']) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
