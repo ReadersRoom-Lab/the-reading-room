@@ -37,7 +37,7 @@ export default async function LandingPage() {
             </Link>
             <Link
               href="/sign-up"
-              className="font-sans text-sm font-medium bg-white text-[#1A1A1A] px-5 py-2 hover:bg-gray-100 transition-colors shadow-sm"
+              className="font-sans text-sm font-semibold bg-white text-[#1A1A1A] px-5 py-2 hover:bg-gray-100 transition-colors shadow-none rounded-none"
             >
               Get Started
             </Link>
@@ -66,13 +66,13 @@ export default async function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-slide-up" style={{ animationDelay: '400ms' }}>
             <Link
               href="/sign-up"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#1A1A1A] font-sans text-sm font-semibold px-8 py-4 hover:bg-gray-100 transition-colors shadow-lg"
+              className="group inline-flex items-center justify-center gap-2 bg-white text-[#1A1A1A] font-sans text-sm font-semibold px-8 py-4 hover:bg-gray-100 transition-colors shadow-none rounded-none"
             >
-              Start Reading Free <ArrowRight className="w-4 h-4" />
+              Start Reading Free <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               href="/sign-in"
-              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white font-sans text-sm font-semibold px-8 py-4 hover:bg-white/10 transition-colors backdrop-blur-sm shadow-lg"
+              className="inline-flex items-center justify-center gap-2 border border-white/40 text-white font-sans text-sm font-semibold px-8 py-4 hover:bg-white/10 hover:border-white transition-colors backdrop-blur-sm shadow-none rounded-none"
             >
               Sign In
             </Link>
@@ -85,11 +85,11 @@ export default async function LandingPage() {
           <div className="bg-white border-b border-[#E5E5E5] p-8 lg:p-12 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative z-10">
-              <BookOpen className="w-6 h-6 text-[#747878] mb-6" />
+              <BookOpen className="w-6 h-6 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-6" />
               <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6">
                 &ldquo;A library is not a luxury but one of the necessities of life.&rdquo;
               </blockquote>
-              <p className="font-sans text-xs tracking-[0.05em] text-[#747878] uppercase font-medium">
+              <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold">
                 Henry Ward Beecher
               </p>
             </div>
@@ -97,22 +97,22 @@ export default async function LandingPage() {
 
           {/* Three-column features */}
           <div className="grid sm:grid-cols-3 gap-px bg-[#E5E5E5]">
-            <div className="bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500">
-              <FolderArchive className="w-5 h-5 text-[#747878] mb-5" />
+            <div className="group bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500">
+              <FolderArchive className="w-5 h-5 text-[#747878] group-hover:text-[#1A1A1A] group-hover:-translate-y-1 transition-all duration-300 mb-5" />
               <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Archive</h3>
               <p className="font-sans text-sm text-[#444748] leading-relaxed">
                 Build a personal, lasting vault of knowledge.
               </p>
             </div>
-            <div className="bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500 delay-75">
-              <Brain className="w-5 h-5 text-[#747878] mb-5" />
+            <div className="group bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500 delay-75">
+              <Brain className="w-5 h-5 text-[#747878] group-hover:text-[#1A1A1A] group-hover:-translate-y-1 transition-all duration-300 mb-5" />
               <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Think</h3>
               <p className="font-sans text-sm text-[#444748] leading-relaxed">
                 Structural scaffolding for deep intellectual exploration.
               </p>
             </div>
-            <div className="bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500 delay-150">
-              <BookOpen className="w-5 h-5 text-[#747878] mb-5" />
+            <div className="group bg-white p-6 lg:p-8 hover:bg-gray-50 transition-colors duration-500 delay-150">
+              <BookOpen className="w-5 h-5 text-[#747878] group-hover:text-[#1A1A1A] group-hover:-translate-y-1 transition-all duration-300 mb-5" />
               <h3 className="font-heading text-base font-bold text-[#1A1A1A] mb-2">Learn</h3>
               <p className="font-sans text-sm text-[#444748] leading-relaxed">
                 Transform passive reading into active understanding.
