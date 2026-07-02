@@ -89,12 +89,11 @@ export default function SignUpPage() {
                   fontSize: '11px', 
                   letterSpacing: '0.1em', 
                   textTransform: 'uppercase',
-                  fontWeight: '600',
-                  marginBottom: '6px'
+                  fontWeight: '600'
                 },
-                formFieldInput: { backgroundColor: '#1a1a1a', color: '#FDFBF7', borderColor: 'rgba(255, 255, 255, 0.15)' },
-                formButtonPrimary: { backgroundColor: '#FDFBF7', color: '#111111', border: 'none', borderRadius: '0px', fontWeight: 'bold' },
-                socialButtonsBlockButton: { color: '#FDFBF7', border: '1px solid rgba(255, 255, 255, 0.15)', backgroundColor: '#1a1a1a', borderRadius: '0px' },
+                formFieldInput: { backgroundColor: 'rgba(0, 0, 0, 0.2)', color: '#FDFBF7', borderColor: 'rgba(255, 255, 255, 0.15)' },
+                formButtonPrimary: { backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#111111', border: 'none', borderRadius: '0px', fontWeight: 'bold' },
+                socialButtonsBlockButton: { color: '#FDFBF7', border: '1px solid rgba(255, 255, 255, 0.15)', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '0px' },
                 socialButtonsBlockButtonText: { color: '#FDFBF7', fontWeight: '500' },
                 dividerText: { color: '#C4A882', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' },
                 dividerLine: { background: 'rgba(196, 168, 130, 0.2)' },
