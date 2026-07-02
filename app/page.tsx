@@ -15,7 +15,7 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
+    <div className="h-[100dvh] relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
       <div 
         className="absolute inset-0 z-0 animate-kenburns opacity-70" 
@@ -53,10 +53,10 @@ export default async function LandingPage() {
       </header>
 
       {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-8 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-4 lg:py-6 flex flex-col justify-center min-h-0">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
           {/* Left Column: Hero Text */}
-          <div className="lg:col-span-5 flex flex-col gap-8">
+          <div className="lg:col-span-5 flex flex-col gap-6">
           <p className="font-sans text-xs font-bold tracking-[0.15em] text-white/70 uppercase animate-slide-up" style={{ animationDelay: '100ms' }}>
             {"Est. 2026 › A Digital Sanctuary"}
           </p>
@@ -87,12 +87,12 @@ export default async function LandingPage() {
         </div>
 
         {/* Right Column: Feature Panels */}
-        <div className="lg:col-span-7 flex flex-col gap-px border border-[#E5E5E5] animate-slide-up" style={{ animationDelay: '500ms' }}>
+        <div className="lg:col-span-7 flex flex-col gap-px border border-[#E5E5E5] animate-slide-up bg-white rounded-lg overflow-hidden shadow-2xl" style={{ animationDelay: '500ms' }}>
           {/* Quote Panel */}
-          <div className="bg-white border-b border-[#E5E5E5] p-8 lg:p-12 relative overflow-hidden group">
+          <div className="bg-white border-b border-[#E5E5E5] p-6 lg:p-8 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative z-10">
-              <BookOpen className="w-6 h-6 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-6" />
+              <BookOpen className="w-5 h-5 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-4" />
               <StreamingQuote />
             </div>
           </div>

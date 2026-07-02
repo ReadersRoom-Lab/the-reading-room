@@ -154,7 +154,7 @@ export function LandingMockup() {
   ];
 
   return (
-    <div className="bg-gray-50/50 p-8 lg:p-12 relative overflow-hidden flex items-center justify-center border-t border-[#E5E5E5] w-full min-h-[440px]">
+    <div className="bg-gray-50/50 p-6 lg:p-8 relative overflow-hidden flex items-center justify-center border-t border-[#E5E5E5] w-full min-h-[360px]">
       
       {/* Glow effect behind the mockup */}
       <div className={cn("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] h-[300px] blur-[80px] rounded-full pointer-events-none transition-colors duration-1000",
@@ -164,7 +164,7 @@ export function LandingMockup() {
       <div className="flex flex-col items-center z-10 w-full max-w-[480px]">
         
         {/* The Mockup Window */}
-        <div className="relative w-full h-[280px] bg-white border border-gray-200 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden transform hover:-translate-y-2 hover:shadow-[0_30px_50px_-20px_rgba(0,0,0,0.15)] transition-all duration-700 ease-out group/mockup">
+        <div className="relative w-full h-[260px] bg-white border border-gray-200 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] rounded-xl overflow-hidden transform hover:-translate-y-2 hover:shadow-[0_30px_50px_-20px_rgba(0,0,0,0.15)] transition-all duration-700 ease-out group/mockup">
           
           {/* Mockup Topbar */}
           <div className="h-10 border-b border-gray-100 flex items-center justify-between px-4 bg-[#FDFBF7]">
@@ -180,7 +180,7 @@ export function LandingMockup() {
           </div>
 
           {/* Ad Container */}
-          <div className="relative w-full h-[240px] bg-white">
+          <div className="relative w-full h-[220px] bg-white">
             <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 0 ? "opacity-100 z-10" : "opacity-0 z-0")}>
               {activeAd === 0 && <HighlightAd />}
             </div>
