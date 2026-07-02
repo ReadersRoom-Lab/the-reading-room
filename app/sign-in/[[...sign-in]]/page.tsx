@@ -4,21 +4,33 @@ import { ArrowLeft } from "lucide-react";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-[#F9F7F2] flex flex-col w-full">
+    <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#F9F7F2]">
+      {/* Background with subtle animation */}
+      <div 
+        className="absolute inset-0 z-0 animate-kenburns opacity-80" 
+        style={{
+          backgroundImage: "url('/library_bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      {/* Overlay for text readability */}
+      <div className="absolute inset-0 z-0 bg-[#F9F7F2]/60 backdrop-blur-[2px]" />
 
-      {/* Top bar */}
-      <header className="absolute top-0 left-0 px-8 py-8">
-        <Link
-          href="/"
-          className="font-heading text-xl font-bold text-[#1A1A1A] hover:opacity-80 transition-opacity"
-        >
-          The Reading Room
-        </Link>
-      </header>
+      <div className="relative z-10 flex-1 flex flex-col w-full">
+        {/* Top bar */}
+        <header className="absolute top-0 left-0 px-8 py-8 w-full">
+          <Link
+            href="/"
+            className="font-heading text-xl font-bold text-[#1A1A1A] hover:opacity-80 transition-opacity"
+          >
+            The Reading Room
+          </Link>
+        </header>
 
-      {/* Centered auth card */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-md">
+        {/* Centered auth card */}
+        <main className="flex-1 flex flex-col items-center justify-center px-6">
+          <div className="w-full max-w-md">
 
           <SignIn
             forceRedirectUrl="/home"
@@ -44,6 +56,7 @@ export default function SignInPage() {
           />
         </div>
       </main>
+      </div>
     </div>
   );
 }
