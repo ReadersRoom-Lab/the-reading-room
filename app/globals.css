@@ -78,6 +78,17 @@
   100% { transform: translateX(100%); }
 }
 
+@keyframes fire-glow {
+  0%, 100% { opacity: 0.8; transform: scale(1) translate(0, 0); }
+  25% { opacity: 0.95; transform: scale(1.05) translate(1%, -1%); }
+  50% { opacity: 0.75; transform: scale(0.95) translate(-1%, 2%); }
+  75% { opacity: 0.9; transform: scale(1.02) translate(2%, 1%); }
+}
+
+.animate-fire-glow {
+  animation: fire-glow 4s ease-in-out infinite;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

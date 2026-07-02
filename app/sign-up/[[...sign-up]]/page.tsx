@@ -19,6 +19,10 @@ export default function SignUpPage() {
       <div className="absolute inset-0 z-10 bg-black/50" />
       <div className="absolute inset-0 z-10 pointer-events-none"><DustMotes /></div>
 
+      {/* Fireplace Glow */}
+      <div className="absolute -bottom-[20%] right-[10%] w-[600px] h-[600px] bg-orange-600/20 blur-[120px] rounded-full mix-blend-screen animate-fire-glow z-10 pointer-events-none" />
+      <div className="absolute -bottom-[10%] right-[20%] w-[400px] h-[400px] bg-amber-500/15 blur-[80px] rounded-full mix-blend-screen animate-fire-glow z-10 pointer-events-none" style={{ animationDelay: '1s', animationDuration: '3s' }} />
+
       {/* Left Side: Logo (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative z-20">
         
