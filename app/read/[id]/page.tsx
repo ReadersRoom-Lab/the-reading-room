@@ -312,7 +312,7 @@ export default function ReaderPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Font Family</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => setFontFamily('serif')}>
-                <span className={`font-source-serif ${fontFamily === 'serif' ? 'font-bold' : ''}`}>Serif</span>
+                <span className={`font-serif ${fontFamily === 'serif' ? 'font-bold' : ''}`}>Serif</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setFontFamily('sans')}>
                 <span className={`font-sans ${fontFamily === 'sans' ? 'font-bold' : ''}`}>Sans-serif</span>
@@ -353,7 +353,7 @@ export default function ReaderPage() {
             className={`
               mx-auto max-w-2xl
               prose prose-stone dark:prose-invert
-              ${fontFamily === 'serif' ? 'font-source-serif' : 'font-sans'}
+              ${fontFamily === 'serif' ? 'font-serif' : 'font-sans'}
               ${fontSize === 'sm' ? 'prose-sm' : ''}
               ${fontSize === 'base' ? 'prose-base' : ''}
               ${fontSize === 'lg' ? 'prose-lg' : ''}
