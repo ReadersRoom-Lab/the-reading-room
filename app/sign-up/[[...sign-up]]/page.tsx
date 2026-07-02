@@ -1,5 +1,4 @@
 import { SignUp } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { TypewriterLogo } from "@/components/TypewriterLogo";
@@ -19,7 +18,6 @@ export default function SignUpPage() {
       />
       <div className="absolute inset-0 z-10 bg-black/50" />
       <div className="absolute inset-0 z-10 pointer-events-none"><DustMotes /></div>
-
 
       {/* Left Side: Logo (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative z-20">
@@ -42,74 +40,24 @@ export default function SignUpPage() {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-black/40 backdrop-blur-2xl border-l border-white/10 overflow-hidden">
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-white/95 backdrop-blur-xl border-l border-white/20 overflow-hidden shadow-2xl">
         
-        {/* Fireplace Glow - Centered at the bottom of the auth panel, expanded to cover most of the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-96 pointer-events-none z-0">
-          <div className="absolute -bottom-48 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-600/40 blur-[120px] rounded-[100%] mix-blend-screen animate-fire-glow" />
-          <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-amber-500/50 blur-[90px] rounded-[100%] mix-blend-screen animate-fire-glow" style={{ animationDelay: '0.5s', animationDuration: '3s' }} />
-          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-yellow-400/40 blur-[60px] rounded-[100%] mix-blend-screen animate-fire-glow" style={{ animationDelay: '1s', animationDuration: '2s' }} />
-        </div>
-
         {/* Mobile Header */}
-        <header className="relative z-10 lg:hidden px-6 py-6 border-b border-white/10 flex items-center justify-between">
-          <Link href="/" className="font-heading text-xl font-bold text-[#FDFBF7]">
+        <header className="relative z-10 lg:hidden px-6 py-6 border-b border-gray-200 flex items-center justify-between">
+          <Link href="/" className="font-heading text-xl font-bold text-gray-900">
             The Reading Rooms
           </Link>
-          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-gray-400">
+          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-gray-500">
             <ArrowLeft className="w-4 h-4" />
             Back
           </Link>
         </header>
 
-        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto auth-container">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto">
           <div className="w-full max-w-[400px] animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-
-          <SignUp
-            forceRedirectUrl="/onboarding"
-            appearance={{
-              baseTheme: dark,
-              variables: {
-                colorBackground: 'transparent',
-                colorInputBackground: 'rgba(0, 0, 0, 0.25)',
-                colorText: '#FDFBF7',
-                colorInputText: '#FDFBF7',
-                colorTextSecondary: '#9ca3af',
-                colorPrimary: '#FDFBF7',
-                borderRadius: '0px',
-                fontFamily: 'var(--font-inter)',
-                fontFamilyButtons: 'var(--font-inter)',
-              },
-              elements: {
-                rootBox: "w-full",
-                card: { backgroundColor: 'transparent', border: 'none', boxShadow: 'none', padding: '0px' },
-                footer: { background: 'transparent' },
-                headerTitle: { color: '#FDFBF7', fontFamily: 'var(--font-source-serif)', fontSize: '1.75rem', fontWeight: 'bold', letterSpacing: '-0.02em' },
-                headerSubtitle: { color: '#9ca3af', fontFamily: 'var(--font-inter)', fontSize: '0.875rem' },
-                formFieldRow: { display: 'flex', flexDirection: 'column', gap: '8px' },
-                formFieldLabel: { 
-                  color: '#BDBDBD', 
-                  fontFamily: 'var(--font-inter)', 
-                  fontSize: '11px', 
-                  letterSpacing: '0.1em', 
-                  textTransform: 'uppercase',
-                  fontWeight: '600'
-                },
-                formFieldInput: { color: '#FDFBF7', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: 'none' },
-                formButtonPrimary: { backgroundColor: 'rgba(255, 255, 255, 0.9)', color: '#111111', border: 'none', borderRadius: '0px', fontWeight: 'bold' },
-                socialButtonsBlockButton: { color: '#FDFBF7', border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '0px' },
-                socialButtonsBlockButtonText: { color: '#FDFBF7', fontWeight: '500' },
-                dividerText: { color: '#C4A882', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' },
-                dividerLine: { background: 'rgba(196, 168, 130, 0.2)' },
-                footerActionText: { color: '#9ca3af' },
-                formFieldInputShowPasswordButton: { color: '#9ca3af' },
-                identityPreviewText: { color: '#FDFBF7', fontWeight: 'bold' },
-                identityPreviewEditButtonIcon: { color: '#9ca3af' }
-              },
-            }}
-          />
-        </div>
-      </main>
+            <SignUp forceRedirectUrl="/home" />
+          </div>
+        </main>
       </div>
     </div>
   );
