@@ -83,7 +83,6 @@ export default function SignInPage() {
                 footer: { background: 'transparent' },
                 headerTitle: { color: '#FDFBF7', fontFamily: 'var(--font-source-serif)', fontSize: '1.75rem', fontWeight: 'bold', letterSpacing: '-0.02em' },
                 headerSubtitle: { color: '#9ca3af', fontFamily: 'var(--font-inter)', fontSize: '0.875rem' },
-                formFieldLabelRow: { marginBottom: '8px' },
                 formFieldLabel: { 
                   color: '#BDBDBD', 
                   fontFamily: 'var(--font-inter)', 

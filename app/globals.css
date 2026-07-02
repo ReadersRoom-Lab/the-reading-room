@@ -605,11 +605,16 @@
   box-shadow: 0 0 0 1px #C4A882 !important;
 }
 
-/* Fix label spacing */
+/* Fix label spacing by targeting the raw label tag */
+.auth-container label {
+  padding-bottom: 12px !important;
+  display: block !important;
+  margin-bottom: 0 !important;
+}
+
 .auth-container .cl-formFieldRow {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
 }
 
 .auth-container .cl-formFieldLabel {
