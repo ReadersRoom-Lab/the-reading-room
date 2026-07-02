@@ -7,28 +7,18 @@ export default function SignInPage() {
     <div className="min-h-screen bg-[#F9F7F2] flex flex-col w-full">
 
       {/* Top bar */}
-      <header className="absolute top-0 left-0 px-8 py-6">
+      <header className="absolute top-0 left-0 px-8 py-8">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 font-sans text-sm text-[#747878] hover:text-[#1A1A1A] transition-colors"
+          className="font-heading text-xl font-bold text-[#1A1A1A] hover:opacity-80 transition-opacity"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
+          The Reading Room
         </Link>
       </header>
 
       {/* Centered auth card */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-16">
-        <div className="mb-8 text-center">
-          <h1 className="font-heading text-4xl tracking-tight font-bold text-[#1A1A1A]">
-            The Reading Room
-          </h1>
-        </div>
+      <main className="flex-1 flex flex-col items-center justify-center px-6">
         <div className="w-full max-w-md">
-          <div className="mb-8 text-center">
-            <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Welcome back</h2>
-            <p className="font-sans text-sm text-[#747878]">Sign in to continue to your reading room.</p>
-          </div>
 
           <SignIn
             forceRedirectUrl="/home"
