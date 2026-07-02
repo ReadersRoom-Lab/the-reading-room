@@ -16,27 +16,24 @@ export default function SignInPage() {
           }}
         />
         <div className="absolute inset-0 z-10 bg-black/10" />
-        
-        {/* Logo over image */}
-        <div className="absolute top-8 left-10 z-20">
-          <Link
-            href="/"
-            className="font-heading text-2xl font-bold text-white hover:opacity-80 transition-opacity drop-shadow-md"
-          >
-            The Reading Room
-          </Link>
-        </div>
       </div>
 
       {/* Right Side: Auth Form */}
       <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col">
-        {/* Mobile Header */}
-        <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5]">
+        {/* Header */}
+        <header className="px-8 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
           <Link
             href="/"
-            className="font-heading text-xl font-bold text-[#1A1A1A]"
+            className="font-heading text-xl font-bold text-[#1A1A1A] hover:text-[#333] transition-colors"
           >
             The Reading Room
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#747878] hover:text-[#1A1A1A] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </Link>
         </header>
 
