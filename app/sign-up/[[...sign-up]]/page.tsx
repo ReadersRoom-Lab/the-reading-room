@@ -4,33 +4,44 @@ import { ArrowLeft } from "lucide-react";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen relative flex flex-col w-full overflow-hidden bg-[#F9F7F2]">
-      {/* Background with subtle animation */}
-      <div 
-        className="absolute inset-0 z-0 animate-kenburns opacity-80" 
-        style={{
-          backgroundImage: "url('/library_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      {/* Overlay for text readability */}
-      <div className="absolute inset-0 z-0 bg-[#F9F7F2]/60 backdrop-blur-[2px]" />
-
-      <div className="relative z-10 flex-1 flex flex-col w-full">
-        {/* Top bar */}
-        <header className="absolute top-0 left-0 px-8 py-8 w-full">
+    <div className="min-h-screen flex w-full bg-white">
+      {/* Left Side: Animated Background (Hidden on Mobile) */}
+      <div className="hidden lg:flex flex-1 relative overflow-hidden bg-[#1A1A1A]">
+        <div 
+          className="absolute inset-0 z-0 animate-kenburns opacity-70" 
+          style={{
+            backgroundImage: "url('/library_bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 z-10 bg-black/10" />
+        
+        {/* Logo over image */}
+        <div className="absolute top-8 left-10 z-20">
           <Link
             href="/"
-            className="font-heading text-xl font-bold text-[#1A1A1A] hover:opacity-80 transition-opacity"
+            className="font-heading text-2xl font-bold text-white hover:opacity-80 transition-opacity drop-shadow-md"
+          >
+            The Reading Room
+          </Link>
+        </div>
+      </div>
+
+      {/* Right Side: Auth Form */}
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col">
+        {/* Mobile Header */}
+        <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5]">
+          <Link
+            href="/"
+            className="font-heading text-xl font-bold text-[#1A1A1A]"
           >
             The Reading Room
           </Link>
         </header>
 
-        {/* Centered auth card */}
-        <main className="flex-1 flex flex-col items-center justify-center px-6">
-          <div className="w-full max-w-md">
+        <main className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12">
+          <div className="w-full max-w-[400px]">
 
           <SignUp
             forceRedirectUrl="/onboarding"
