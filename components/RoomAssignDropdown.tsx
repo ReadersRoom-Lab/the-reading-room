@@ -66,8 +66,9 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
         const data = await res.json()
         throw new Error(data.error || "Failed to delete article")
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to delete article")
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete article";
+      toast.error(msg);
     } finally {
       setLoading(false)
     }

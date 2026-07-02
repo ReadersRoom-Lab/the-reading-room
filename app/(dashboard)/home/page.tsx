@@ -19,6 +19,7 @@ export default async function Home() {
   let randomVaultEntry = null
   
   if (vaultCount > 0 && user) {
+    // eslint-disable-next-line react-hooks/purity
     const skip = Math.floor(Math.random() * vaultCount)
     randomVaultEntry = await prisma.vaultEntry.findFirst({
       where: { user_id: user.id },

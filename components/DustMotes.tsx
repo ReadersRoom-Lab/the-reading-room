@@ -13,6 +13,7 @@ export function DustMotes() {
       delay: `${Math.random() * 10}s`,
       duration: `${Math.random() * 15 + 15}s`,
     }));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMotes(generatedMotes);
   }, []);
 

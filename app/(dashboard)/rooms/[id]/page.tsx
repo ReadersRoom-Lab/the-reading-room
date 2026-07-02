@@ -46,7 +46,7 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
     redirect('/rooms')
   }
 
-  const highlightsCount = room.articles.reduce((acc: number, curr: any) => acc + curr._count.highlights, 0)
+  const highlightsCount = room.articles.reduce((acc: number, curr: { _count: { highlights: number } }) => acc + curr._count.highlights, 0)
 
   const unreadArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'unread')
   const inProgressArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'in-progress')

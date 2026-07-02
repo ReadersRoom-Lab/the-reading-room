@@ -23,6 +23,7 @@ export function StreamingQuote() {
   
   useEffect(() => {
     // Select a random fallback quote on mount to avoid hydration mismatch
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFallbackQuote(FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]);
     
     // Fire the streaming completion request immediately

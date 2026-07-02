@@ -81,7 +81,7 @@ function AIAd() {
           </div>
        </div>
        <div className={cn("absolute bottom-6 left-6 right-6 p-3 bg-indigo-50/80 backdrop-blur-sm border border-indigo-100 rounded-lg text-xs font-serif italic text-indigo-900 transition-all duration-700", step === 3 ? "opacity-100 translate-y-0 shadow-lg" : "opacity-0 translate-y-4")}>
-          "A profound conceptual link was found between your highlights on <b>Philosophy</b> and <b>Quantum Mechanics</b>."
+          &quot;A profound conceptual link was found between your highlights on <b>Philosophy</b> and <b>Quantum Mechanics</b>.&quot;
        </div>
     </div>
   )
@@ -117,7 +117,7 @@ function OrganizeAd() {
            )}>
               <FileText className="w-5 h-5 text-gray-400 shrink-0" />
               <div>
-                 <div className="text-sm font-bold mb-1">The Brain's Network</div>
+                 <div className="text-sm font-bold mb-1">The Brain&apos;s Network</div>
                  <div className="text-[10px] text-gray-500 leading-tight">How neurons wire together...</div>
               </div>
            </div>

@@ -62,8 +62,9 @@ export default function OnboardingPage() {
 
       setError(null);
       router.push("/");
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred during onboarding.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred during onboarding.";
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
