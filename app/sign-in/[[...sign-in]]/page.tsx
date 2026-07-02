@@ -19,9 +19,6 @@ export default function SignInPage() {
       <div className="absolute inset-0 z-10 bg-black/50" />
       <div className="absolute inset-0 z-10 pointer-events-none"><DustMotes /></div>
 
-      {/* Fireplace Glow */}
-      <div className="absolute -bottom-[20%] right-[10%] w-[600px] h-[600px] bg-orange-600/20 blur-[120px] rounded-full mix-blend-screen animate-fire-glow z-10 pointer-events-none" />
-      <div className="absolute -bottom-[10%] right-[20%] w-[400px] h-[400px] bg-amber-500/15 blur-[80px] rounded-full mix-blend-screen animate-fire-glow z-10 pointer-events-none" style={{ animationDelay: '1s', animationDuration: '3s' }} />
 
       {/* Left Side: Logo (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative z-20">
@@ -44,9 +41,17 @@ export default function SignInPage() {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-black/40 backdrop-blur-2xl border-l border-white/10 overflow-y-auto">
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-black/40 backdrop-blur-2xl border-l border-white/10 overflow-hidden">
+        
+        {/* Fireplace Glow - Centered at the bottom of the auth panel */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none z-0">
+          <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-orange-600/40 blur-[80px] rounded-full mix-blend-screen animate-fire-glow" />
+          <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[250px] h-[250px] bg-amber-500/50 blur-[60px] rounded-full mix-blend-screen animate-fire-glow" style={{ animationDelay: '0.5s', animationDuration: '3s' }} />
+          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[150px] h-[150px] bg-yellow-400/40 blur-[40px] rounded-full mix-blend-screen animate-fire-glow" style={{ animationDelay: '1s', animationDuration: '2s' }} />
+        </div>
+
         {/* Mobile Header */}
-        <header className="lg:hidden px-6 py-6 border-b border-white/10 flex items-center justify-between">
+        <header className="relative z-10 lg:hidden px-6 py-6 border-b border-white/10 flex items-center justify-between">
           <Link href="/" className="font-heading text-xl font-bold text-[#FDFBF7]">
             The Reading Rooms
           </Link>
@@ -56,7 +61,7 @@ export default function SignInPage() {
           </Link>
         </header>
 
-        <main className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 min-h-[max-content]">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto">
           <div className="w-full max-w-[400px]">
 
           <SignIn
