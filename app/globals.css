@@ -63,6 +63,21 @@
   vertical-align: bottom;
 }
 
+@keyframes float {
+  0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

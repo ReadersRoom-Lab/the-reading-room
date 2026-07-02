@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"
 import { StreamingQuote } from "@/components/StreamingQuote"
 import { LandingMockup } from "@/components/LandingMockup"
+import { DustMotes } from "@/components/DustMotes"
 
 
 export default async function LandingPage() {
@@ -29,7 +30,10 @@ export default async function LandingPage() {
       <div className="absolute inset-0 z-0 mix-blend-overlay opacity-20 pointer-events-none" style={{ backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')", backgroundRepeat: 'repeat' }} />
       
       {/* Dark Overlay to ensure white text readability */}
-      <div className="absolute inset-0 z-0 bg-black/50 backdrop-blur-[4px]" />
+      <div className="absolute inset-0 z-0 bg-black/60 backdrop-blur-[4px]" />
+      
+      {/* Floating Dust Particles */}
+      <DustMotes />
 
       <div className="relative z-10 flex-1 flex flex-col w-full">
         {/* Top Navigation Bar */}
@@ -73,9 +77,12 @@ export default async function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-slide-up" style={{ animationDelay: '400ms' }}>
             <Link
               href="/sign-up"
-              className="group inline-flex items-center justify-center gap-2 bg-white text-[#1A1A1A] font-sans text-sm font-semibold px-8 py-4 hover:bg-gray-100 transition-colors shadow-none rounded-none"
+              className="group relative inline-flex items-center justify-center gap-2 bg-white text-[#1A1A1A] font-sans text-sm font-semibold px-8 py-4 shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)] transition-all duration-300 rounded-none overflow-hidden"
             >
-              Start Reading Free <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-gray-200/50 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+              <span className="relative z-10 flex items-center gap-2">
+                Start Reading Free <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </span>
             </Link>
             <Link
               href="/sign-in"
