@@ -6,10 +6,13 @@ import { TypewriterLogo } from "@/components/TypewriterLogo"
 
 const QUOTES = [
   { text: "A library is not a luxury but one of the necessities of life.", author: "Henry Ward Beecher" },
-  { text: "Reading is to the mind what exercise is to the body.", author: "Joseph Addison" },
-  { text: "The reading of all good books is like conversation with the finest men of past centuries.", author: "René Descartes" },
-  { text: "Some books leave us free and some books make us free.", author: "Ralph Waldo Emerson" },
   { text: "If you only read the books that everyone else is reading, you can only think what everyone else is thinking.", author: "Haruki Murakami" },
+  { text: "A book is like a garden carried in the pocket.", author: "Chinese Proverb" },
+  { text: "I have always imagined that Paradise will be a kind of library.", author: "Jorge Luis Borges" },
+  { text: "To read a poem is to hear it with our eyes; to hear it is to see it with our ears.", author: "Octavio Paz" },
+  { text: "A book is a version of the world. If you do not like it, ignore it; or offer your own version in return.", author: "Salman Rushdie" },
+  { text: "Once you learn to read, you will be forever free.", author: "Frederick Douglass" },
+  { text: "There are worse crimes than burning books. One of them is not reading them.", author: "Joseph Brodsky" },
 ]
 
 export default async function LandingPage() {
