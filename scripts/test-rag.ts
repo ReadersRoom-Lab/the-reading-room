@@ -12,8 +12,7 @@ async function run() {
         data: {
           clerk_id: 'test-rag-user',
           email: 'test@rag.com',
-          first_name: 'Test',
-          last_name: 'Rag'
+          name: 'Test Rag'
         }
       })
     }
