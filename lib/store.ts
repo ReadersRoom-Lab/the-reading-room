@@ -39,9 +39,9 @@ export type Highlight = {
 };
 
 export class InMemoryStore {
-  private rooms: Room[] = [];
-  private articles: Article[] = [];
-  private highlights: Highlight[] = [];
+  private readonly rooms: Room[] = [];
+  private readonly articles: Article[] = [];
+  private readonly highlights: Highlight[] = [];
 
   createRoom(userId: string, name: string, coverColor: string, description?: string): Room {
     const room: Room = {

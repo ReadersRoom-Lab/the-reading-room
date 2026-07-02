@@ -24,7 +24,7 @@ export function ManageRoomDialog({ roomId, initialName, initialDescription }: Re
   const [loading, setLoading] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     
     if (!name.trim()) {

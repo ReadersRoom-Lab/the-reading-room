@@ -12,7 +12,7 @@ export function ProfileNav() {
   const navigate = (page: "profile" | "security") => {
     setActive(page)
     // Clerk hash routing: '' = profile page, '/security/' = security page
-    window.location.hash = page === "profile" ? "" : "/security/"
+    globalThis.location.hash = page === "profile" ? "" : "/security/"
   }
 
   const initial =

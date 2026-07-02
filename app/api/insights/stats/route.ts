@@ -4,6 +4,78 @@ import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
 import { startOfDay, format, subDays, differenceInDays } from 'date-fns'
 
+function calculateStreaks(activeDaysSorted: Date[]) {
+  let currentStreak = 0;
+  let longestStreak = 0;
+  
+  if (activeDaysSorted.length > 0) {
+    const today = startOfDay(new Date());
+    const lastActiveDay = startOfDay(activeDaysSorted[0]);
+    const diffFromToday = differenceInDays(today, lastActiveDay);
+
+    if (diffFromToday <= 1) {
+      let tempStreak = 1;
+      for (let i = 0; i < activeDaysSorted.length - 1; i++) {
+        const currentDay = startOfDay(activeDaysSorted[i]);
+        const prevDay = startOfDay(activeDaysSorted[i + 1]);
+        const diff = differenceInDays(currentDay, prevDay);
+        
+        if (diff === 1) {
+          tempStreak++;
+        } else if (diff > 1) {
+          break;
+        }
+      }
+      currentStreak = tempStreak;
+    }
+
+    const activeDaysAsc = [...activeDaysSorted].reverse();
+    let tempStreak = 1;
+    longestStreak = 1;
+    for (let i = 0; i < activeDaysAsc.length - 1; i++) {
+      const currentDay = startOfDay(activeDaysAsc[i]);
+      const nextDay = startOfDay(activeDaysAsc[i + 1]);
+      const diff = differenceInDays(nextDay, currentDay);
+      
+      if (diff === 1) {
+        tempStreak++;
+      } else if (diff > 1) {
+        longestStreak = Math.max(longestStreak, tempStreak);
+        tempStreak = 1;
+      }
+    }
+    longestStreak = Math.max(longestStreak, tempStreak);
+  }
+
+  return { currentStreak, longestStreak };
+}
+
+function calculateGrowthData(vaultEntries: { created_at: string | Date }[]) {
+  const growthData: { date: string, count: number }[] = [];
+  let cumulativeCount = 0;
+  const thirtyDaysAgo = subDays(new Date(), 30);
+
+  vaultEntries.forEach(entry => {
+    if (new Date(entry.created_at) < thirtyDaysAgo) {
+      cumulativeCount++;
+    }
+  });
+
+  for (let i = 30; i >= 0; i--) {
+    const dateObj = subDays(new Date(), i);
+    const dateStr = format(dateObj, 'yyyy-MM-dd');
+    const dailyCount = vaultEntries.filter(entry => 
+      format(new Date(entry.created_at), 'yyyy-MM-dd') === dateStr
+    ).length;
+    cumulativeCount += dailyCount;
+    growthData.push({
+      date: format(dateObj, 'MMM dd'),
+      count: cumulativeCount
+    });
+  }
+  return growthData;
+}
+
 export async function GET() {
   try {
     const { userId } = await auth()
@@ -74,72 +146,10 @@ export async function GET() {
       .map(d => new Date(d))
       .sort((a, b) => b.getTime() - a.getTime())
 
-    let currentStreak = 0
-    let longestStreak = 0
-    
-    if (activeDaysSorted.length > 0) {
-      const today = startOfDay(new Date())
-      const lastActiveDay = startOfDay(activeDaysSorted[0])
-      const diffFromToday = differenceInDays(today, lastActiveDay)
-
-      if (diffFromToday <= 1) {
-        currentStreak = 1
-        let tempStreak = 1
-        for (let i = 0; i < activeDaysSorted.length - 1; i++) {
-          const currentDay = startOfDay(activeDaysSorted[i])
-          const prevDay = startOfDay(activeDaysSorted[i + 1])
-          const diff = differenceInDays(currentDay, prevDay)
-          
-          if (diff === 1) {
-            tempStreak++
-          } else if (diff > 1) {
-            break
-          }
-        }
-        currentStreak = tempStreak
-      }
-
-      const activeDaysAsc = [...activeDaysSorted].reverse()
-      let tempStreak = 1
-      longestStreak = 1
-      for (let i = 0; i < activeDaysAsc.length - 1; i++) {
-        const currentDay = startOfDay(activeDaysAsc[i])
-        const nextDay = startOfDay(activeDaysAsc[i + 1])
-        const diff = differenceInDays(nextDay, currentDay)
-        
-        if (diff === 1) {
-          tempStreak++
-        } else if (diff > 1) {
-          longestStreak = Math.max(longestStreak, tempStreak)
-          tempStreak = 1
-        }
-      }
-      longestStreak = Math.max(longestStreak, tempStreak)
-    }
+    const { currentStreak, longestStreak } = calculateStreaks(activeDaysSorted);
 
     // --- Compute Knowledge Growth (Past 30 Days Cumulative) ---
-    const growthData: { date: string, count: number }[] = []
-    let cumulativeCount = 0
-    const thirtyDaysAgo = subDays(new Date(), 30)
-
-    user.vaultEntries.forEach(entry => {
-      if (new Date(entry.created_at) < thirtyDaysAgo) {
-        cumulativeCount++
-      }
-    })
-
-    for (let i = 30; i >= 0; i--) {
-      const dateObj = subDays(new Date(), i)
-      const dateStr = format(dateObj, 'yyyy-MM-dd')
-      const dailyCount = user.vaultEntries.filter(entry => 
-        format(new Date(entry.created_at), 'yyyy-MM-dd') === dateStr
-      ).length
-      cumulativeCount += dailyCount
-      growthData.push({
-        date: format(dateObj, 'MMM dd'),
-        count: cumulativeCount
-      })
-    }
+    const growthData = calculateGrowthData(user.vaultEntries);
 
     // --- Most Active Rooms ---
     const roomsData = user.rooms.map(r => ({
