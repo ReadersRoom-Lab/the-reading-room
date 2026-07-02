@@ -62,7 +62,7 @@ export default function SignUpPage() {
           </Link>
         </header>
 
-        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto auth-container">
           <div className="w-full max-w-[400px]">
 
           <SignUp
