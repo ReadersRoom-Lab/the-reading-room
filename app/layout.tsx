@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Reading Room",
-  description: "Read. Archive. Think. Learn.",
+  title: "The Reading Rooms",
+  description: "A digital sanctuary for thoughtful reading and research.",
 };
 
 export default function RootLayout({

@@ -113,7 +113,7 @@ export default function OnboardingPage() {
             <Progress value={(step / totalSteps) * 100} className="h-2" />
           </div>
           <CardTitle className="font-heading text-2xl">
-            {step === 1 && "Welcome to The Reading Room"}
+            {step === 1 && "Welcome to The Reading Rooms"}
             {step === 2 && "Set Your Reading Goal"}
             {step === 3 && "Create Your First Room"}
           </CardTitle>

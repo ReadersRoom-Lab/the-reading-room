@@ -37,8 +37,8 @@ export default async function DashboardLayout({
 
         {/* Brand */}
         <div className="border-b border-[#E5E5E5] px-6 py-5">
-          <span className="font-heading text-base font-semibold text-[#1A1A1A] tracking-tight">
-            The Reading Room
+          <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
+            The Reading Rooms
           </span>
         </div>
 

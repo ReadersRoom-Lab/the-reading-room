@@ -40,7 +40,7 @@ export default function SignInPage() {
         {/* Mobile Header */}
         <header className="lg:hidden px-6 py-6 border-b border-[#E5E5E5] flex items-center justify-between">
           <Link href="/" className="font-heading text-xl font-bold text-[#1A1A1A]">
-            The Reading Room
+            The Reading Rooms
           </Link>
           <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-[#747878]">
             <ArrowLeft className="w-4 h-4" />

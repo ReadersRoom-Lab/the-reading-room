@@ -27,9 +27,9 @@ export default async function LandingPage() {
         {/* Top Navigation Bar */}
         <header className="border-b border-[#1A1A1A]/10 bg-transparent">
         <div className="max-w-5xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
-          <span className="font-heading text-lg font-semibold text-[#1A1A1A] tracking-tight">
-            The Reading Room
-          </span>
+          <Link href="/" className="font-heading text-xl font-bold text-[#1A1A1A]">
+            The Reading Rooms
+          </Link>
           <nav className="flex items-center gap-8">
             <Link href="/sign-in" className="font-sans text-sm text-[#747878] hover:text-[#1A1A1A] transition-colors">
               Sign In
@@ -54,7 +54,7 @@ export default async function LandingPage() {
           </p>
 
           <h1 className="font-heading text-5xl lg:text-7xl font-bold text-[#1A1A1A] leading-[1.05] tracking-tight">
-            The<br />Reading Room
+            The<br />Reading Rooms
           </h1>
 
           <p className="font-serif text-lg lg:text-xl text-[#444748] leading-relaxed max-w-md">

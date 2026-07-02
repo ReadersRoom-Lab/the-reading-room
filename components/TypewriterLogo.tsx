@@ -6,7 +6,7 @@ export function TypewriterLogo() {
   
   const line1 = "The"
   const line2 = "Reading"
-  const line3 = "Room"
+  const line3 = "Rooms"
   const fullText = line1 + line2 + line3
 
   useEffect(() => {
