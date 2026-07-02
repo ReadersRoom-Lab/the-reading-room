@@ -356,7 +356,7 @@ export default function ReaderPage() {
         >
           <article 
             className={`
-              mx-auto max-w-2xl
+              mx-auto max-w-4xl
               prose prose-stone dark:prose-invert
               ${fontFamily === 'serif' ? 'font-serif' : 'font-sans'}
               ${fontSize === 'sm' ? 'prose-sm' : ''}
