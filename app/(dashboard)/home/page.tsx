@@ -3,13 +3,14 @@ import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import { Bookmark, RefreshCw } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
+import { RefreshButton } from './RefreshButton'
 
 export default async function Home() {
   const { userId } = await auth()
   const user = await prisma.user.findUnique({ where: { clerk_id: userId! } })
   
   const recentArticles = user ? await prisma.article.findMany({
-    where: { user_id: user.id, status: 'in-progress' },
+    where: { user_id: user.id },
     orderBy: { updated_at: 'desc' },
     take: 2
   }) : []
@@ -31,34 +32,34 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-10">
 
-      {/* Page header */}
-      <div className="border-b border-[#E5E5E5] pb-8">
-        <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Good day.</h1>
-        <p className="font-sans text-sm text-[#747878]">Here is what awaits your attention.</p>
+      {/* Page header & Promo */}
+      <div className="flex flex-col gap-6">
+        <div className="border-b border-[#E5E5E5] pb-6">
+          <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Good day.</h1>
+          <p className="font-sans text-sm text-[#747878]">Here is what awaits your attention.</p>
+        </div>
+
+        {/* Extension Promo */}
+        <section className="bg-[#1A1A1A] text-white px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h2 className="font-heading text-lg font-bold mb-1 text-[#F9F7F2]">The Reading Room Extension</h2>
+            <p className="font-sans text-xs text-[#BDBDBD] max-w-xl leading-relaxed">
+              Save articles directly from your browser. Bypasses paywalls and anti-bot protections by saving exactly what you see.
+            </p>
+          </div>
+          <div className="flex-shrink-0">
+            <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-4 py-2 text-[11px] font-bold tracking-[0.05em] uppercase hover:bg-[#E5E5E5] transition-colors whitespace-nowrap">
+              View Instructions
+            </Link>
+          </div>
+        </section>
       </div>
-
-      {/* Extension Promo */}
-      <section className="bg-[#1A1A1A] text-white px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h2 className="font-heading text-lg font-bold mb-1 text-[#F9F7F2]">The Reading Room Extension</h2>
-          <p className="font-sans text-xs text-[#BDBDBD] max-w-xl leading-relaxed">
-            Save articles directly from your browser. Bypasses paywalls and anti-bot protections by saving exactly what you see.
-          </p>
-        </div>
-        <div className="flex-shrink-0">
-          <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-4 py-2 text-[11px] font-bold tracking-[0.05em] uppercase hover:bg-[#E5E5E5] transition-colors whitespace-nowrap">
-            View Instructions
-          </Link>
-        </div>
-      </section>
 
       {/* Today's Rediscovery */}
       <section>
-        <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5 flex items-center gap-2">
-          <RefreshCw className="w-3 h-3" /> Today&apos;s Rediscovery
-        </h2>
+        <RefreshButton />
         {randomVaultEntry ? (
           <div className="border border-[#E5E5E5] bg-white p-10">
             <div className="flex justify-between items-start mb-6">
