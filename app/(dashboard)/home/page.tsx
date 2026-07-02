@@ -41,20 +41,77 @@ export default async function Home() {
           <p className="font-sans text-sm text-[#747878]">Here is what awaits your attention.</p>
         </div>
 
-        {/* Extension Promo */}
-        <section className="bg-[#1A1A1A] text-white px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <h2 className="font-heading text-lg font-bold mb-1 text-[#F9F7F2]">The Reading Room Extension</h2>
-            <p className="font-sans text-xs text-[#BDBDBD] max-w-xl leading-relaxed">
-              Save articles directly from your browser. Bypasses paywalls and anti-bot protections by saving exactly what you see.
-            </p>
+        {/* Hero Info Block */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          
+          {/* How to Use */}
+          <div className="xl:col-span-2 bg-[#1A1A1A] text-white p-8">
+            <h2 className="font-heading text-xl font-bold mb-6 text-[#F9F7F2]">How to Use The Reading Room</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
+              
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0">
+                    <Library className="w-3 h-3 text-[#F9F7F2]" />
+                  </div>
+                  <h3 className="font-heading font-bold text-sm text-[#E6C79C]">1. Build Your Library</h3>
+                </div>
+                <p className="font-sans text-xs text-[#BDBDBD] leading-relaxed pl-9">
+                  Save articles with one click using the extension, upload PDFs, or paste URLs.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0">
+                    <Highlighter className="w-3 h-3 text-[#F9F7F2]" />
+                  </div>
+                  <h3 className="font-heading font-bold text-sm text-[#E6C79C]">2. Read & Annotate</h3>
+                </div>
+                <p className="font-sans text-xs text-[#BDBDBD] leading-relaxed pl-9">
+                  Highlight important passages, add notes, and read distraction-free.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-3 h-3 text-[#F9F7F2]" />
+                  </div>
+                  <h3 className="font-heading font-bold text-sm text-[#E6C79C]">3. Grow Your Vault</h3>
+                </div>
+                <p className="font-sans text-xs text-[#BDBDBD] leading-relaxed pl-9">
+                  Select unfamiliar words to define and save them for spaced rediscovery.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-6 h-6 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0">
+                    <Layout className="w-3 h-3 text-[#F9F7F2]" />
+                  </div>
+                  <h3 className="font-heading font-bold text-sm text-[#E6C79C]">4. Organize into Rooms</h3>
+                </div>
+                <p className="font-sans text-xs text-[#BDBDBD] leading-relaxed pl-9">
+                  Curate your knowledge by grouping related articles into thematic Spaces.
+                </p>
+              </div>
+
+            </div>
           </div>
-          <div className="flex-shrink-0">
-            <Link href="/chrome-extension" className="bg-white text-[#1A1A1A] px-4 py-2 text-[11px] font-bold tracking-[0.05em] uppercase hover:bg-[#E5E5E5] transition-colors whitespace-nowrap">
+
+          {/* Extension Promo */}
+          <div className="bg-[#F9F7F2] border border-[#E6C79C] p-8 flex flex-col justify-center">
+            <h2 className="font-heading text-lg font-bold mb-2 text-[#1A1A1A]">Browser Extension</h2>
+            <p className="font-sans text-xs text-[#747878] mb-6 leading-relaxed">
+              The easiest way to save articles. Bypasses paywalls and anti-bot protections by saving exactly what you see on your screen.
+            </p>
+            <Link href="/chrome-extension" className="bg-[#1A1A1A] text-white px-4 py-3 text-center text-[11px] font-bold tracking-[0.05em] uppercase hover:bg-[#333] transition-colors whitespace-nowrap">
               View Instructions
             </Link>
           </div>
-        </section>
+
+        </div>
       </div>
 
       {/* Today's Rediscovery */}
@@ -132,58 +189,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="text-[#BDBDBD] font-sans text-sm tracking-widest text-center mt-6">───</div>
 
-      {/* How to use */}
-      <section>
-        <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5">
-          How to Use The Reading Room
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
-              <Library className="w-4 h-4" />
-            </div>
-            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">1. Build Your Library</h3>
-            <p className="font-sans text-sm text-[#747878] leading-relaxed">
-              Use the Chrome Extension to save web articles with one click, bypassing paywalls. You can also manually upload PDFs or paste URLs.
-            </p>
-          </div>
-
-          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
-              <Highlighter className="w-4 h-4" />
-            </div>
-            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">2. Read & Annotate</h3>
-            <p className="font-sans text-sm text-[#747878] leading-relaxed">
-              Experience a minimalist, editorial reader. Highlight important passages, add personal notes, and categorize them by tags.
-            </p>
-          </div>
-
-          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
-              <BookOpen className="w-4 h-4" />
-            </div>
-            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">3. Grow Your Vault</h3>
-            <p className="font-sans text-sm text-[#747878] leading-relaxed">
-              Select any unfamiliar word or concept while reading to look up its definition. It is automatically saved to your Vault for spaced rediscovery.
-            </p>
-          </div>
-
-          <div className="border border-[#E5E5E5] bg-white p-8 hover:border-[#1A1A1A] transition-colors">
-            <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center mb-6">
-              <Layout className="w-4 h-4" />
-            </div>
-            <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-3">4. Organize into Rooms</h3>
-            <p className="font-sans text-sm text-[#747878] leading-relaxed">
-              Curate your knowledge by grouping related articles into thematic Rooms. Perfect for research projects or specific areas of interest.
-            </p>
-          </div>
-
-        </div>
-      </section>
     </div>
   )
 }
