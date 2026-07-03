@@ -55,7 +55,7 @@ export default async function RoomsPage() {
       <div className="border-b border-[#E5E5E5] pb-8 flex items-start justify-between">
         <div>
           <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">My Rooms</h1>
-          <p className="font-sans text-sm text-[#747878]">Manage your intellectual environments and curated research clusters.</p>
+          <p className="font-sans text-sm text-[#52525B]">Manage your intellectual environments and curated research clusters.</p>
         </div>
         <CreateRoomDialog />
       </div>
@@ -64,7 +64,7 @@ export default async function RoomsPage() {
         <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
           <Library className="w-8 h-8 text-[#BDBDBD] mb-4" />
           <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">No rooms created yet</h2>
-          <p className="font-sans text-sm text-[#747878] max-w-md">Rooms are themed shelves where you can organize your saved articles.</p>
+          <p className="font-sans text-sm text-[#52525B] max-w-md">Rooms are themed shelves where you can organize your saved articles.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -80,10 +80,10 @@ export default async function RoomsPage() {
                   
                   <div className="p-8">
                     <div className="flex justify-between items-start mb-4">
-                      <span className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase">
+                      <span className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#52525B] uppercase">
                         {isResearch ? 'Research Room' : 'Reading Room'}
                       </span>
-                      <span className="font-sans text-[11px] tracking-[0.05em] text-[#747878]">
+                      <span className="font-sans text-[11px] tracking-[0.05em] text-[#52525B]">
                         {format(new Date(room.created_at), 'MMM dd, yyyy')}
                       </span>
                     </div>
@@ -92,15 +92,15 @@ export default async function RoomsPage() {
                     
                     <div className="flex items-center gap-8 border-t border-[#E5E5E5] pt-4">
                       <div>
-                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase mb-0.5">Articles</p>
+                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#52525B] uppercase mb-0.5">Articles</p>
                         <p className="font-sans text-base font-semibold text-[#1A1A1A]">{room._count.articles}</p>
                       </div>
                       <div>
-                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase mb-0.5">Highlights</p>
+                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#52525B] uppercase mb-0.5">Highlights</p>
                         <p className="font-sans text-base font-semibold text-[#1A1A1A]">{highlightsCount}</p>
                       </div>
                       <div>
-                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase mb-0.5">Vault</p>
+                        <p className="font-sans text-[11px] tracking-[0.05em] text-[#52525B] uppercase mb-0.5">Vault</p>
                         <p className="font-sans text-base font-semibold text-[#1A1A1A]">{room._count.vaultTrails}</p>
                       </div>
                     </div>

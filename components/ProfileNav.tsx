@@ -27,7 +27,7 @@ export function ProfileNav() {
       <div className="border-b border-[#E5E5E5] px-6 py-4">
         <Link
           href="/home"
-          className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#747878] hover:text-[#1A1A1A] transition-colors"
+          className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#52525B] hover:text-[#1A1A1A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           The Reading Rooms
@@ -50,7 +50,7 @@ export function ProfileNav() {
         <p className="font-heading text-base font-semibold text-[#1A1A1A] truncate leading-tight">
           {user?.fullName ?? user?.firstName ?? "Reader"}
         </p>
-        <p className="font-sans text-xs text-[#747878] truncate mt-1">
+        <p className="font-sans text-xs text-[#52525B] truncate mt-1">
           {user?.primaryEmailAddress?.emailAddress}
         </p>
       </div>
@@ -97,7 +97,7 @@ export function ProfileNav() {
             href="https://clerk.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#BDBDBD] hover:text-[#747878] transition-colors underline underline-offset-2"
+            className="text-[#BDBDBD] hover:text-[#52525B] transition-colors underline underline-offset-2"
           >
             Clerk
           </a>

@@ -39,11 +39,11 @@ export default function ProfilePage() {
                 },
                 elements: {
                   headerTitle: { fontFamily: 'var(--font-source-serif)', fontSize: '1.5rem', color: '#1A1A1A', letterSpacing: '-0.02em', fontWeight: 'bold' },
-                  headerSubtitle: { color: '#747878', fontFamily: 'var(--font-inter)' },
+                  headerSubtitle: { color: '#52525B', fontFamily: 'var(--font-inter)' },
                   profileSectionTitleText: { textTransform: 'uppercase', letterSpacing: '0.1em', color: '#BDBDBD', fontWeight: 'bold', fontFamily: 'var(--font-inter)' },
                   avatarBox: { border: '2px solid #E5E5E5', borderRadius: '0px' },
                   userPreviewMainIdentifier: { fontFamily: 'var(--font-source-serif)', fontWeight: 'bold' },
-                  badge: { borderRadius: '0px', border: '1px solid #BDBDBD', backgroundColor: 'transparent', color: '#747878', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '9px', padding: '2px 6px' },
+                  badge: { borderRadius: '0px', border: '1px solid #BDBDBD', backgroundColor: 'transparent', color: '#52525B', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '9px', padding: '2px 6px' },
                   profileSectionPrimaryButton: { textDecoration: 'underline', textUnderlineOffset: '2px', color: '#1A1A1A', fontWeight: '500' },
                   formButtonPrimary: { backgroundColor: '#1A1A1A', color: '#F9F7F2', borderRadius: '0px', fontWeight: 'bold' },
                   formButtonReset: { border: '1px solid #BDBDBD', borderRadius: '0px', backgroundColor: 'transparent', color: '#1A1A1A' },

@@ -19,7 +19,7 @@ export default function ChromeExtensionPage() {
             <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
             <div>
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-2">Open Extension Settings</h3>
-              <p className="font-sans text-[#747878] mb-3">Copy and paste this URL into your Chrome address bar:</p>
+              <p className="font-sans text-[#52525B] mb-3">Copy and paste this URL into your Chrome address bar:</p>
               <a href="chrome://extensions/" target="_blank" rel="noopener noreferrer" className="bg-[#F4F3F3] text-[#1A1A1A] px-3 py-1.5 rounded text-sm font-mono block w-fit hover:bg-[#E5E5E5] transition-colors cursor-pointer">
                 chrome://extensions/
               </a>
@@ -30,7 +30,7 @@ export default function ChromeExtensionPage() {
             <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
             <div>
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-2">Enable Developer Mode</h3>
-              <p className="font-sans text-[#747878]">
+              <p className="font-sans text-[#52525B]">
                 Find the <strong className="text-[#1A1A1A]">Developer mode</strong> toggle switch in the top right corner of the extensions page and turn it on.
               </p>
             </div>
@@ -40,11 +40,11 @@ export default function ChromeExtensionPage() {
             <div className="w-8 h-8 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
             <div>
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-2">Load the Extension</h3>
-              <p className="font-sans text-[#747878] mb-4">
+              <p className="font-sans text-[#52525B] mb-4">
                 Click the <strong className="text-[#1A1A1A]">Load unpacked</strong> button in the top left and select the <code className="bg-[#F4F3F3] text-sm px-1.5 py-0.5 rounded">chrome-extension</code> folder located in this project&apos;s directory:
               </p>
               <div className="bg-[#F4F3F3] p-4 rounded-md flex items-center gap-3">
-                <Download className="w-5 h-5 text-[#747878]" />
+                <Download className="w-5 h-5 text-[#52525B]" />
                 <span className="font-mono text-sm text-[#1A1A1A]">d:\the-reading-room\chrome-extension</span>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function ChromeExtensionPage() {
             </div>
             <div>
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A] mb-2">You&apos;re all set!</h3>
-              <p className="font-sans text-[#747878]">
+              <p className="font-sans text-[#52525B]">
                 Pin the extension to your toolbar. Next time you hit a paywall or want to save a great article, just click the icon!
               </p>
             </div>
@@ -65,7 +65,7 @@ export default function ChromeExtensionPage() {
       </div>
       
       <div className="flex justify-center">
-        <Link href="/home" className="flex items-center gap-2 font-sans text-sm font-bold tracking-widest text-[#1A1A1A] uppercase hover:text-[#747878] transition-colors">
+        <Link href="/home" className="flex items-center gap-2 font-sans text-sm font-bold tracking-widest text-[#1A1A1A] uppercase hover:text-[#52525B] transition-colors">
           Return Home <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

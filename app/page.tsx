@@ -57,7 +57,7 @@ export default async function LandingPage() {
       </header>
 
       {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-4 lg:py-6 flex flex-col justify-center min-h-0">
+      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-4 lg:py-6 flex flex-col justify-center min-h-0">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-6">
@@ -99,7 +99,7 @@ export default async function LandingPage() {
           <div className="bg-white border-b border-[#E5E5E5] p-6 lg:p-8 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative z-10">
-              <BookOpen className="w-5 h-5 text-[#747878] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-4" />
+              <BookOpen className="w-5 h-5 text-[#52525B] group-hover:text-[#1A1A1A] transition-colors duration-500 mb-4" />
               <StreamingQuote />
             </div>
           </div>

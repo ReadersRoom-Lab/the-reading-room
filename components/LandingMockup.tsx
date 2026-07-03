@@ -106,7 +106,7 @@ function OrganizeAd() {
   return (
      <div className="flex h-full w-full">
         <div className="w-1/3 border-r border-gray-100 p-4 bg-gray-50/50 flex flex-col gap-2 relative z-10">
-           <div className="text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wider">Rooms</div>
+           <div className="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-wider">Rooms</div>
            <div className={cn("flex items-center gap-2 p-2 rounded transition-all duration-300", step === 1 ? "bg-white shadow-md ring-1 ring-blue-200 scale-105" : "")}>
               <Folder className={cn("w-4 h-4", step === 1 ? "text-blue-500" : "text-blue-400")} />
               <span className="text-xs font-semibold">Neuroscience</span>
@@ -122,7 +122,7 @@ function OrganizeAd() {
               <FileText className="w-5 h-5 text-gray-400 shrink-0" />
               <div>
                  <div className="text-sm font-bold mb-1">The Brain&apos;s Network</div>
-                 <div className="text-[10px] text-gray-500 leading-tight">How neurons wire together...</div>
+                 <div className="text-[10px] text-gray-600 leading-tight">How neurons wire together...</div>
               </div>
            </div>
 
@@ -132,8 +132,8 @@ function OrganizeAd() {
            )}>
               <FileText className="w-5 h-5 text-gray-300 shrink-0" />
               <div>
-                 <div className="text-sm font-bold mb-1 text-gray-400">Synaptic Plasticity</div>
-                 <div className="text-[10px] text-gray-300 leading-tight">Memory formation and...</div>
+                 <div className="text-sm font-bold mb-1 text-gray-500">Synaptic Plasticity</div>
+                 <div className="text-[10px] text-gray-500 leading-tight">Memory formation and...</div>
               </div>
            </div>
         </div>
@@ -158,7 +158,7 @@ export function LandingMockup() {
   ];
 
   return (
-    <div className="bg-gray-50/50 p-6 lg:p-8 relative overflow-hidden flex items-center justify-center border-t border-[#E5E5E5] w-full min-h-[360px]">
+    <div className="bg-gray-50/50 p-6 lg:p-8 relative overflow-hidden flex items-center justify-center border-t border-[#E5E5E5] w-full min-h-[360px]" aria-hidden="true">
       
       {/* Glow effect behind the mockup */}
       <div className={cn("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] h-[300px] blur-[80px] rounded-full pointer-events-none transition-colors duration-1000",
@@ -179,7 +179,7 @@ export function LandingMockup() {
               <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
             </div>
-            <div className="font-sans text-[10px] text-gray-400 font-bold tracking-widest uppercase transition-all duration-300">
+            <div className="font-sans text-[10px] text-gray-500 font-bold tracking-widest uppercase transition-all duration-300">
               {titles[activeAd]}
             </div>
             <div className="w-10"></div> {/* Spacer for centering */}
@@ -206,6 +206,8 @@ export function LandingMockup() {
               key={i}
               onClick={() => setActiveAd(i)}
               className="relative py-2 px-1 group"
+              tabIndex={-1}
+              aria-label={`Slide ${i + 1}`}
             >
               <div className={cn(
                 "h-1 rounded-full transition-all duration-700 ease-out", 

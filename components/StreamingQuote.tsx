@@ -70,7 +70,7 @@ export function StreamingQuote() {
         {formattedQuote}
         {isLoading && <span className="inline-block w-1.5 h-6 ml-1 align-middle bg-[#1A1A1A]/80 animate-pulse" />}
       </blockquote>
-      <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold min-h-[16px]">
+      <p className="font-sans text-xs tracking-[0.1em] text-[#52525B] uppercase font-bold min-h-[16px]">
         {displayAuthor}
       </p>
     </>

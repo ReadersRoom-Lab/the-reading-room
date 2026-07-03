@@ -53,7 +53,7 @@ export default function RootLayout({
           },
           headerSubtitle: {
             fontFamily: "var(--font-inter)",
-            color: "#747878",
+            color: "#52525B",
           },
           formButtonPrimary: {
             backgroundColor: "#1A1A1A",
@@ -85,11 +85,11 @@ export default function RootLayout({
           },
           dividerText: {
             fontFamily: "var(--font-inter)",
-            color: "#747878",
+            color: "#52525B",
           },
           footerActionText: {
             fontFamily: "var(--font-inter)",
-            color: "#747878",
+            color: "#52525B",
           },
           footerActionLink: {
             fontFamily: "var(--font-inter)",

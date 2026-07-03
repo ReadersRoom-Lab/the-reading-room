@@ -47,7 +47,7 @@ export default async function VaultPage() {
         <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
           <BookMarked className="w-8 h-8 text-[#BDBDBD] mb-4" />
           <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Your Vault is empty</h2>
-          <p className="font-sans text-sm text-[#747878] max-w-md">
+          <p className="font-sans text-sm text-[#52525B] max-w-md">
             Highlight words while reading to save concepts, definitions, and contexts directly to your vault.
           </p>
         </div>

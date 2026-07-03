@@ -39,7 +39,7 @@ export default async function Home() {
       <div className="flex flex-col gap-6">
         <div className="border-b border-[#E5E5E5] pb-6">
           <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Good day.</h1>
-          <p className="font-sans text-sm text-[#747878]">Here is what awaits your attention.</p>
+          <p className="font-sans text-sm text-[#52525B]">Here is what awaits your attention.</p>
         </div>
 
         {/* Hero Info Block */}
@@ -104,7 +104,7 @@ export default async function Home() {
           {/* Extension Promo */}
           <div className="bg-[#F9F7F2] border border-[#E6C79C] px-8 py-6 flex flex-col justify-center">
             <h2 className="font-heading text-lg font-bold mb-1 text-[#1A1A1A]">Browser Extension</h2>
-            <p className="font-sans text-[11px] text-[#747878] mb-5 leading-relaxed">
+            <p className="font-sans text-[11px] text-[#52525B] mb-5 leading-relaxed">
               Bypass paywalls and anti-bot protections by saving exactly what you see.
             </p>
             <Link href="/chrome-extension" className="bg-[#1A1A1A] text-white px-4 py-2.5 text-center text-[10px] font-bold tracking-[0.05em] uppercase hover:bg-[#333] transition-colors whitespace-nowrap mt-auto">
@@ -124,7 +124,7 @@ export default async function Home() {
               <span className="font-sans text-[11px] font-medium px-2 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.1em] uppercase">
                 {randomVaultEntry.type === 'concept' ? 'CONCEPT' : 'VOCABULARY'}
               </span>
-              <span className="font-sans text-[11px] tracking-[0.05em] text-[#747878] uppercase">
+              <span className="font-sans text-[11px] tracking-[0.05em] text-[#52525B] uppercase">
                 {formatDistanceToNow(new Date(randomVaultEntry.created_at), { addSuffix: true })}
               </span>
             </div>
@@ -134,7 +134,7 @@ export default async function Home() {
             </p>
             {randomVaultEntry.vaultTrails && randomVaultEntry.vaultTrails.length > 0 && (
               <div className="pt-5 border-t border-[#E5E5E5]">
-                <p className="font-sans text-[11px] tracking-[0.05em] text-[#747878]">
+                <p className="font-sans text-[11px] tracking-[0.05em] text-[#52525B]">
                   {"Encountered in "}
                   <span className="italic font-serif text-[#1A1A1A] text-sm">&quot;{randomVaultEntry.vaultTrails[0].article.title}&quot;</span>
                 </p>
@@ -143,7 +143,7 @@ export default async function Home() {
           </div>
         ) : (
           <div className="border border-[#E5E5E5] bg-white p-10 text-center">
-            <p className="font-sans text-sm text-[#747878] mb-4">Your Vault is currently empty.</p>
+            <p className="font-sans text-sm text-[#52525B] mb-4">Your Vault is currently empty.</p>
             <p className="font-sans text-xs text-[#BDBDBD]">Highlight and define words while reading to build your vocabulary.</p>
           </div>
         )}
@@ -154,14 +154,14 @@ export default async function Home() {
 
       {/* Recently Read */}
       <section>
-        <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#747878] uppercase mb-5">
+        <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#52525B] uppercase mb-5">
           Recently Read
         </h2>
         <div className="flex flex-col gap-0 border border-[#E5E5E5]">
           {recentArticles.length === 0 ? (
             <div className="p-12 text-center bg-white">
               <Bookmark className="w-6 h-6 text-[#BDBDBD] mx-auto mb-3" />
-              <p className="font-sans text-sm text-[#747878]">No articles in progress.</p>
+              <p className="font-sans text-sm text-[#52525B]">No articles in progress.</p>
               <p className="font-sans text-xs text-[#BDBDBD] mt-1">Start reading from your library!</p>
             </div>
           ) : recentArticles.map((article: { id: string; source_type: string; title: string; reading_progress: number; read_time_minutes: number }, idx: number) => (
@@ -171,7 +171,7 @@ export default async function Home() {
               className={`block bg-white hover:bg-[#F4F3F3] transition-colors p-8 ${idx > 0 ? 'border-t border-[#E5E5E5]' : ''}`}
             >
               <div className="flex justify-between items-start mb-3">
-                <span className="font-sans text-[11px] font-medium tracking-[0.1em] text-[#747878] uppercase">
+                <span className="font-sans text-[11px] font-medium tracking-[0.1em] text-[#52525B] uppercase">
                   {article.source_type === 'url' ? 'Web Article' : 'Document'}
                 </span>
                 <Bookmark className="w-3.5 h-3.5 text-[#BDBDBD]" />
@@ -181,7 +181,7 @@ export default async function Home() {
                 <div className="flex-1 h-px bg-[#E5E5E5]">
                   <div className="h-full bg-[#1A1A1A]" style={{ width: `${article.reading_progress}%` }}></div>
                 </div>
-                <span className="font-sans text-[11px] tracking-[0.03em] text-[#747878] whitespace-nowrap">
+                <span className="font-sans text-[11px] tracking-[0.03em] text-[#52525B] whitespace-nowrap">
                   {article.reading_progress}% · {Math.max(1, Math.ceil(article.read_time_minutes * (1 - (article.reading_progress / 100))))}m left
                 </span>
               </div>

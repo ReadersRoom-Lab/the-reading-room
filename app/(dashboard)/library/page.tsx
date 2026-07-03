@@ -31,7 +31,7 @@ export default function LibraryPage() {
     <div className="flex flex-col gap-8">
       <div className="border-b border-[#E5E5E5] pb-8">
         <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Library</h1>
-        <p className="font-sans text-sm text-[#747878]">Your saved articles and documents.</p>
+        <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
       </div>
       
       {loading && (
@@ -50,7 +50,7 @@ export default function LibraryPage() {
         <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
           <BookMarked className="w-8 h-8 text-[#BDBDBD] mb-4" />
           <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Your library is empty</h2>
-          <p className="font-sans text-sm text-[#747878] max-w-sm">Save articles from the web to read them later without distractions.</p>
+          <p className="font-sans text-sm text-[#52525B] max-w-sm">Save articles from the web to read them later without distractions.</p>
         </div>
       )}
     </div>

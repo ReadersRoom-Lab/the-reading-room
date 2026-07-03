@@ -161,7 +161,7 @@
   --secondary-foreground: var(--ink-text);
 
   --muted: var(--ui-grey-light);
-  --muted-foreground: #747878;
+  --muted-foreground: #52525B;
 
   --accent: var(--ui-grey-light);
   --accent-foreground: var(--ink-text);
