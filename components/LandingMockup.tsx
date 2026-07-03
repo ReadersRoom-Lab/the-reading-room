@@ -18,7 +18,7 @@ function HighlightAd() {
   const isMenuVisible = step === 2 || step === 3;
   const isHighlighted = step === 3 || step === 4;
 
-  let highlightClass = "bg-transparent text-gray-600 border-b-2 border-transparent px-1 rounded transition-colors duration-300";
+  let highlightClass = "bg-transparent text-gray-700 border-b-2 border-transparent px-1 rounded transition-colors duration-300";
   if (isSelected) {
     highlightClass = "bg-blue-200/50 text-black border-b-2 border-transparent px-1 rounded transition-colors duration-300";
   } else if (isHighlighted) {
@@ -31,10 +31,10 @@ function HighlightAd() {
         The Architecture of Thought
       </h4>
       
-      <p className="font-serif text-xs leading-relaxed text-gray-600 mb-2 transition-colors">
+      <p className="font-serif text-xs leading-relaxed text-gray-700 mb-2 transition-colors">
         When we interact with complex systems, our minds naturally seek to build <mark className={highlightClass}>structural scaffolding</mark>. This allows us to map new concepts onto existing frameworks.
       </p>
-      <p className="font-serif text-xs leading-relaxed text-gray-600">
+      <p className="font-serif text-xs leading-relaxed text-gray-700">
         The most effective learning environments are those that <mark className="bg-[#D1D9D3]/40 text-black px-1 rounded border-b-2 border-[#D1D9D3]">encourage active synthesis</mark> rather than passive consumption. By highlighting and annotating, we transform the text into our own context.
       </p>
 
@@ -106,7 +106,7 @@ function OrganizeAd() {
   return (
      <div className="flex h-full w-full">
         <div className="w-1/3 border-r border-gray-100 p-4 bg-gray-50/50 flex flex-col gap-2 relative z-10">
-           <div className="text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-wider">Rooms</div>
+           <div className="text-[10px] font-bold text-gray-600 mb-2 uppercase tracking-wider">Rooms</div>
            <div className={cn("flex items-center gap-2 p-2 rounded transition-all duration-300", step === 1 ? "bg-white shadow-md ring-1 ring-blue-200 scale-105" : "")}>
               <Folder className={cn("w-4 h-4", step === 1 ? "text-blue-500" : "text-blue-400")} />
               <span className="text-xs font-semibold">Neuroscience</span>
@@ -122,7 +122,7 @@ function OrganizeAd() {
               <FileText className="w-5 h-5 text-gray-400 shrink-0" />
               <div>
                  <div className="text-sm font-bold mb-1">The Brain&apos;s Network</div>
-                 <div className="text-[10px] text-gray-600 leading-tight">How neurons wire together...</div>
+                 <div className="text-[10px] text-gray-700 leading-tight">How neurons wire together...</div>
               </div>
            </div>
 
@@ -132,8 +132,8 @@ function OrganizeAd() {
            )}>
               <FileText className="w-5 h-5 text-gray-300 shrink-0" />
               <div>
-                 <div className="text-sm font-bold mb-1 text-gray-500">Synaptic Plasticity</div>
-                 <div className="text-[10px] text-gray-500 leading-tight">Memory formation and...</div>
+                 <div className="text-sm font-bold mb-1 text-gray-600">Synaptic Plasticity</div>
+                 <div className="text-[10px] text-gray-600 leading-tight">Memory formation and...</div>
               </div>
            </div>
         </div>
@@ -179,7 +179,7 @@ export function LandingMockup() {
               <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
             </div>
-            <div className="font-sans text-[10px] text-gray-500 font-bold tracking-widest uppercase transition-all duration-300">
+            <div className="font-sans text-[10px] text-gray-600 font-bold tracking-widest uppercase transition-all duration-300">
               {titles[activeAd]}
             </div>
             <div className="w-10"></div> {/* Spacer for centering */}
