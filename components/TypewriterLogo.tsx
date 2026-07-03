@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export function TypewriterLogo() {
   const [typedChars, setTypedChars] = useState(0)
@@ -27,18 +28,21 @@ export function TypewriterLogo() {
   }
 
   const renderLine = (text: string, startIndex: number, lineIndex: number) => {
-    const charsToShow = Math.max(0, Math.min(typedChars - startIndex, text.length))
-    const displayedText = text.substring(0, charsToShow)
     const cursor = showCursor(lineIndex, text.length, startIndex)
     
     return (
-      <div className="flex items-center min-h-[1.2em]">
+      <div className="flex items-center">
         <span className="font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl tracking-tight">
-          {displayedText}
+          {text.split('').map((char, index) => {
+            const isVisible = startIndex + index < typedChars;
+            return (
+              <span key={index} className={isVisible ? "opacity-100" : "opacity-0"}>
+                {char}
+              </span>
+            );
+          })}
         </span>
-        {cursor && (
-          <span className="w-1.5 h-[0.8em] bg-white ml-2 animate-pulse shadow-sm" />
-        )}
+        <span className={cn("w-1.5 h-[0.8em] bg-white ml-2 shadow-sm", cursor ? "animate-pulse" : "opacity-0")} />
       </div>
     )
   }

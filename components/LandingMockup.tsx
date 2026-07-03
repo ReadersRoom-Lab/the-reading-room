@@ -96,11 +96,11 @@ function OrganizeAd() {
     return () => clearInterval(interval);
   }, []);
 
-  let dragFileClass = "translate-x-0 translate-y-0 scale-100 opacity-100";
+  let dragFileClass = "translate-x-0 translate-y-0 opacity-100";
   if (step === 1) {
-    dragFileClass = "-translate-x-[120px] translate-y-[10px] scale-50 opacity-0";
+    dragFileClass = "-translate-x-[120px] translate-y-[10px] opacity-0";
   } else if (step === 2 || step === 3) {
-    dragFileClass = "opacity-0 translate-y-4 scale-95";
+    dragFileClass = "opacity-0 translate-y-4";
   }
 
   return (
@@ -187,14 +187,14 @@ export function LandingMockup() {
 
           {/* Ad Container */}
           <div className="relative w-full h-[220px] bg-white">
-            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 0 ? "opacity-100 z-10" : "opacity-0 z-0")}>
-              {activeAd === 0 && <HighlightAd />}
+            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 0 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
+              <HighlightAd />
             </div>
-            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 1 ? "opacity-100 z-10" : "opacity-0 z-0")}>
-              {activeAd === 1 && <AIAd />}
+            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 1 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
+              <AIAd />
             </div>
-            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 2 ? "opacity-100 z-10" : "opacity-0 z-0")}>
-              {activeAd === 2 && <OrganizeAd />}
+            <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 2 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
+              <OrganizeAd />
             </div>
           </div>
         </div>
