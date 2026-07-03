@@ -6,6 +6,8 @@ import { TypewriterLogo } from "@/components/TypewriterLogo"
 import { StreamingQuote } from "@/components/StreamingQuote"
 import { LandingMockup } from "@/components/LandingMockup"
 import { DustMotes } from "@/components/DustMotes"
+import Image from "next/image"
+
 
 
 export default async function LandingPage() {
@@ -18,16 +20,23 @@ export default async function LandingPage() {
   return (
     <div className="h-[100dvh] relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
-      <div 
-        className="absolute inset-0 z-0 animate-kenburns opacity-70" 
-        style={{
-          backgroundImage: "url('/library_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+      <div className="absolute inset-0 z-0 animate-kenburns opacity-70">
+        <Image
+          src="/library_bg.png"
+          alt="Library Background"
+          fill
+          priority
+          quality={75}
+          className="object-cover object-center"
+        />
+      </div>
       {/* Subtle Grain Texture Overlay */}
-      <div className="absolute inset-0 z-0 mix-blend-overlay opacity-20 pointer-events-none" style={{ backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')", backgroundRepeat: 'repeat' }} />
+      <div 
+        className="absolute inset-0 z-0 mix-blend-overlay opacity-20 pointer-events-none" 
+        style={{ 
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")" 
+        }} 
+      />
       
       {/* Dark Overlay to ensure white text readability */}
       <div className="absolute inset-0 z-0 bg-black/60 backdrop-blur-[4px]" />
