@@ -89,6 +89,8 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
         <DropdownMenuTrigger 
           onClick={handleTriggerInteraction} 
           onKeyDown={handleTriggerInteraction}
+          aria-label="Article options"
+          title="Article options"
           className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none"
         >
           <MoreVertical className="w-4 h-4" />

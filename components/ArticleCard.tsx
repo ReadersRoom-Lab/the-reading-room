@@ -69,7 +69,7 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
               <span>Progress</span>
               <span>{article.reading_progress}%</span>
             </div>
-            <Progress value={article.reading_progress} className="h-1.5" />
+            <Progress value={article.reading_progress} className="h-1.5" aria-label="Reading progress" title="Reading progress" />
           </div>
         )}
       </CardContent>
