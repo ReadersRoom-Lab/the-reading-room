@@ -18,7 +18,7 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="h-[100dvh] relative flex flex-col w-full overflow-hidden bg-[#1A1A1A]">
+    <div className="min-h-[100dvh] relative flex flex-col w-full overflow-x-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
       <div className="absolute inset-0 z-0 animate-kenburns opacity-70">
         <Image
@@ -65,8 +65,8 @@ export default async function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll */}
-      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-8 lg:px-12 py-4 lg:py-6 flex flex-col justify-center min-h-0">
+      {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll on desktop */}
+      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-6 flex flex-col justify-center min-h-0">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-6">

@@ -2,6 +2,7 @@ import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { MobileNav } from "@/components/MobileNav";
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
@@ -30,10 +31,11 @@ export default async function DashboardLayout({
     redirect('/onboarding');
   }
   return (
-    <div className="flex h-screen w-full bg-[#F9F7F2] overflow-hidden">
+    <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-[#F9F7F2] overflow-hidden">
+      <MobileNav />
 
       {/* Sidebar */}
-      <aside className="w-64 border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-col">
+      <aside className="hidden md:flex w-64 border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex-col">
 
         {/* Brand */}
         <div className="border-b border-[#E5E5E5] px-6 py-5">
@@ -99,7 +101,7 @@ export default async function DashboardLayout({
 
       {/* Main content */}
       <main role="main" className="flex-1 min-w-0 overflow-y-auto bg-[#FAFAFA]">
-        <div className="max-w-6xl mx-auto px-10 py-10">
+        <div className="max-w-6xl mx-auto px-4 py-6 md:px-10 md:py-10">
           {children}
         </div>
       </main>
