@@ -30,7 +30,7 @@ jobs:
             --test-reporter-destination=lcov.info \
             --test-reporter=spec \
             --test-reporter-destination=stdout \
-            tests/**/*.test.ts
+            tests/*.test.ts
         continue-on-error: true   # don't fail the build if tests fail; Sonar still needs the coverage file
 
       - name: SonarCloud Scan
