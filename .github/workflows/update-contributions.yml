@@ -1,0 +1,32 @@
+name: Update Contributions Log
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'CONTRIBUTIONS.md' # Prevent infinite loops if this is the only file changed
+
+permissions:
+  contents: write # Required for git-auto-commit-action
+
+jobs:
+  update-log:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch full history
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate CONTRIBUTIONS.md
+        run: node scripts/generate-contributions.mjs
+          
+      - name: Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Docs: auto-update CONTRIBUTIONS.md"
+          file_pattern: "CONTRIBUTIONS.md"
