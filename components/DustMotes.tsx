@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { secureRandom } from '@/lib/utils';
 
 export function DustMotes() {
   const [motes, setMotes] = useState<Array<{ id: number; left: string; size: number; delay: string; duration: string }>>([]);
@@ -8,10 +9,10 @@ export function DustMotes() {
     // Generate static motes on mount to avoid hydration mismatch
     const generatedMotes = Array.from({ length: 40 }).map((_, i) => ({
       id: i,
-      left: `${Math.random() * 100}%`,
-      size: Math.random() * 2 + 1,
-      delay: `${Math.random() * 10}s`,
-      duration: `${Math.random() * 15 + 15}s`,
+      left: `${secureRandom() * 100}%`,
+      size: secureRandom() * 2 + 1,
+      delay: `${secureRandom() * 10}s`,
+      duration: `${secureRandom() * 15 + 15}s`,
     }));
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMotes(generatedMotes);

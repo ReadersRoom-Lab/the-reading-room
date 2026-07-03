@@ -2,6 +2,7 @@
 
 import { useCompletion } from 'ai/react';
 import { useEffect, useState } from 'react';
+import { secureRandom } from '@/lib/utils';
 
 const FALLBACK_QUOTES = [
   { text: "A library is not a luxury but one of the necessities of life.", author: "Henry Ward Beecher" },
@@ -24,7 +25,7 @@ export function StreamingQuote() {
   useEffect(() => {
     // Select a random fallback quote on mount to avoid hydration mismatch
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFallbackQuote(FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]);
+    setFallbackQuote(FALLBACK_QUOTES[Math.floor(secureRandom() * FALLBACK_QUOTES.length)]);
     
     // Fire the streaming completion request immediately
     complete(''); 

@@ -46,3 +46,11 @@ test('cn handles object syntax from clsx', () => {
   assert.ok(result.includes('text-red-500'));
   assert.ok(!result.includes('text-blue-500'));
 });
+
+test('secureRandom returns numbers between 0 and 1', () => {
+  const { secureRandom } = require('../lib/utils');
+  for (let i = 0; i < 100; i++) {
+    const val = secureRandom();
+    assert.ok(val >= 0 && val < 1, `Value ${val} should be between 0 and 1`);
+  }
+});

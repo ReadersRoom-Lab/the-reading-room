@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+import { secureRandom } from '@/lib/utils'
 import Link from 'next/link'
 import { Bookmark, RefreshCw, BookOpen, Highlighter, Library, Layout } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
@@ -19,8 +20,7 @@ export default async function Home() {
   let randomVaultEntry = null
   
   if (vaultCount > 0 && user) {
-    // eslint-disable-next-line react-hooks/purity
-    const skip = Math.floor(Math.random() * vaultCount)
+    const skip = Math.floor(secureRandom() * vaultCount)
     randomVaultEntry = await prisma.vaultEntry.findFirst({
       where: { user_id: user.id },
       skip,
