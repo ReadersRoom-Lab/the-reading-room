@@ -4,6 +4,7 @@
 
 ## 📅 July 3, 2026
 **Lokeshwaran V R:**
+- Feat: implement mobile responsiveness for landing page and dashboard
 - Ci: implement automated contributions log generation
 - Docs: update README with accessibility and performance scores
 - Perf: optimize background images on auth pages using next/image
