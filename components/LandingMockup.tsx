@@ -208,7 +208,9 @@ export function LandingMockup() {
               className="relative py-2 px-1 group"
               tabIndex={-1}
               aria-label={`Slide ${i + 1}`}
+              title={`Slide ${i + 1}`}
             >
+              <span className="sr-only">Slide {i + 1}</span>
               <div className={cn(
                 "h-1 rounded-full transition-all duration-700 ease-out", 
                 activeAd === i ? "w-8 bg-[#1A1A1A]" : "w-4 bg-gray-300 group-hover:bg-gray-400"
