@@ -47,7 +47,7 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
               {domain}
             </Badge>
             {article.status === 'finished' && (
-              <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-600 hover:bg-emerald-700">Finished</Badge>
+              <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-800 hover:bg-emerald-900 text-white">Finished</Badge>
             )}
           </div>
           <RoomAssignDropdown articleId={article.id} currentRoomId={article.room_id} />
