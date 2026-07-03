@@ -3,19 +3,22 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { TypewriterLogo } from "@/components/TypewriterLogo";
 import { DustMotes } from "@/components/DustMotes";
+import Image from "next/image";
 
 export default function SignInPage() {
   return (
     <div className="h-[100dvh] overflow-hidden flex w-full relative bg-black">
       {/* Full Page Background */}
-      <div 
-        className="absolute inset-0 z-0 animate-kenburns opacity-70" 
-        style={{
-          backgroundImage: "url('/library_sketch_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+      <div className="absolute inset-0 z-0 animate-kenburns opacity-70">
+        <Image
+          src="/library_sketch_bg.png"
+          alt="Library Background"
+          fill
+          priority
+          quality={75}
+          className="object-cover object-center"
+        />
+      </div>
       <div className="absolute inset-0 z-10 bg-black/50" />
       <div className="absolute inset-0 z-10 pointer-events-none"><DustMotes /></div>
 
