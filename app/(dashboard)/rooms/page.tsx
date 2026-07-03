@@ -88,7 +88,7 @@ export default async function RoomsPage() {
                       </span>
                     </div>
                     
-                    <h3 className="font-heading text-3xl font-semibold text-[#1A1A1A] mb-8 leading-snug">{room.name}</h3>
+                    <h2 className="font-heading text-3xl font-semibold text-[#1A1A1A] mb-8 leading-snug">{room.name}</h2>
                     
                     <div className="flex items-center gap-8 border-t border-[#E5E5E5] pt-4">
                       <div>
