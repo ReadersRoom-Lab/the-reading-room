@@ -75,7 +75,7 @@ export default async function VaultPage() {
                     </span>
                   </div>
                   
-                  <h3 className="text-2xl font-heading font-bold text-[#1a1a1a] mb-4">{entry.term}</h3>
+                  <h2 className="text-2xl font-heading font-bold text-[#1a1a1a] mb-4">{entry.term}</h2>
                   
                   <p className="text-[#333] font-source-serif text-[17px] leading-relaxed mb-6">
                     {entry.definition}
