@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { cn } from '../lib/utils';
+import { cn, secureRandom } from '../lib/utils';
 
 test('cn merges class names correctly', () => {
   const result = cn('foo', 'bar');
@@ -48,7 +48,6 @@ test('cn handles object syntax from clsx', () => {
 });
 
 test('secureRandom returns numbers between 0 and 1', () => {
-  const { secureRandom } = require('../lib/utils');
   for (let i = 0; i < 100; i++) {
     const val = secureRandom();
     assert.ok(val >= 0 && val < 1, `Value ${val} should be between 0 and 1`);
