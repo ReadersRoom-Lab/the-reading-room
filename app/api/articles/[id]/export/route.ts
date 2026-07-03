@@ -35,7 +35,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       }
     })
 
-    if (!article || article.user_id !== user.id) {
+    if (article?.user_id !== user.id) {
       return new NextResponse('Article not found', { status: 404 })
     }
 

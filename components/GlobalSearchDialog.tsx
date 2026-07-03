@@ -32,7 +32,7 @@ export function GlobalSearchDialog() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true)
-    if (typeof globalThis.window !== "undefined") {
+    if (globalThis.window !== undefined) {
       setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform))
     }
 
