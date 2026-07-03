@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // 1. Semantic RAG: Fetch relevant user context.
     let relevantChunks: { title: string, content: string }[] = []
 
-    if (lastMessage && lastMessage.role === 'user') {
+    if (lastMessage?.role === 'user') {
       try {
         const queryEmbedding = await generateEmbedding(lastMessage.content)
         const embeddingString = `[${queryEmbedding.join(',')}]`

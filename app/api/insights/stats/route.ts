@@ -4,50 +4,57 @@ import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
 import { startOfDay, format, subDays, differenceInDays } from 'date-fns'
 
-function calculateStreaks(activeDaysSorted: Date[]) {
-  let currentStreak = 0;
-  let longestStreak = 0;
+function getCurrentStreak(activeDaysSorted: Date[]): number {
+  const today = startOfDay(new Date());
+  const lastActiveDay = startOfDay(activeDaysSorted[0]);
+  const diffFromToday = differenceInDays(today, lastActiveDay);
+
+  if (diffFromToday > 1) return 0;
+
+  let tempStreak = 1;
+  for (let i = 0; i < activeDaysSorted.length - 1; i++) {
+    const currentDay = startOfDay(activeDaysSorted[i]);
+    const prevDay = startOfDay(activeDaysSorted[i + 1]);
+    const diff = differenceInDays(currentDay, prevDay);
+    
+    if (diff === 1) {
+      tempStreak++;
+    } else if (diff > 1) {
+      break;
+    }
+  }
+  return tempStreak;
+}
+
+function getLongestStreak(activeDaysSorted: Date[]): number {
+  const activeDaysAsc = [...activeDaysSorted].reverse();
+  let tempStreak = 1;
+  let longestStreak = 1;
   
-  if (activeDaysSorted.length > 0) {
-    const today = startOfDay(new Date());
-    const lastActiveDay = startOfDay(activeDaysSorted[0]);
-    const diffFromToday = differenceInDays(today, lastActiveDay);
-
-    if (diffFromToday <= 1) {
-      let tempStreak = 1;
-      for (let i = 0; i < activeDaysSorted.length - 1; i++) {
-        const currentDay = startOfDay(activeDaysSorted[i]);
-        const prevDay = startOfDay(activeDaysSorted[i + 1]);
-        const diff = differenceInDays(currentDay, prevDay);
-        
-        if (diff === 1) {
-          tempStreak++;
-        } else if (diff > 1) {
-          break;
-        }
-      }
-      currentStreak = tempStreak;
+  for (let i = 0; i < activeDaysAsc.length - 1; i++) {
+    const currentDay = startOfDay(activeDaysAsc[i]);
+    const nextDay = startOfDay(activeDaysAsc[i + 1]);
+    const diff = differenceInDays(nextDay, currentDay);
+    
+    if (diff === 1) {
+      tempStreak++;
+    } else if (diff > 1) {
+      longestStreak = Math.max(longestStreak, tempStreak);
+      tempStreak = 1;
     }
+  }
+  return Math.max(longestStreak, tempStreak);
+}
 
-    const activeDaysAsc = [...activeDaysSorted].reverse();
-    let tempStreak = 1;
-    longestStreak = 1;
-    for (let i = 0; i < activeDaysAsc.length - 1; i++) {
-      const currentDay = startOfDay(activeDaysAsc[i]);
-      const nextDay = startOfDay(activeDaysAsc[i + 1]);
-      const diff = differenceInDays(nextDay, currentDay);
-      
-      if (diff === 1) {
-        tempStreak++;
-      } else if (diff > 1) {
-        longestStreak = Math.max(longestStreak, tempStreak);
-        tempStreak = 1;
-      }
-    }
-    longestStreak = Math.max(longestStreak, tempStreak);
+function calculateStreaks(activeDaysSorted: Date[]) {
+  if (activeDaysSorted.length === 0) {
+    return { currentStreak: 0, longestStreak: 0 };
   }
 
-  return { currentStreak, longestStreak };
+  return { 
+    currentStreak: getCurrentStreak(activeDaysSorted), 
+    longestStreak: getLongestStreak(activeDaysSorted) 
+  };
 }
 
 function calculateGrowthData(vaultEntries: { created_at: string | Date }[]) {

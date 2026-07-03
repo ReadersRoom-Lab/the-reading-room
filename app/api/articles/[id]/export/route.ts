@@ -47,7 +47,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     
     markdown += `---\n\n`
     
-    if (article.highlights && article.highlights.length > 0) {
+    if (article.highlights?.length > 0) {
       markdown += `## Highlights (${article.highlights.length})\n\n`
       article.highlights.forEach(h => {
         markdown += `> ${h.content}\n`
@@ -58,7 +58,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       markdown += `*No highlights yet.*\n\n`
     }
 
-    if (article.vaultTrails && article.vaultTrails.length > 0) {
+    if (article.vaultTrails?.length > 0) {
       markdown += `## Concepts & Insights (${article.vaultTrails.length})\n\n`
       article.vaultTrails.forEach(trail => {
         markdown += `### ${trail.vault_entry.term}\n`

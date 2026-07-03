@@ -86,9 +86,9 @@ export async function PATCH(
     const updated = await prisma.highlight.update({
       where: { id },
       data: {
-        colour: colour !== undefined ? colour : undefined,
-        note: note !== undefined ? note : undefined,
-        annotation_type: annotation_type !== undefined ? annotation_type : undefined
+        colour,
+        note,
+        annotation_type
       }
     })
 

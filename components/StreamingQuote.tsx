@@ -47,13 +47,27 @@ export function StreamingQuote() {
 
   // If there's an error or we finished but got nothing, use fallback
   const isFailed = error || (!isLoading && !completion);
-  const displayQuote = isFailed ? fallbackQuote.text : (completion ? text : '');
+  let displayQuote = '';
+  if (isFailed) {
+    displayQuote = fallbackQuote.text;
+  } else if (completion) {
+    displayQuote = text;
+  }
   const displayAuthor = isFailed ? fallbackQuote.author : author;
+
+  let formattedQuote = '';
+  if (displayQuote) {
+    if (displayQuote.startsWith('"')) {
+      formattedQuote = displayQuote;
+    } else {
+      formattedQuote = `"${displayQuote}"`;
+    }
+  }
 
   return (
     <>
       <blockquote className="font-serif text-xl lg:text-2xl text-[#1A1A1A] leading-relaxed italic mb-6 min-h-[96px]">
-        {displayQuote ? (displayQuote.startsWith('"') ? displayQuote : `"${displayQuote}"`) : ''}
+        {formattedQuote}
         {isLoading && <span className="inline-block w-1.5 h-6 ml-1 align-middle bg-[#1A1A1A]/80 animate-pulse" />}
       </blockquote>
       <p className="font-sans text-xs tracking-[0.1em] text-[#747878] uppercase font-bold min-h-[16px]">

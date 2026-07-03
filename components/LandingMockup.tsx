@@ -18,11 +18,12 @@ function HighlightAd() {
   const isMenuVisible = step === 2 || step === 3;
   const isHighlighted = step === 3 || step === 4;
 
-  const highlightClass = isSelected
-    ? "bg-blue-200/50 text-black border-b-2 border-transparent px-1 rounded transition-colors duration-300"
-    : isHighlighted
-    ? "bg-[#E4D7C5]/60 text-black border-b-2 border-[#E4D7C5] px-1 rounded transition-colors duration-300"
-    : "bg-transparent text-gray-600 border-b-2 border-transparent px-1 rounded transition-colors duration-300";
+  let highlightClass = "bg-transparent text-gray-600 border-b-2 border-transparent px-1 rounded transition-colors duration-300";
+  if (isSelected) {
+    highlightClass = "bg-blue-200/50 text-black border-b-2 border-transparent px-1 rounded transition-colors duration-300";
+  } else if (isHighlighted) {
+    highlightClass = "bg-[#E4D7C5]/60 text-black border-b-2 border-[#E4D7C5] px-1 rounded transition-colors duration-300";
+  }
 
   return (
     <div className="p-6 relative h-full flex flex-col justify-center">
@@ -95,6 +96,13 @@ function OrganizeAd() {
     return () => clearInterval(interval);
   }, []);
 
+  let dragFileClass = "translate-x-0 translate-y-0 scale-100 opacity-100";
+  if (step === 1) {
+    dragFileClass = "-translate-x-[120px] translate-y-[10px] scale-50 opacity-0";
+  } else if (step === 2 || step === 3) {
+    dragFileClass = "opacity-0 translate-y-4 scale-95";
+  }
+
   return (
      <div className="flex h-full w-full">
         <div className="w-1/3 border-r border-gray-100 p-4 bg-gray-50/50 flex flex-col gap-2 relative z-10">
@@ -110,11 +118,7 @@ function OrganizeAd() {
         </div>
         <div className="w-2/3 p-6 relative bg-white overflow-hidden">
            {/* Dragging File */}
-           <div className={cn("p-4 border border-gray-200 shadow-sm rounded-lg bg-white flex items-start gap-3 absolute top-6 left-6 right-6 transition-all duration-700 ease-in-out z-20", 
-              step === 1 ? "-translate-x-[120px] translate-y-[10px] scale-50 opacity-0" : 
-              step === 2 || step === 3 ? "opacity-0 translate-y-4 scale-95" : 
-              "translate-x-0 translate-y-0 scale-100 opacity-100"
-           )}>
+           <div className={cn("p-4 border border-gray-200 shadow-sm rounded-lg bg-white flex items-start gap-3 absolute top-6 left-6 right-6 transition-all duration-700 ease-in-out z-20", dragFileClass)}>
               <FileText className="w-5 h-5 text-gray-400 shrink-0" />
               <div>
                  <div className="text-sm font-bold mb-1">The Brain&apos;s Network</div>
@@ -158,7 +162,9 @@ export function LandingMockup() {
       
       {/* Glow effect behind the mockup */}
       <div className={cn("absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] h-[300px] blur-[80px] rounded-full pointer-events-none transition-colors duration-1000",
-        activeAd === 0 ? "bg-amber-100/80" : activeAd === 1 ? "bg-indigo-100/80" : "bg-blue-100/80"
+        activeAd === 0 && "bg-amber-100/80",
+        activeAd === 1 && "bg-indigo-100/80",
+        activeAd === 2 && "bg-blue-100/80"
       )} />
 
       <div className="flex flex-col items-center z-10 w-full max-w-[480px]">

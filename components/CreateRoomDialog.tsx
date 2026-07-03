@@ -20,8 +20,8 @@ interface CreateRoomDialogProps {
 export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setControlledOpen, hideTrigger, onSuccess }: Readonly<CreateRoomDialogProps> = {}) {
   const router = useRouter()
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
-  const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen
-  const setOpen = setControlledOpen || setUncontrolledOpen
+  const open = controlledOpen ?? uncontrolledOpen
+  const setOpen = setControlledOpen ?? setUncontrolledOpen
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")

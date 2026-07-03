@@ -7,6 +7,40 @@ import DOMPurify from 'isomorphic-dompurify'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
+async function processVectorEmbeddings(textContent: string, articleId: string) {
+  try {
+    const textChunks = chunkText(textContent, 1000)
+    if (textChunks.length === 0) return
+
+    const embeddings = await generateEmbeddings(textChunks)
+    
+    for (let i = 0; i < textChunks.length; i++) {
+      const chunk = textChunks[i]
+      const embedding = embeddings[i]
+      
+      if (embedding && embedding.length > 0) {
+        const embeddingString = `[${embedding.join(',')}]`
+        await prisma.$executeRaw`
+          INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
+          VALUES (gen_random_uuid(), ${articleId}, ${chunk}, ${embeddingString}::vector, NOW())
+        `
+      }
+    }
+  } catch (embedError) {
+    logger.error('Failed to generate embeddings for extension article:', embedError)
+  }
+}
+
+function extractCoverImage(doc: JSDOM) {
+  const metaTags = doc.window.document.getElementsByTagName('meta')
+  for (const metaTag of Array.from(metaTags)) {
+    if (metaTag.getAttribute('property') === 'og:image' || metaTag.getAttribute('name') === 'twitter:image') {
+      return metaTag.getAttribute('content')
+    }
+  }
+  return null
+}
+
 export async function OPTIONS(req: Request) {
   const origin = req.headers.get('origin') || '*'
   
@@ -70,14 +104,7 @@ export async function POST(req: Request) {
     }
 
     // Extract cover image
-    let coverImage = null
-    const metaTags = doc.window.document.getElementsByTagName('meta')
-    for (const metaTag of Array.from(metaTags)) {
-      if (metaTag.getAttribute('property') === 'og:image' || metaTag.getAttribute('name') === 'twitter:image') {
-        coverImage = metaTag.getAttribute('content')
-        break
-      }
-    }
+    const coverImage = extractCoverImage(doc)
 
     const cleanContent = DOMPurify.sanitize(article.content || '')
     
@@ -105,27 +132,7 @@ export async function POST(req: Request) {
     })
 
     // --- Vector Search & RAG: Generate Embeddings ---
-    try {
-      const textChunks = chunkText(textContent, 1000)
-      if (textChunks.length > 0) {
-        const embeddings = await generateEmbeddings(textChunks)
-        
-        for (let i = 0; i < textChunks.length; i++) {
-          const chunk = textChunks[i]
-          const embedding = embeddings[i]
-          
-          if (embedding && embedding.length > 0) {
-            const embeddingString = `[${embedding.join(',')}]`
-            await prisma.$executeRaw`
-              INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
-              VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
-            `
-          }
-        }
-      }
-    } catch (embedError) {
-      logger.error('Failed to generate embeddings for extension article:', embedError)
-    }
+    await processVectorEmbeddings(textContent, savedArticle.id)
 
     return NextResponse.json(savedArticle, { 
       status: 201, 

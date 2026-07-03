@@ -66,7 +66,7 @@ export default function ReaderPage() {
   // Settings
   const [fontFamily, setFontFamily] = useState<'serif' | 'sans'>('serif')
   const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base')
-  const [showAnnotate, setShowAnnotate] = useState(false)
+
   const [activeSelection, setActiveSelection] = useState<{ text: string, rect: DOMRect, contextSnippet: string } | null>(null)
   const [showDictionary, setShowDictionary] = useState(false)
   const [concept, setConcept] = useState<{ term: string, definition: string, contextSnippet: string } | null>(null)
@@ -173,8 +173,8 @@ export default function ReaderPage() {
 
     const onClickContainer = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest('mark')
-      if (target && target.hasAttribute('data-highlight-id')) {
-        const id = target.getAttribute('data-highlight-id')
+      if (target?.dataset.highlightId) {
+        const id = target.dataset.highlightId
         const highlight = highlights.find(h => h.id === id)
         if (highlight) {
           const rect = target.getBoundingClientRect()

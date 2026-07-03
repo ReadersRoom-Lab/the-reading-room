@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, BookOpen, Brain, FolderArchive } from "lucide-react"
+import { ArrowRight, BookOpen } from "lucide-react"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"

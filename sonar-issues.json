@@ -1,0 +1,2298 @@
+{
+  "total": 44,
+  "p": 1,
+  "ps": 100,
+  "paging": {
+    "pageIndex": 1,
+    "pageSize": 100,
+    "total": 44
+  },
+  "effortTotal": 188,
+  "debtTotal": 188,
+  "issues": [
+    {
+      "key": "AZ8mnSE9KburwM6vECZK",
+      "rule": "typescript:S6582",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/api/articles/[id]/export/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 38,
+      "hash": "af2ae82891441354a6764b951043df96",
+      "textRange": {
+        "startLine": 38,
+        "endLine": 38,
+        "startOffset": 8,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "editable-source",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-03T06:13:40+0000",
+      "updateDate": "2026-07-03T06:13:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "d3093903-389a-4391-b002-b5819b8ea96a",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8mnSJuKburwM6vECZL",
+      "rule": "typescript:S6606",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/CreateRoomDialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 23,
+      "hash": "e97ff10bde098df7ff90b6aed41a7d73",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 15,
+        "endOffset": 79
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer using nullish coalescing operator (`??`) instead of a ternary expression, as it is simpler to read.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "es2020",
+        "nullish-coalescing",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-03T06:13:40+0000",
+      "updateDate": "2026-07-03T06:13:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "d3093903-389a-4391-b002-b5819b8ea96a",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8mnSJuKburwM6vECZM",
+      "rule": "typescript:S7735",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/CreateRoomDialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 23,
+      "hash": "e97ff10bde098df7ff90b6aed41a7d73",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 15,
+        "endOffset": 43
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "effort": "2min",
+      "debt": "2min",
+      "tags": [
+        "editable-source",
+        "readability"
+      ],
+      "creationDate": "2026-07-03T06:13:40+0000",
+      "updateDate": "2026-07-03T06:13:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "d3093903-389a-4391-b002-b5819b8ea96a",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8mnSNiKburwM6vECZO",
+      "rule": "typescript:S7764",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/GlobalSearchDialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 35,
+      "hash": "7025f0a4b44def00f3cc04e93fd020a3",
+      "textRange": {
+        "startLine": 35,
+        "endLine": 35,
+        "startOffset": 15,
+        "endOffset": 21
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer `globalThis.window` over `window`.",
+      "effort": "2min",
+      "debt": "2min",
+      "tags": [
+        "es2020",
+        "portability"
+      ],
+      "creationDate": "2026-07-03T06:13:40+0000",
+      "updateDate": "2026-07-03T06:13:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "d3093903-389a-4391-b002-b5819b8ea96a",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8mnSNiKburwM6vECZP",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/GlobalSearchDialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 89,
+      "hash": "3e3a00949d5a0456a43d227e6e7eb65a",
+      "textRange": {
+        "startLine": 89,
+        "endLine": 89,
+        "startOffset": 48,
+        "endOffset": 68
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-03T06:13:40+0000",
+      "updateDate": "2026-07-03T06:13:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "d3093903-389a-4391-b002-b5819b8ea96a",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8jNt_R5_oBqR_Bel6l",
+      "rule": "typescript:S1128",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/(dashboard)/home/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 5,
+      "hash": "44e2b52fafe81e57089b20de8ad988ca",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 19,
+        "endOffset": 28
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this unused import of 'RefreshCw'.",
+      "effort": "1min",
+      "debt": "1min",
+      "tags": [
+        "es2015",
+        "type-dependent",
+        "unused"
+      ],
+      "creationDate": "2026-07-02T14:23:07+0000",
+      "updateDate": "2026-07-02T14:23:07+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "f1dbb9af-a890-42e6-9bda-9d64cf156350",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8jL0ge00wtKe1XdHQ9",
+      "rule": "typescript:S6582",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 176,
+      "hash": "1535a43c9af757a57c182f8f76e43f50",
+      "textRange": {
+        "startLine": 176,
+        "endLine": 176,
+        "startOffset": 10,
+        "endOffset": 60
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "editable-source",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-02T14:14:44+0000",
+      "updateDate": "2026-07-02T14:14:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "915a589e-133a-453a-a8c0-4535c30ec797",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8jIKB8RX_ewwPumJSm",
+      "rule": "typescript:S3776",
+      "severity": "CRITICAL",
+      "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 23,
+      "hash": "d6eba8220d498535dfee755982d5f0de",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 22,
+        "endOffset": 26
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 33,
+                "endLine": 33,
+                "startOffset": 4,
+                "endOffset": 6
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 42,
+                "endLine": 42,
+                "startOffset": 4,
+                "endOffset": 6
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 53,
+                "endLine": 53,
+                "startOffset": 4,
+                "endOffset": 6
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 65,
+                "endLine": 65,
+                "startOffset": 4,
+                "endOffset": 6
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 75,
+                "endLine": 75,
+                "startOffset": 4,
+                "endOffset": 7
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 76,
+                "endLine": 76,
+                "startOffset": 6,
+                "endOffset": 8
+              },
+              "msg": "+2 (incl. 1 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 110,
+                "endLine": 110,
+                "startOffset": 6,
+                "endOffset": 8
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 113,
+                "endLine": 113,
+                "startOffset": 8,
+                "endOffset": 11
+              },
+              "msg": "+2 (incl. 1 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 117,
+                "endLine": 117,
+                "startOffset": 10,
+                "endOffset": 12
+              },
+              "msg": "+3 (incl. 2 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 117,
+                "endLine": 117,
+                "startOffset": 24,
+                "endOffset": 26
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 126,
+                "endLine": 126,
+                "startOffset": 6,
+                "endOffset": 11
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+              "textRange": {
+                "startLine": 135,
+                "endLine": 135,
+                "startOffset": 4,
+                "endOffset": 9
+              },
+              "msg": "+1"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "effort": "6min",
+      "debt": "6min",
+      "tags": [
+        "brain-overload",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T13:58:05+0000",
+      "updateDate": "2026-07-02T13:58:53+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "FOCUSED",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "703ef20a-4e77-4a24-8d9f-2fc7c5691c2f",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8iGz92c4MKXUJn9-Iu",
+      "rule": "typescript:S1854",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 69,
+      "hash": "12bb0202a156119e08cc92adf300826f",
+      "textRange": {
+        "startLine": 69,
+        "endLine": 69,
+        "startOffset": 9,
+        "endOffset": 21
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"showAnnotate\".",
+      "effort": "1min",
+      "debt": "1min",
+      "tags": [
+        "cwe",
+        "editable-source",
+        "unused"
+      ],
+      "creationDate": "2026-07-02T09:13:17+0000",
+      "updateDate": "2026-07-02T09:13:17+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "a315fd1e-0357-4cd7-b07f-d505a7fa8e89",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8iGz92c4MKXUJn9-Iv",
+      "rule": "typescript:S1854",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 69,
+      "hash": "12bb0202a156119e08cc92adf300826f",
+      "textRange": {
+        "startLine": 69,
+        "endLine": 69,
+        "startOffset": 23,
+        "endOffset": 38
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"setShowAnnotate\".",
+      "effort": "1min",
+      "debt": "1min",
+      "tags": [
+        "cwe",
+        "editable-source",
+        "unused"
+      ],
+      "creationDate": "2026-07-02T09:13:17+0000",
+      "updateDate": "2026-07-02T09:13:17+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "a315fd1e-0357-4cd7-b07f-d505a7fa8e89",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8iDzdiWVfbOyNwFuAs",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/LandingMockup.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 115,
+      "hash": "50772150c962310f006871b80eb0ec4e",
+      "textRange": {
+        "startLine": 115,
+        "endLine": 116,
+        "startOffset": 14,
+        "endOffset": 65
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T09:00:05+0000",
+      "updateDate": "2026-07-02T09:00:05+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "5dde9bd5-c232-45bd-a77c-c62cf4678253",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8iDzdiWVfbOyNwFuAt",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/LandingMockup.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 161,
+      "hash": "8f580572b650b1a5c328e60fe29ef1f6",
+      "textRange": {
+        "startLine": 161,
+        "endLine": 161,
+        "startOffset": 45,
+        "endOffset": 99
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T09:00:05+0000",
+      "updateDate": "2026-07-02T09:00:05+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "5dde9bd5-c232-45bd-a77c-c62cf4678253",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h9J-poYG4JGBnUqzm",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/LandingMockup.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 23,
+      "hash": "5f7226da8466891b4de8ec3e59011d68",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 25,
+        "startOffset": 6,
+        "endOffset": 110
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T08:30:18+0000",
+      "updateDate": "2026-07-02T08:31:05+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "5dde9bd5-c232-45bd-a77c-c62cf4678253",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h8gOh-2TBUwKK09e-",
+      "rule": "typescript:S1128",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 2,
+      "hash": "a620a997dd89e9a1556eebfc4ae96304",
+      "textRange": {
+        "startLine": 2,
+        "endLine": 2,
+        "startOffset": 31,
+        "endOffset": 36
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this unused import of 'Brain'.",
+      "effort": "1min",
+      "debt": "1min",
+      "tags": [
+        "es2015",
+        "type-dependent",
+        "unused"
+      ],
+      "creationDate": "2026-07-02T08:28:17+0000",
+      "updateDate": "2026-07-02T08:28:17+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "95cbffff-d0cb-4ef7-add5-a84882f15a22",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h8gOh-2TBUwKK09e_",
+      "rule": "typescript:S1128",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 2,
+      "hash": "a620a997dd89e9a1556eebfc4ae96304",
+      "textRange": {
+        "startLine": 2,
+        "endLine": 2,
+        "startOffset": 38,
+        "endOffset": 51
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this unused import of 'FolderArchive'.",
+      "effort": "1min",
+      "debt": "1min",
+      "tags": [
+        "es2015",
+        "type-dependent",
+        "unused"
+      ],
+      "creationDate": "2026-07-02T08:28:17+0000",
+      "updateDate": "2026-07-02T08:28:17+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "95cbffff-d0cb-4ef7-add5-a84882f15a22",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h7rfDK0SfOljMcqab",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/StreamingQuote.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 50,
+      "hash": "9c769c5621f1e08737f93697c11a1f93",
+      "textRange": {
+        "startLine": 50,
+        "endLine": 50,
+        "startOffset": 56,
+        "endOffset": 78
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T08:23:44+0000",
+      "updateDate": "2026-07-02T08:24:36+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "f1dbb9af-a890-42e6-9bda-9d64cf156350",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h7rfDK0SfOljMcqac",
+      "rule": "typescript:S3358",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:components/StreamingQuote.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 56,
+      "hash": "c446c925dbf5b18ca52ec9c083d67599",
+      "textRange": {
+        "startLine": 56,
+        "endLine": 56,
+        "startOffset": 25,
+        "endOffset": 90
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "confusing",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T08:23:44+0000",
+      "updateDate": "2026-07-02T08:24:36+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "f1dbb9af-a890-42e6-9bda-9d64cf156350",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h0YAfBEGNJJIv8p69",
+      "rule": "typescript:S7735",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/api/highlights/[id]/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 89,
+      "hash": "30d824b3b44ccd83769874afd67bf33c",
+      "textRange": {
+        "startLine": 89,
+        "endLine": 89,
+        "startOffset": 16,
+        "endOffset": 36
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "effort": "2min",
+      "debt": "2min",
+      "tags": [
+        "editable-source",
+        "readability"
+      ],
+      "creationDate": "2026-07-02T07:52:44+0000",
+      "updateDate": "2026-07-02T07:52:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "c98fd9ec-ee48-4461-bf5a-6cb3a3891d60",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h0YAfBEGNJJIv8p6-",
+      "rule": "typescript:S7735",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/api/highlights/[id]/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 90,
+      "hash": "dbe49e1a790f28f13db71ad830310939",
+      "textRange": {
+        "startLine": 90,
+        "endLine": 90,
+        "startOffset": 14,
+        "endOffset": 32
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "effort": "2min",
+      "debt": "2min",
+      "tags": [
+        "editable-source",
+        "readability"
+      ],
+      "creationDate": "2026-07-02T07:52:44+0000",
+      "updateDate": "2026-07-02T07:52:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "c98fd9ec-ee48-4461-bf5a-6cb3a3891d60",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h0YAfBEGNJJIv8p6_",
+      "rule": "typescript:S7735",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/api/highlights/[id]/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 91,
+      "hash": "2dd5cc2be8994facd51d8ee9850cc954",
+      "textRange": {
+        "startLine": 91,
+        "endLine": 91,
+        "startOffset": 25,
+        "endOffset": 54
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "effort": "2min",
+      "debt": "2min",
+      "tags": [
+        "editable-source",
+        "readability"
+      ],
+      "creationDate": "2026-07-02T07:52:44+0000",
+      "updateDate": "2026-07-02T07:52:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "c98fd9ec-ee48-4461-bf5a-6cb3a3891d60",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h0YFIBEGNJJIv8p7A",
+      "rule": "typescript:S7761",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 176,
+      "hash": "1535a43c9af757a57c182f8f76e43f50",
+      "textRange": {
+        "startLine": 176,
+        "endLine": 176,
+        "startOffset": 20,
+        "endOffset": 60
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `hasAttribute(…)`.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "api",
+        "dom",
+        "editable-source",
+        "html"
+      ],
+      "creationDate": "2026-07-02T07:52:44+0000",
+      "updateDate": "2026-07-02T07:52:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "915a589e-133a-453a-a8c0-4535c30ec797",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8h0YFIBEGNJJIv8p7B",
+      "rule": "typescript:S7761",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 177,
+      "hash": "43ef7f8519d5a6ea33ccd28880892bf3",
+      "textRange": {
+        "startLine": 177,
+        "endLine": 177,
+        "startOffset": 19,
+        "endOffset": 59
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "api",
+        "dom",
+        "editable-source",
+        "html"
+      ],
+      "creationDate": "2026-07-02T07:52:44+0000",
+      "updateDate": "2026-07-02T07:52:44+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "a315fd1e-0357-4cd7-b07f-d505a7fa8e89",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8hxGkM3-Z9uIIJKYyj",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:app/template.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 4,
+      "hash": "a833d81355f0b87e6bf7c523de2a7197",
+      "textRange": {
+        "startLine": 4,
+        "endLine": 4,
+        "startOffset": 33,
+        "endOffset": 76
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-02T07:37:40+0000",
+      "updateDate": "2026-07-02T07:38:27+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "12d87e5f-911e-4993-aae5-203f408af794",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8hdxnXI62rm2YbITro",
+      "rule": "typescript:S6582",
+      "severity": "MAJOR",
+      "component": "readersroom-lab_the-reading-room:app/api/chat/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 33,
+      "hash": "2cf2ef78aafa140aa7f4354ae0265174",
+      "textRange": {
+        "startLine": 33,
+        "endLine": 33,
+        "startOffset": 8,
+        "endOffset": 50
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "editable-source",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-02T06:14:00+0000",
+      "updateDate": "2026-07-02T06:14:00+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "8cfed68d-52ff-4659-860d-0b642473e7c7",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8hY6EC3sDEiddgbv9i",
+      "rule": "typescript:S3776",
+      "severity": "CRITICAL",
+      "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 7,
+      "hash": "c8bac293437c6c8d1f646f9f5e61c4ed",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 9,
+        "endOffset": 25
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 11,
+                "endLine": 11,
+                "startOffset": 2,
+                "endOffset": 4
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 16,
+                "endLine": 16,
+                "startOffset": 4,
+                "endOffset": 6
+              },
+              "msg": "+2 (incl. 1 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 18,
+                "endLine": 18,
+                "startOffset": 6,
+                "endOffset": 9
+              },
+              "msg": "+3 (incl. 2 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 23,
+                "endLine": 23,
+                "startOffset": 8,
+                "endOffset": 10
+              },
+              "msg": "+4 (incl. 3 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 25,
+                "endLine": 25,
+                "startOffset": 15,
+                "endOffset": 17
+              },
+              "msg": "+1"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 35,
+                "endLine": 35,
+                "startOffset": 4,
+                "endOffset": 7
+              },
+              "msg": "+2 (incl. 1 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 40,
+                "endLine": 40,
+                "startOffset": 6,
+                "endOffset": 8
+              },
+              "msg": "+3 (incl. 2 for nesting)"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+              "textRange": {
+                "startLine": 42,
+                "endLine": 42,
+                "startOffset": 13,
+                "endOffset": 15
+              },
+              "msg": "+1"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.",
+      "effort": "7min",
+      "debt": "7min",
+      "tags": [
+        "brain-overload",
+        "editable-source"
+      ],
+      "creationDate": "2026-07-02T05:52:40+0000",
+      "updateDate": "2026-07-02T05:52:40+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "FOCUSED",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "87b9001e-b75f-42ab-8e50-f4aa77c199eb",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIg",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 10,
+      "hash": "fb01031467c91b07c3559239a869fd1e",
+      "textRange": {
+        "startLine": 10,
+        "endLine": 10,
+        "startOffset": 16,
+        "endOffset": 56
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIh",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 14,
+      "hash": "3abee650cb9cc2be58a95ff54f3cf739",
+      "textRange": {
+        "startLine": 14,
+        "endLine": 14,
+        "startOffset": 23,
+        "endOffset": 66
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIi",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 18,
+      "hash": "d7b9e67c005f2cfc91cdc8c1619a97b7",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 22,
+        "endOffset": 64
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIj",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 22,
+      "hash": "b08a88f01fd6bdadad0fc563df0e15c2",
+      "textRange": {
+        "startLine": 22,
+        "endLine": 22,
+        "startOffset": 21,
+        "endOffset": 62
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIk",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 26,
+      "hash": "f37ec8a8fae6b6cb04bd2ab845fd7a05",
+      "textRange": {
+        "startLine": 26,
+        "endLine": 29,
+        "startOffset": 23,
+        "endOffset": 33
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIl",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 120,
+      "hash": "24b3bbb6d2f6d97a7a38646db6377cd6",
+      "textRange": {
+        "startLine": 120,
+        "endLine": 120,
+        "startOffset": 21,
+        "endOffset": 73
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaubkkhrvlSDmIm",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 133,
+      "hash": "43cee3f826e47cca17154b46a8b99ef0",
+      "textRange": {
+        "startLine": 133,
+        "endLine": 136,
+        "startOffset": 27,
+        "endOffset": 36
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIn",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 9,
+      "hash": "6bc5084f4af25f73a3383339e045797f",
+      "textRange": {
+        "startLine": 9,
+        "endLine": 9,
+        "startOffset": 22,
+        "endOffset": 60
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIo",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 13,
+      "hash": "6fcc55ff02edebed1947f103d7bf3c75",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 28,
+        "endOffset": 68
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIp",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 17,
+      "hash": "0681745092dd69579070372ad60a6e66",
+      "textRange": {
+        "startLine": 17,
+        "endLine": 17,
+        "startOffset": 29,
+        "endOffset": 70
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIq",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 52,
+      "hash": "22995586955b35eb878f9fb247214be2",
+      "textRange": {
+        "startLine": 52,
+        "endLine": 52,
+        "startOffset": 27,
+        "endOffset": 66
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIr",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 99,
+      "hash": "b3c21c4141835f73b68b64ac8f871e37",
+      "textRange": {
+        "startLine": 99,
+        "endLine": 99,
+        "startOffset": 25,
+        "endOffset": 70
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIs",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 182,
+      "hash": "a21453fbecaf0ba18938938f096925f9",
+      "textRange": {
+        "startLine": 182,
+        "endLine": 182,
+        "startOffset": 32,
+        "endOffset": 76
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMa8bkkhrvlSDmIt",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 223,
+      "hash": "11c61c9b94055c71a8fc9813d169dbea",
+      "textRange": {
+        "startLine": 223,
+        "endLine": 226,
+        "startOffset": 31,
+        "endOffset": 32
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaSbkkhrvlSDmIb",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/scroll-area.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 8,
+      "hash": "0100e6ff6531a715cee68d82d12c7c25",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 12,
+        "startOffset": 20,
+        "endOffset": 33
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMaSbkkhrvlSDmIc",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/scroll-area.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 31,
+      "hash": "08e65d32e3ec9dee33b4e8eef0e50351",
+      "textRange": {
+        "startLine": 31,
+        "endLine": 35,
+        "startOffset": 19,
+        "endOffset": 38
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMagbkkhrvlSDmId",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/tabs.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 8,
+      "hash": "c5e46504063ca3f35d8c9e3851a73e1d",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 12,
+        "startOffset": 14,
+        "endOffset": 27
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMagbkkhrvlSDmIe",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/tabs.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 56,
+      "hash": "a1184318072d628445e0f758b300047e",
+      "textRange": {
+        "startLine": 56,
+        "endLine": 56,
+        "startOffset": 21,
+        "endOffset": 69
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    },
+    {
+      "key": "AZ8dpMagbkkhrvlSDmIf",
+      "rule": "typescript:S6759",
+      "severity": "MINOR",
+      "component": "readersroom-lab_the-reading-room:components/ui/tabs.tsx",
+      "project": "readersroom-lab_the-reading-room",
+      "line": 72,
+      "hash": "dee413313ff678f049e24864a3923315",
+      "textRange": {
+        "startLine": 72,
+        "endLine": 72,
+        "startOffset": 21,
+        "endOffset": 71
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Mark the props of the component as read-only.",
+      "effort": "5min",
+      "debt": "5min",
+      "tags": [
+        "react",
+        "type-dependent"
+      ],
+      "creationDate": "2026-07-01T12:25:29+0000",
+      "updateDate": "2026-07-01T12:25:29+0000",
+      "type": "CODE_SMELL",
+      "organization": "readersroom-lab",
+      "cleanCodeAttribute": "CONVENTIONAL",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "readersroom-lab_the-reading-room",
+      "internalTags": [],
+      "lastChangeAnalysisUuid": "68871c3d-9317-49da-99e9-6e40c4ae8ad0",
+      "lastChangeSource": "ANALYSIS"
+    }
+  ],
+  "components": [
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/ui/scroll-area.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf61-",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "scroll-area.tsx",
+      "longName": "components/ui/scroll-area.tsx",
+      "path": "components/ui/scroll-area.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/api/insights/stats/route.ts",
+      "uuid": "AZ8er0jSUa5zTy8LQ8-u",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "route.ts",
+      "longName": "app/api/insights/stats/route.ts",
+      "path": "app/api/insights/stats/route.ts"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/api/highlights/[id]/route.ts",
+      "uuid": "AZ8dIU1u7UYFBmGmEcMd",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "route.ts",
+      "longName": "app/api/highlights/[id]/route.ts",
+      "path": "app/api/highlights/[id]/route.ts"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/ui/dropdown-menu.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf62E",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "dropdown-menu.tsx",
+      "longName": "components/ui/dropdown-menu.tsx",
+      "path": "components/ui/dropdown-menu.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/(dashboard)/home/page.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf61C",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "page.tsx",
+      "longName": "app/(dashboard)/home/page.tsx",
+      "path": "app/(dashboard)/home/page.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/LandingMockup.tsx",
+      "uuid": "AZ8h9JiEoYG4JGBnUqzl",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "LandingMockup.tsx",
+      "longName": "components/LandingMockup.tsx",
+      "path": "components/LandingMockup.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/ui/tabs.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf62A",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "tabs.tsx",
+      "longName": "components/ui/tabs.tsx",
+      "path": "components/ui/tabs.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/template.tsx",
+      "uuid": "AZ8hxGP33-Z9uIIJKYyi",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "template.tsx",
+      "longName": "app/template.tsx",
+      "path": "app/template.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/api/articles/[id]/export/route.ts",
+      "uuid": "AZ8iGzqqc4MKXUJn9-Ir",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "route.ts",
+      "longName": "app/api/articles/[id]/export/route.ts",
+      "path": "app/api/articles/[id]/export/route.ts"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/ui/dialog.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf62C",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "dialog.tsx",
+      "longName": "components/ui/dialog.tsx",
+      "path": "components/ui/dialog.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room",
+      "uuid": "AZ8cw0NUcXo1ixapU6XO",
+      "enabled": true,
+      "qualifier": "TRK",
+      "name": "readersroom-lab_the-reading-room",
+      "longName": "readersroom-lab_the-reading-room"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/StreamingQuote.tsx",
+      "uuid": "AZ8h7rG3K0SfOljMcqaZ",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "StreamingQuote.tsx",
+      "longName": "components/StreamingQuote.tsx",
+      "path": "components/StreamingQuote.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/page.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf61x",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "page.tsx",
+      "longName": "app/page.tsx",
+      "path": "app/page.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/CreateRoomDialog.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf619",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "CreateRoomDialog.tsx",
+      "longName": "components/CreateRoomDialog.tsx",
+      "path": "components/CreateRoomDialog.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/api/articles/extension/route.ts",
+      "uuid": "AZ8jIJkCRX_ewwPumJSk",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "route.ts",
+      "longName": "app/api/articles/extension/route.ts",
+      "path": "app/api/articles/extension/route.ts"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:components/GlobalSearchDialog.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf62T",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "GlobalSearchDialog.tsx",
+      "longName": "components/GlobalSearchDialog.tsx",
+      "path": "components/GlobalSearchDialog.tsx"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/api/chat/route.ts",
+      "uuid": "AZ8cyUEuCOAHb8Unf61o",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "route.ts",
+      "longName": "app/api/chat/route.ts",
+      "path": "app/api/chat/route.ts"
+    },
+    {
+      "organization": "readersroom-lab",
+      "key": "readersroom-lab_the-reading-room:app/read/[id]/page.tsx",
+      "uuid": "AZ8cyUEuCOAHb8Unf611",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "page.tsx",
+      "longName": "app/read/[id]/page.tsx",
+      "path": "app/read/[id]/page.tsx"
+    }
+  ],
+  "organizations": [
+    {
+      "key": "readersroom-lab",
+      "name": "ReadersRoom-Lab"
+    }
+  ],
+  "facets": []
+}

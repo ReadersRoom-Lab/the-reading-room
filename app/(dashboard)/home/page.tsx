@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { secureRandom } from '@/lib/utils'
 import Link from 'next/link'
-import { Bookmark, RefreshCw, BookOpen, Highlighter, Library, Layout } from 'lucide-react'
+import { Bookmark, BookOpen, Highlighter, Library, Layout } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { RefreshButton } from './RefreshButton'
 
