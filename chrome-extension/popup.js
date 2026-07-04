@@ -23,10 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const html = results[0].result;
 
-      // Send to local API
-      // Since we requested host_permissions for localhost:3000, 
-      // fetch will automatically include cookies for that domain.
-      const response = await fetch('http://localhost:3000/api/articles/extension', {
+      const items = await new Promise(resolve => {
+        chrome.storage.sync.get({ backendUrl: 'http://localhost:3000' }, resolve);
+      });
+      const backendUrl = items.backendUrl;
+
+      // Send to API
+      const response = await fetch(`${backendUrl}/api/articles/extension`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({ error: 'Invalid response from server' }));
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to save article.');
@@ -54,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (error) {
       console.error(error);
-      statusEl.textContent = error.message || 'An unexpected error occurred.';
+      let errorMsg = error.message || 'An unexpected error occurred.';
+      if (errorMsg === 'Failed to fetch' || errorMsg.includes('NetworkError')) {
+        errorMsg = 'Could not connect. Did you set your App URL in the extension options?';
+      }
+      statusEl.textContent = errorMsg;
       statusEl.className = 'status error';
       saveBtn.disabled = false;
       saveBtn.innerHTML = `
