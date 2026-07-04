@@ -1,6 +1,6 @@
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
-import { Home, Library, LayoutGrid, BookMarked, User, Sparkles, Download } from "lucide-react";
+import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { MobileNav } from "@/components/MobileNav";
 import { auth } from '@clerk/nextjs/server';
@@ -86,12 +86,7 @@ export default async function DashboardLayout({
           >
             <Sparkles className="w-4 h-4 shrink-0" /> Insights
           </Link>
-          <Link
-            href="/extension"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors mt-auto"
-          >
-            <Download className="w-4 h-4 shrink-0" /> Browser Extension
-          </Link>
+
         </nav>
 
         {/* Profile at bottom */}
