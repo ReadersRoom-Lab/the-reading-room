@@ -41,6 +41,13 @@ export async function POST(req: Request) {
     const data = await pdfParse(buffer)
     const textContent = data.text || ''
     
+    if (!textContent.trim()) {
+      return NextResponse.json(
+        { error: 'Could not extract any text from this PDF. It appears to be a scanned document or an image-based PDF, which we cannot read without OCR software.' }, 
+        { status: 400 }
+      )
+    }
+    
     // Fallbacks for title and author if not in PDF metadata
     const title = data.info?.Title || file.name || 'Untitled PDF'
     const author = data.info?.Author || null
