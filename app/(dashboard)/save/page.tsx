@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 
-export default function SaveFromExtensionPage() {
+function SaveHandler() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const url = searchParams.get("url")
@@ -31,7 +31,6 @@ export default function SaveFromExtensionPage() {
           throw new Error(data.error || `Error ${res.status}`)
         }
         setState("success")
-        // Auto-redirect to library after 2 seconds
         setTimeout(() => router.push("/library"), 2000)
       })
       .catch((err) => {
@@ -47,7 +46,7 @@ export default function SaveFromExtensionPage() {
           <>
             <Loader2 className="w-8 h-8 animate-spin text-[#BDBDBD] mx-auto mb-4" />
             <h1 className="font-heading font-bold text-xl text-[#1A1A1A] mb-2">Saving article…</h1>
-            <p className="text-sm text-[#52525B] font-sans truncate">{url}</p>
+            <p className="text-sm text-[#52525B] font-sans truncate max-w-full">{url}</p>
           </>
         )}
         {state === "success" && (
@@ -68,5 +67,20 @@ export default function SaveFromExtensionPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function SaveFromExtensionPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[#BDBDBD] mx-auto mb-4" />
+          <p className="text-sm text-[#52525B]">Loading…</p>
+        </div>
+      </div>
+    }>
+      <SaveHandler />
+    </Suspense>
   )
 }
