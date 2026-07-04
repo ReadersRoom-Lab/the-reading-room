@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Plus, FileText, Upload } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import * as pdfjsLib from "pdfjs-dist"
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
 
 export function SaveArticleDialog() {
   const [open, setOpen] = useState(false)
@@ -29,12 +33,35 @@ export function SaveArticleDialog() {
       
       let res;
       if (file) {
-        const formData = new FormData()
-        formData.append("file", file)
+        // Extract text on the client side using pdfjs-dist
+        const arrayBuffer = await file.arrayBuffer()
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
         
-        res = await fetch("/api/articles/pdf", {
+        let extractedText = ''
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i)
+          const textContent = await page.getTextContent()
+          const pageText = textContent.items.map((item: any) => item.str).join(' ')
+          extractedText += pageText + '\n\n'
+        }
+
+        if (!extractedText.trim()) {
+          throw new Error('Could not extract any text from this PDF. It appears to be a scanned document or an image-based PDF, which we cannot read without OCR software.')
+        }
+
+        const title = file.name || 'Untitled PDF'
+
+        res = await fetch("/api/articles/save", {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            title: title, 
+            source_url: `upload://${file.name}`,
+            source_type: 'pdf',
+            text: extractedText
+          }),
         })
       } else {
         res = await fetch("/api/articles/save", {

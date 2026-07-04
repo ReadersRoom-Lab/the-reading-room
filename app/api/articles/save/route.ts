@@ -101,10 +101,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { url, roomId } = await req.json()
+    const { url, roomId, title: pdfTitle, source_url, source_type, text } = await req.json()
 
-    if (!url) {
-      return NextResponse.json({ error: 'URL or Identifier is required' }, { status: 400 })
+    if (!url && !text) {
+      return NextResponse.json({ error: 'URL or PDF text is required' }, { status: 400 })
     }
 
     // Ensure the user exists in our DB
@@ -119,14 +119,33 @@ export async function POST(req: Request) {
     let articleData = null;
     let coverImage = null;
 
-    if (url.startsWith('10.') || url.includes('doi.org')) {
-      articleData = await fetchDOIMetadata(url)
-    } else if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
-      articleData = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
+    if (text && source_type === 'pdf') {
+      // It's a PDF parsed on the client
+      const formattedHtml = text
+        .split('\n\n')
+        .filter((p: string) => p.trim().length > 0)
+        .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
+        .join('')
+
+      articleData = {
+        title: pdfTitle || 'Untitled PDF',
+        author: null,
+        content: formattedHtml,
+        url: source_url || 'upload://pdf',
+        sourceType: 'pdf'
+      }
+    } else if (url) {
+      if (url.startsWith('10.') || url.includes('doi.org')) {
+        articleData = await fetchDOIMetadata(url)
+      } else if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
+        articleData = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
+      } else {
+        const standardRes = await fetchStandardUrl(url)
+        articleData = standardRes.articleData
+        coverImage = standardRes.coverImage
+      }
     } else {
-      const standardRes = await fetchStandardUrl(url)
-      articleData = standardRes.articleData
-      coverImage = standardRes.coverImage
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
     }
 
     // Sanitize the HTML output
