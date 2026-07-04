@@ -71,18 +71,18 @@ export function LibraryImportDialog({ roomId, libraryArticles }: { roomId: strin
               <p className="text-xs text-muted-foreground mt-1">All your documents are already in rooms, or you haven't saved any yet.</p>
             </div>
           ) : (
-            <div className="h-[300px] overflow-y-auto overflow-x-hidden w-full">
-              <div className="flex flex-col w-full">
+            <div className="h-[300px] overflow-y-auto overflow-x-hidden">
+              <div className="flex flex-col">
                 {articles.map(article => (
-                  <div key={article.id} className="flex items-center justify-between py-4 pl-4 pr-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors w-full">
-                    <div className="flex flex-col gap-1 pr-4 flex-1 min-w-0">
+                  <div key={article.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-4 pl-4 pr-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
+                    <div className="flex flex-col gap-1 min-w-0">
                       <span className="text-sm font-medium text-foreground block truncate">{article.title}</span>
                       <span className="text-xs text-muted-foreground block truncate">{article.source_url}</span>
                     </div>
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="shrink-0 rounded-none h-8 ml-2"
+                      className="rounded-none h-8"
                       onClick={() => handleImport(article.id)}
                       disabled={importingId !== null}
                     >
