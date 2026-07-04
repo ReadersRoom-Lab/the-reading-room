@@ -159,11 +159,14 @@ export function RoomAssignDropdown({ articleId, currentRoomId, onDeleteSuccess }
         open={isCreateRoomOpen} 
         onOpenChange={setIsCreateRoomOpen} 
         hideTrigger 
-        onSuccess={() => {
+        onSuccess={(newRoomId?: string) => {
           // Re-fetch rooms when a new one is created
           fetch('/api/rooms').then(res => res.json()).then(data => {
             if (Array.isArray(data)) setRooms(data)
           })
+          if (newRoomId) {
+            assignRoom(newRoomId)
+          }
         }}
       />
 

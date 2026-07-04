@@ -14,7 +14,7 @@ interface CreateRoomDialogProps {
   open?: boolean
   onOpenChange?: (open: boolean) => void
   hideTrigger?: boolean
-  onSuccess?: () => void
+  onSuccess?: (roomId?: string) => void
 }
 
 export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setControlledOpen, hideTrigger, onSuccess }: Readonly<CreateRoomDialogProps> = {}) {
@@ -48,11 +48,13 @@ export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setContro
         throw new Error("Failed to create room")
       }
 
+      const newRoom = await res.json()
+
       toast.success("Room created successfully")
       setOpen(false)
       setName("")
       setDescription("")
-      onSuccess?.()
+      onSuccess?.(newRoom.id)
       router.refresh()
     } catch (error) {
       logger.error(error)
