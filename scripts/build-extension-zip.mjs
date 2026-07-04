@@ -31,9 +31,8 @@ const manifestJson = JSON.stringify({
   manifest_version: 3,
   name: "Send to Reading Room",
   description: "Save web pages directly to your Reading Room.",
-  version: "1.0",
-  permissions: ["activeTab", "scripting"],
-  host_permissions: [`${baseUrl}/*`],
+  version: "1.1",
+  permissions: ["activeTab"],
   action: {
     default_popup: "popup.html",
     default_title: "Save to Reading Room"
@@ -61,8 +60,8 @@ const popupHtml = `<!DOCTYPE html>
 </html>`
 
 const popupCss = `
-:root { --bg:#FCFBF8;--fg:#1a1a1a;--border:#E5E5E5;--primary:#1A1A1A;--primary-fg:#F9F7F2;--muted:#52525B }
-@media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--fg:#F9F7F2;--border:#333;--primary:#F9F7F2;--primary-fg:#1A1A1A;--muted:#A1A1AA}}
+:root { --bg:#FCFBF8;--fg:#1a1a1a;--primary:#1A1A1A;--primary-fg:#F9F7F2;--muted:#52525B }
+@media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--fg:#F9F7F2;--primary:#F9F7F2;--primary-fg:#1A1A1A;--muted:#A1A1AA}}
 body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg)}
 .container{padding:24px;display:flex;flex-direction:column;gap:16px}
 .title{margin:0;font-size:20px;font-weight:700;font-family:ui-serif,Georgia,serif}
@@ -75,6 +74,8 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .hidden{display:none}
 `
 
+// No more direct API calls — opens a tab in the authenticated Reading Room instead.
+// This bypasses all SameSite cookie restrictions and CORS issues entirely.
 const popupJs = `document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.getElementById('save-btn');
   const statusEl = document.getElementById('status-container');
@@ -82,29 +83,25 @@ const popupJs = `document.addEventListener('DOMContentLoaded', () => {
 
   saveBtn.addEventListener('click', async () => {
     saveBtn.disabled = true;
-    saveBtn.innerHTML = 'Saving...';
-    statusEl.className = 'status hidden';
+    saveBtn.innerHTML = 'Opening...';
+
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (!tab.url || tab.url.startsWith('chrome://')) throw new Error('Cannot save this type of page.');
-      const results = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: () => document.documentElement.outerHTML });
-      const html = results[0].result;
-      const response = await fetch(BACKEND_URL + '/api/articles/extension', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ url: tab.url, html, roomId: null })
-      });
-      const data = await response.json().catch(() => ({ error: 'Invalid response' }));
-      if (!response.ok) throw new Error(data.error || 'Failed to save article.');
-      statusEl.textContent = 'Saved to The Reading Room!';
+
+      if (!tab.url || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
+        throw new Error('Cannot save this type of page.');
+      }
+
+      // Open the Reading Room save page — it handles auth and saving internally.
+      const saveUrl = BACKEND_URL + '/save?url=' + encodeURIComponent(tab.url);
+      chrome.tabs.create({ url: saveUrl });
+
+      statusEl.textContent = 'Opening The Reading Room\u2026';
       statusEl.className = 'status success';
-      saveBtn.innerHTML = 'Saved \u2713';
-      setTimeout(() => window.close(), 2000);
+      setTimeout(() => window.close(), 1200);
+
     } catch (err) {
-      let msg = err.message || 'An unexpected error occurred.';
-      if (msg === 'Failed to fetch') msg = 'Could not connect. Make sure you are logged in to The Reading Room.';
-      statusEl.textContent = msg;
+      statusEl.textContent = err.message || 'An unexpected error occurred.';
       statusEl.className = 'status error';
       saveBtn.disabled = false;
       saveBtn.innerHTML = 'Try Again';
