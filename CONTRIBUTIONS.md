@@ -4,6 +4,7 @@
 
 ## 📅 July 4, 2026
 **Lokeshwaran V R:**
+- Fix: externalize pdf-parse and napi-rs/canvas for Vercel Serverless
 - Fix: graceful error handling for document and pdf upload
 
 
