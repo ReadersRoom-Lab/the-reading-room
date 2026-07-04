@@ -15,6 +15,8 @@ import {
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { CreateRoomDialog } from "./CreateRoomDialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 interface RoomAssignDropdownProps {
   articleId: string
@@ -26,6 +28,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
   const [rooms, setRooms] = useState<{ id: string, name: string, cover_color: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   
   useEffect(() => {
     fetch('/api/rooms').then(res => res.json()).then(data => {
@@ -53,7 +56,6 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
   }
 
   const deleteArticle = async () => {
-    if (!confirm("Are you sure you want to delete this document?")) return
     setLoading(true)
     try {
       const res = await fetch(`/api/articles/${articleId}`, {
@@ -61,6 +63,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
       })
       if (res.ok) {
         toast.success("Document deleted successfully")
+        setIsDeleteDialogOpen(false)
         router.refresh()
       } else {
         const data = await res.json()
@@ -130,9 +133,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           <DropdownMenuSeparator />
           <DropdownMenuItem 
             onClick={(e) => {
-              e.preventDefault();
-              // Base-ui uses onClick.
-              deleteArticle();
+              setIsDeleteDialogOpen(true);
             }} 
             className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"
           >
@@ -161,6 +162,37 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           })
         }}
       />
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Delete Document</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Are you sure you want to delete this document? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 sm:justify-end gap-2 flex-col sm:flex-row">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={loading}
+              className="rounded-none border-[#E5E5E5]"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="button" 
+              className="rounded-none bg-red-600 hover:bg-red-700 text-white"
+              onClick={deleteArticle}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
