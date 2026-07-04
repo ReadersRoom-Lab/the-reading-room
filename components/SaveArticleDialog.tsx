@@ -35,7 +35,11 @@ export function SaveArticleDialog() {
       if (file) {
         // Extract text on the client side using pdfjs-dist
         const arrayBuffer = await file.arrayBuffer()
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
+        const pdf = await pdfjsLib.getDocument({ 
+          data: arrayBuffer,
+          cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+          cMapPacked: true
+        }).promise
         
         let extractedText = ''
         for (let i = 1; i <= pdf.numPages; i++) {
