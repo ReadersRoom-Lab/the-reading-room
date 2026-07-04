@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
+import { revalidatePath } from 'next/cache'
 
 export async function PATCH(
   req: Request,
@@ -46,6 +47,7 @@ export async function PATCH(
       }
     })
 
+    revalidatePath('/', 'layout')
     return NextResponse.json(article)
   } catch (error) {
     logger.error('Error updating article room:', error)

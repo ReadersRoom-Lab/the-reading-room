@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
+import { revalidatePath } from 'next/cache'
 
 export async function GET() {
   try {
@@ -77,6 +78,7 @@ export async function POST(req: Request) {
       }
     })
 
+    revalidatePath('/', 'layout')
     return NextResponse.json(room, { status: 201 })
   } catch (error) {
     logger.error('Error creating room:', error)

@@ -6,6 +6,7 @@ import { Readability } from '@mozilla/readability'
 import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
+import { revalidatePath } from 'next/cache'
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
@@ -204,6 +205,7 @@ export async function POST(req: Request) {
       // We don't fail the save if embeddings fail, just log it.
     }
 
+    revalidatePath('/', 'layout')
     return NextResponse.json(savedArticle, { status: 201 })
   } catch (error) {
     logger.error('Error saving article:', error)

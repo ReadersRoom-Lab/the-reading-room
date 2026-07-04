@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(
   req: Request,
@@ -79,6 +80,7 @@ export async function PATCH(
       }
     })
 
+    revalidatePath('/', 'layout')
     return NextResponse.json(room)
   } catch (error) {
     logger.error('Error updating room:', error)
@@ -113,6 +115,7 @@ export async function DELETE(
       }
     })
 
+    revalidatePath('/', 'layout')
     return NextResponse.json({ success: true })
   } catch (error) {
     logger.error('Error deleting room:', error)
