@@ -129,7 +129,8 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               // Base-ui uses onClick.
               deleteArticle();
             }} 
