@@ -10,27 +10,16 @@ import { Library, Loader2, Plus, Check } from "lucide-react"
 import { logger } from '@/lib/logger'
 import type { ArticleProps } from "@/components/ArticleCard"
 
-export function LibraryImportDialog({ roomId }: { roomId: string }) {
+export function LibraryImportDialog({ roomId, libraryArticles }: { roomId: string, libraryArticles: { id: string, title: string, source_url: string }[] }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [articles, setArticles] = useState<ArticleProps['article'][]>([])
-  const [loading, setLoading] = useState(true)
+  const [articles, setArticles] = useState(libraryArticles)
   const [importingId, setImportingId] = useState<string | null>(null)
 
+  // Sync state if props change
   useEffect(() => {
-    if (open) {
-      if (articles.length === 0) setLoading(true)
-      fetch('/api/articles/library')
-        .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            setArticles(data)
-          }
-        })
-        .catch(err => logger.error("Failed to fetch library articles", err))
-        .finally(() => setLoading(false))
-    }
-  }, [open])
+    setArticles(libraryArticles)
+  }, [libraryArticles])
 
   const handleImport = async (articleId: string) => {
     setImportingId(articleId)
@@ -75,11 +64,7 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
         </DialogHeader>
         
         <div className="border-t border-border">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-            </div>
-          ) : articles.length === 0 ? (
+          {articles.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center px-4">
               <Library className="w-8 h-8 text-muted-foreground/50 mb-3" />
               <p className="text-sm font-medium text-foreground">Your library is empty</p>
@@ -90,9 +75,9 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
               <div className="flex flex-col w-full">
                 {articles.map(article => (
                   <div key={article.id} className="flex items-center justify-between py-4 pl-4 pr-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors w-full">
-                    <div className="flex flex-col gap-1 pr-4 overflow-hidden flex-1 min-w-0 w-full">
-                      <span className="text-sm font-medium text-foreground truncate block w-full">{article.title}</span>
-                      <span className="text-xs text-muted-foreground truncate block w-full">{article.source_url}</span>
+                    <div className="flex flex-col gap-1 pr-4 flex-1 min-w-0">
+                      <span className="text-sm font-medium text-foreground block truncate">{article.title}</span>
+                      <span className="text-xs text-muted-foreground block truncate">{article.source_url}</span>
                     </div>
                     <Button
                       size="sm"

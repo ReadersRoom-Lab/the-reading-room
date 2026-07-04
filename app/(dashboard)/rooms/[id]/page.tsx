@@ -48,6 +48,13 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
     redirect('/rooms')
   }
 
+  // Fetch general library articles to pass to the import dialog (avoids client side loading delays)
+  const libraryArticles = await prisma.article.findMany({
+    where: { user_id: user.id, room_id: null },
+    orderBy: { created_at: 'desc' },
+    select: { id: true, title: true, source_url: true }
+  })
+
   const highlightsCount = room.articles.reduce((acc: number, curr: { _count: { highlights: number } }) => acc + curr._count.highlights, 0)
 
   const unreadArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'unread')
@@ -77,7 +84,7 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <LibraryImportDialog roomId={room.id} />
+            <LibraryImportDialog roomId={room.id} libraryArticles={libraryArticles} />
             <SaveArticleDialog defaultRoomId={room.id} compact />
             <ExportRoomButton roomId={room.id} roomName={room.name} />
             <ManageRoomDialog roomId={room.id} initialName={room.name} initialDescription={room.description} />
