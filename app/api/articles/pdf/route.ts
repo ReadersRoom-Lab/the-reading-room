@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
-import { PDFParse } from 'pdf-parse'
+import pdfParse from 'pdf-parse'
 import DOMPurify from 'isomorphic-dompurify'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
@@ -37,18 +37,12 @@ export async function POST(req: Request) {
 
     const buffer = Buffer.from(await file.arrayBuffer())
     
-    // Convert Buffer to Uint8Array for pdf-parse v2+
-    const uint8Array = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
-    
-    const parser = new PDFParse({ data: uint8Array })
-    const textResult = await parser.getText()
-    const infoResult = await parser.getInfo()
-
-    const textContent = textResult.text || ''
+    const data = await pdfParse(buffer)
+    const textContent = data.text || ''
     
     // Fallbacks for title and author if not in PDF metadata
-    const title = infoResult.info?.Title || file.name || 'Untitled PDF'
-    const author = infoResult.info?.Author || null
+    const title = data.info?.Title || file.name || 'Untitled PDF'
+    const author = data.info?.Author || null
 
     // We format the raw text into paragraphs for readability
     const formattedHtml = textContent
