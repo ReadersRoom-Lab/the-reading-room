@@ -8,6 +8,7 @@ import { ExportRoomButton } from '@/components/ExportRoomButton'
 import { ManageRoomDialog } from '@/components/ManageRoomDialog'
 import { ArticleCard } from '@/components/ArticleCard'
 import { SaveArticleDialog } from '@/components/SaveArticleDialog'
+import { LibraryImportDialog } from '@/components/LibraryImportDialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default async function RoomViewPage({ params }: Readonly<{ params: Promise<{ id: string }> }>) {
@@ -76,6 +77,7 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <LibraryImportDialog roomId={room.id} />
             <SaveArticleDialog defaultRoomId={room.id} compact />
             <ExportRoomButton roomId={room.id} roomName={room.name} />
             <ManageRoomDialog roomId={room.id} initialName={room.name} initialDescription={room.description} />
