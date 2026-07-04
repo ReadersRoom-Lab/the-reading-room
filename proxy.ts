@@ -5,11 +5,16 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)', 
   '/sign-up(.*)',
   '/api/webhooks/clerk',
+  '/api/articles/extension', // Extension CORS preflight must not be blocked by Clerk
   '/robots.txt',
   '/sitemap.xml'
 ])
 
 export default clerkMiddleware(async (auth, request) => {
+  // Let OPTIONS (CORS preflight) pass through without auth — the route handler
+  // manages its own authentication for actual POST requests.
+  if (request.method === 'OPTIONS') return
+
   if (!isPublicRoute(request)) {
     await auth.protect()
   }
