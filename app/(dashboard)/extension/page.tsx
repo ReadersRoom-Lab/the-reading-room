@@ -56,9 +56,7 @@ export default function ExtensionPage() {
 
   const handleDownload = () => {
     setDownloading(true)
-    // Navigate the tab to the API route — Chrome treats this as a user-initiated
-    // download and won't block it. The API bakes the app URL into the zip.
-    window.location.href = '/api/extension/download'
+    window.location.href = '/extension.zip'
     setTimeout(() => setDownloading(false), 3000)
   }
 
@@ -97,7 +95,7 @@ export default function ExtensionPage() {
 
       {/* Steps */}
       <div className="mb-10">
-        <h2 className="font-heading font-bold text-xl text-[#1A1A1A] mb-6">Install in 3 steps</h2>
+        <h2 className="font-heading font-bold text-xl text-[#1A1A1A] mb-6">Install in 4 steps</h2>
         <div className="flex flex-col">
           {[
             {
@@ -111,8 +109,14 @@ export default function ExtensionPage() {
               codeNote: 'Enable "Developer mode" toggle (top-right), click "Load unpacked", and select the unzipped folder.',
             },
             {
-              number: "03", icon: CheckCircle, title: "Start saving!",
-              description: "Browse any article, click the Reading Room icon in your toolbar, and hit Save. It will appear in your Library instantly.",
+              number: "03", icon: Settings, title: "Set your app URL",
+              description: "Right-click the Reading Room icon in your toolbar → Options. Paste this URL and click Save:",
+              code: origin,
+              codeNote: 'This tells the extension where to send your saved articles.',
+            },
+            {
+              number: "04", icon: CheckCircle, title: "Start saving!",
+              description: "Browse any article, click the Reading Room icon in your toolbar, and hit Save. It appears in your Library instantly.",
             },
           ].map((step, i, arr) => {
             const Icon = step.icon
