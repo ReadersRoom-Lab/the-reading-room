@@ -86,13 +86,13 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
               <p className="text-xs text-muted-foreground mt-1">All your documents are already in rooms, or you haven't saved any yet.</p>
             </div>
           ) : (
-            <div className="h-[300px] overflow-y-auto">
-              <div className="flex flex-col">
+            <div className="h-[300px] overflow-y-auto overflow-x-hidden w-full">
+              <div className="flex flex-col w-full">
                 {articles.map(article => (
-                  <div key={article.id} className="flex items-center justify-between p-4 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
-                    <div className="flex flex-col gap-1 pr-4 overflow-hidden flex-1 min-w-0">
-                      <span className="text-sm font-medium text-foreground truncate">{article.title}</span>
-                      <span className="text-xs text-muted-foreground truncate">{article.source_url}</span>
+                  <div key={article.id} className="flex items-center justify-between py-4 pl-4 pr-6 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors w-full">
+                    <div className="flex flex-col gap-1 pr-4 overflow-hidden flex-1 min-w-0 w-full">
+                      <span className="text-sm font-medium text-foreground truncate block w-full">{article.title}</span>
+                      <span className="text-xs text-muted-foreground truncate block w-full">{article.source_url}</span>
                     </div>
                     <Button
                       size="sm"
