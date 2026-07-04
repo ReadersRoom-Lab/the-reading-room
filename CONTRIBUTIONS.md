@@ -4,6 +4,7 @@
 
 ## 📅 July 4, 2026
 **Lokeshwaran V R:**
+- Fix: bypass pdf-parse index.js to prevent Vercel Serverless crash
 - Fix: downgrade pdf-parse to v1.1.1 for Vercel Serverless stability
 - Fix: externalize pdf-parse and napi-rs/canvas for Vercel Serverless
 - Fix: graceful error handling for document and pdf upload
