@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
@@ -20,6 +23,10 @@ export interface ArticleProps {
 }
 
 export function ArticleCard({ article }: Readonly<ArticleProps>) {
+  const [isDeleted, setIsDeleted] = useState(false)
+
+  if (isDeleted) return null
+
   let domain = ""
   try {
     domain = new URL(article.source_url).hostname.replace('www.', '')
@@ -50,7 +57,11 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
               <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-800 hover:bg-emerald-900 text-white">Finished</Badge>
             )}
           </div>
-          <RoomAssignDropdown articleId={article.id} currentRoomId={article.room_id} />
+          <RoomAssignDropdown 
+            articleId={article.id} 
+            currentRoomId={article.room_id} 
+            onDeleteSuccess={() => setIsDeleted(true)}
+          />
         </div>
         <CardTitle className="line-clamp-2 leading-tight text-lg font-heading">{article.title}</CardTitle>
         {article.author && (

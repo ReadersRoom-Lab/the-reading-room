@@ -7,6 +7,7 @@ import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
@@ -182,28 +183,30 @@ export async function POST(req: Request) {
     })
 
     // --- Vector Search & RAG: Generate Embeddings ---
-    try {
-      const textChunks = chunkText(textContent, 1000)
-      if (textChunks.length > 0) {
-        const embeddings = await generateEmbeddings(textChunks)
-        
-        for (let i = 0; i < textChunks.length; i++) {
-          const chunk = textChunks[i]
-          const embedding = embeddings[i]
+    after(async () => {
+      try {
+        const textChunks = chunkText(textContent, 1000)
+        if (textChunks.length > 0) {
+          const embeddings = await generateEmbeddings(textChunks)
           
-          if (embedding && embedding.length > 0) {
-            const embeddingString = `[${embedding.join(',')}]`
-            await prisma.$executeRaw`
-              INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
-              VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
-            `
+          for (let i = 0; i < textChunks.length; i++) {
+            const chunk = textChunks[i]
+            const embedding = embeddings[i]
+            
+            if (embedding && embedding.length > 0) {
+              const embeddingString = `[${embedding.join(',')}]`
+              await prisma.$executeRaw`
+                INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
+                VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
+              `
+            }
           }
         }
+      } catch (embedError) {
+        logger.error('Failed to generate embeddings for article:', embedError)
+        // We don't fail the save if embeddings fail, just log it.
       }
-    } catch (embedError) {
-      logger.error('Failed to generate embeddings for article:', embedError)
-      // We don't fail the save if embeddings fail, just log it.
-    }
+    })
 
     revalidatePath('/', 'layout')
     return NextResponse.json(savedArticle, { status: 201 })

@@ -21,9 +21,10 @@ import { Button } from "@/components/ui/button"
 interface RoomAssignDropdownProps {
   articleId: string
   currentRoomId?: string | null
+  onDeleteSuccess?: () => void
 }
 
-export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAssignDropdownProps>) {
+export function RoomAssignDropdown({ articleId, currentRoomId, onDeleteSuccess }: Readonly<RoomAssignDropdownProps>) {
   const router = useRouter()
   const [rooms, setRooms] = useState<{ id: string, name: string, cover_color: string }[]>([])
   const [loading, setLoading] = useState(false)
@@ -64,6 +65,9 @@ export function RoomAssignDropdown({ articleId, currentRoomId }: Readonly<RoomAs
       if (res.ok) {
         toast.success("Document deleted successfully")
         setIsDeleteDialogOpen(false)
+        if (onDeleteSuccess) {
+          onDeleteSuccess()
+        }
         router.refresh()
       } else {
         const data = await res.json()
