@@ -12,7 +12,7 @@ import * as pdfjsLib from "pdfjs-dist"
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
 
-export function SaveArticleDialog() {
+export function SaveArticleDialog({ defaultRoomId, compact }: { defaultRoomId?: string, compact?: boolean } = {}) {
   const [open, setOpen] = useState(false)
   const [url, setUrl] = useState("")
   const [file, setFile] = useState<File | null>(null)
@@ -64,7 +64,8 @@ export function SaveArticleDialog() {
             title: title, 
             source_url: `upload://${file.name}`,
             source_type: 'pdf',
-            text: extractedText
+            text: extractedText,
+            roomId: defaultRoomId
           }),
         })
       } else {
@@ -73,7 +74,7 @@ export function SaveArticleDialog() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ url }),
+          body: JSON.stringify({ url, roomId: defaultRoomId }),
         })
       }
 
@@ -125,9 +126,14 @@ export function SaveArticleDialog() {
 
   return (
     <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) { setFile(null); setUrl(""); } }}>
-      <DialogTrigger className="w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors">
+      <DialogTrigger 
+        className={compact 
+          ? "inline-flex items-center justify-center gap-2 rounded-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 text-sm font-medium transition-colors"
+          : "w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors"
+        }
+      >
         <Plus className="w-4 h-4" />
-        <span>Save Document</span>
+        <span className={compact ? "hidden sm:inline" : ""}>Save Document</span>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-card border-border">
         <DialogHeader>
