@@ -1,9 +1,7 @@
-import { Download, Package, Puzzle, CheckCircle } from "lucide-react"
+"use client"
 
-export const metadata = {
-  title: "Browser Extension – The Reading Room",
-  description: "Install the Reading Room browser extension to save articles directly from any web page.",
-}
+import { useState } from "react"
+import { Download, Puzzle, CheckCircle, Loader2 } from "lucide-react"
 
 const steps = [
   {
@@ -28,6 +26,35 @@ const steps = [
 ]
 
 export default function ExtensionPage() {
+  const [downloading, setDownloading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleDownload = async () => {
+    setDownloading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/extension/download')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `Server error: ${res.status}`)
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'reading-room-extension.zip'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      const e = err as Error
+      setError(e.message || 'Download failed. Please try again.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto py-6">
       {/* Header */}
@@ -48,17 +75,24 @@ export default function ExtensionPage() {
         <div>
           <p className="font-heading font-bold text-lg text-[#1A1A1A] mb-1">Reading Room Extension</p>
           <p className="text-sm text-[#52525B] font-sans">Chrome · Pre-configured · Ready to install</p>
+          {error && (
+            <p className="text-sm text-red-600 mt-2">{error}</p>
+          )}
         </div>
-        <a
-          href="/api/extension/download"
-          className="inline-flex items-center gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] px-5 py-2.5 text-sm font-medium font-sans transition-colors shrink-0"
+        <button
+          onClick={handleDownload}
+          disabled={downloading}
+          className="inline-flex items-center gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] px-5 py-2.5 text-sm font-medium font-sans transition-colors shrink-0 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <Download className="w-4 h-4" />
-          Download Extension
-        </a>
+          {downloading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" /> Preparing...</>
+          ) : (
+            <><Download className="w-4 h-4" /> Download Extension</>
+          )}
+        </button>
       </div>
 
-      {/* Steps — now just 3 */}
+      {/* Steps */}
       <div className="mb-10">
         <h2 className="font-heading font-bold text-xl text-[#1A1A1A] mb-6">Install in 3 steps</h2>
         <div className="flex flex-col">
