@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
+// @ts-expect-error - No types available for the internal file
 import pdfParse from 'pdf-parse/lib/pdf-parse.js'
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
@@ -51,7 +52,9 @@ export async function POST(req: Request) {
       .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
       .join('')
 
-    const cleanContent = DOMPurify.sanitize(formattedHtml)
+    const cleanContent = sanitizeHtml(formattedHtml, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+    })
 
     const wordCount = textContent.trim().split(/\s+/).length
     const readTimeMinutes = Math.ceil(wordCount / 200)

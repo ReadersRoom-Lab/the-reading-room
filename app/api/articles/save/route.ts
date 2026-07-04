@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
-import { JSDOM } from 'jsdom'
+import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
@@ -29,8 +29,8 @@ async function fetchArxivMetadata(arxivId: string) {
   if (!res.ok) throw new Error('arXiv ID not found')
   const xml = await res.text()
   
-  const doc = new JSDOM(xml, { contentType: "text/xml" }).window.document
-  const entry = doc.querySelector('entry')
+  const { document } = parseHTML(xml)
+  const entry = document.querySelector('entry')
   if (!entry) throw new Error('arXiv entry not found')
   
   const title = entry.querySelector('title')?.textContent?.trim() || 'Untitled Article'
@@ -62,8 +62,8 @@ async function fetchStandardUrl(url: string) {
   }
 
   const html = await response.text()
-  const doc = new JSDOM(html, { url })
-  const reader = new Readability(doc.window.document)
+  const { document } = parseHTML(html)
+  const reader = new Readability(document)
   const article = reader.parse()
 
   if (!article) {
@@ -71,7 +71,7 @@ async function fetchStandardUrl(url: string) {
   }
 
   let coverImage = null
-  const metaTags = doc.window.document.getElementsByTagName('meta')
+  const metaTags = document.getElementsByTagName('meta')
   for (const metaTag of Array.from(metaTags)) {
     const property = metaTag.getAttribute('property')
     const name = metaTag.getAttribute('name')
@@ -130,12 +130,14 @@ export async function POST(req: Request) {
     }
 
     // Sanitize the HTML output
-    const cleanContent = DOMPurify.sanitize(articleData.content || '')
+    const cleanContent = sanitizeHtml(articleData.content || '', {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+    })
 
     // Calculate word count and read time
     // Create a temporary JSDOM just to extract textContent for word count
-    const tempDoc = new JSDOM(cleanContent).window.document;
-    const textContent = tempDoc.body.textContent || '';
+    const { document } = parseHTML(`<div>${cleanContent}</div>`)
+    const textContent = document.body.textContent || '';
     
     const wordCount = textContent.trim().split(/\s+/).length
     const readTimeMinutes = Math.ceil(wordCount / 200) // Assumes ~200 WPM

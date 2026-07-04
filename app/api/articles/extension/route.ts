@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
-import { JSDOM } from 'jsdom'
+import { parseHTML } from 'linkedom'
 import { Readability } from '@mozilla/readability'
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 
@@ -31,9 +31,9 @@ async function processVectorEmbeddings(textContent: string, articleId: string) {
   }
 }
 
-function extractCoverImage(doc: JSDOM) {
-  const metaTags = doc.window.document.getElementsByTagName('meta')
-  for (const metaTag of Array.from(metaTags)) {
+function extractCoverImage(document: any) {
+  const metaTags = document.getElementsByTagName('meta')
+  for (const metaTag of Array.from(metaTags) as any[]) {
     if (metaTag.getAttribute('property') === 'og:image' || metaTag.getAttribute('name') === 'twitter:image') {
       return metaTag.getAttribute('content')
     }
@@ -92,8 +92,8 @@ export async function POST(req: Request) {
     }
 
     // Parse HTML with Readability
-    const doc = new JSDOM(html, { url })
-    const reader = new Readability(doc.window.document)
+    const { document } = parseHTML(html)
+    const reader = new Readability(document)
     const article = reader.parse()
 
     if (!article) {
@@ -104,12 +104,14 @@ export async function POST(req: Request) {
     }
 
     // Extract cover image
-    const coverImage = extractCoverImage(doc)
+    const coverImage = extractCoverImage(document)
 
-    const cleanContent = DOMPurify.sanitize(article.content || '')
+    const cleanContent = sanitizeHtml(article.content || '', {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
+    })
     
     // Calculate word count and read time
-    const tempDoc = new JSDOM(cleanContent).window.document
+    const { document: tempDoc } = parseHTML(`<div>${cleanContent}</div>`)
     const textContent = tempDoc.body.textContent || ''
     const wordCount = textContent.trim().split(/\s+/).length
     const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200))
