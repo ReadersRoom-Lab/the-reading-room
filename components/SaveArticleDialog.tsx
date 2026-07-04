@@ -126,15 +126,19 @@ export function SaveArticleDialog({ defaultRoomId, compact }: { defaultRoomId?: 
 
   return (
     <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) { setFile(null); setUrl(""); } }}>
-      <DialogTrigger 
-        className={compact 
-          ? "inline-flex items-center justify-center gap-2 rounded-none border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 text-sm font-medium transition-colors"
-          : "w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors"
-        }
-      >
-        <Plus className="w-4 h-4" />
-        <span className={compact ? "hidden sm:inline" : ""}>Save Document</span>
-      </DialogTrigger>
+      {compact ? (
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
+            <Plus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Save Document</span>
+          </Button>
+        </DialogTrigger>
+      ) : (
+        <DialogTrigger className="w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors">
+          <Plus className="w-4 h-4" />
+          <span>Save Document</span>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-md bg-card border-border">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-foreground">Save a new document</DialogTitle>
