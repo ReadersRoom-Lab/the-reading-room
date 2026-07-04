@@ -19,13 +19,12 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
 
   useEffect(() => {
     if (open) {
-      setLoading(true)
-      fetch('/api/articles')
+      if (articles.length === 0) setLoading(true)
+      fetch('/api/articles/library')
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) {
-            // Only show articles that are not in any room (general library)
-            setArticles(data.filter(a => a.room_id === null))
+            setArticles(data)
           }
         })
         .catch(err => logger.error("Failed to fetch library articles", err))
@@ -87,7 +86,7 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
               <p className="text-xs text-muted-foreground mt-1">All your documents are already in rooms, or you haven't saved any yet.</p>
             </div>
           ) : (
-            <ScrollArea className="h-[300px]">
+            <div className="h-[300px] overflow-y-auto">
               <div className="flex flex-col">
                 {articles.map(article => (
                   <div key={article.id} className="flex items-center justify-between p-4 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
@@ -98,7 +97,7 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="shrink-0 rounded-none h-8"
+                      className="shrink-0 rounded-none h-8 ml-2"
                       onClick={() => handleImport(article.id)}
                       disabled={importingId !== null}
                     >
@@ -112,7 +111,7 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           )}
         </div>
       </DialogContent>
