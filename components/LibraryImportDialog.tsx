@@ -91,7 +91,7 @@ export function LibraryImportDialog({ roomId }: { roomId: string }) {
               <div className="flex flex-col">
                 {articles.map(article => (
                   <div key={article.id} className="flex items-center justify-between p-4 border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors">
-                    <div className="flex flex-col gap-1 pr-4 overflow-hidden">
+                    <div className="flex flex-col gap-1 pr-4 overflow-hidden flex-1 min-w-0">
                       <span className="text-sm font-medium text-foreground truncate">{article.title}</span>
                       <span className="text-xs text-muted-foreground truncate">{article.source_url}</span>
                     </div>
