@@ -1,31 +1,28 @@
-"use client"
+import prisma from '@/lib/prisma'
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+import { ArticleCard } from "@/components/ArticleCard"
+import { BookMarked } from "lucide-react"
 
-import { useEffect, useState } from "react"
-import { ArticleCard, ArticleProps } from "@/components/ArticleCard"
-import { BookMarked, Loader2 } from "lucide-react"
-import { logger } from '@/lib/logger'
+export default async function LibraryPage() {
+  const { userId } = await auth()
+  
+  if (!userId) {
+    redirect('/sign-in')
+  }
 
-export default function LibraryPage() {
-  const [articles, setArticles] = useState<ArticleProps['article'][]>([])
-  const [loading, setLoading] = useState(true)
+  const user = await prisma.user.findUnique({
+    where: { clerk_id: userId }
+  })
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch('/api/articles')
-        if (res.ok) {
-          const data = await res.json()
-          setArticles(data)
-        }
-      } catch (error) {
-        logger.error("Failed to fetch articles:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  if (!user) {
+    redirect('/sign-in')
+  }
 
-    fetchArticles()
-  }, [])
+  const articles = await prisma.article.findMany({
+    where: { user_id: user.id },
+    orderBy: { updated_at: 'desc' }
+  })
 
   return (
     <div className="flex flex-col gap-8">
@@ -34,19 +31,14 @@ export default function LibraryPage() {
         <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
       </div>
       
-      {loading && (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="w-6 h-6 animate-spin text-[#BDBDBD]" />
-        </div>
-      )}
-      {!loading && articles.length > 0 && (
+      {articles.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
         </div>
       )}
-      {!loading && articles.length === 0 && (
+      {articles.length === 0 && (
         <div className="flex flex-col items-center justify-center min-h-[400px] border border-[#E5E5E5] bg-white p-12 text-center">
           <BookMarked className="w-8 h-8 text-[#BDBDBD] mb-4" />
           <h2 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-2">Your library is empty</h2>
