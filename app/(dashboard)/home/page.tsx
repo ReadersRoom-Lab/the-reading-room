@@ -103,12 +103,13 @@ export default async function Home() {
 
           {/* Extension Promo */}
           <div className="bg-[#F9F7F2] border border-[#E6C79C] px-8 py-6 flex flex-col justify-center">
+            <p className="font-sans text-[9px] font-medium tracking-[0.14em] text-[#BDBDBD] uppercase mb-1">Developer Mode Required</p>
             <h2 className="font-heading text-lg font-bold mb-1 text-[#1A1A1A]">Browser Extension</h2>
             <p className="font-sans text-[11px] text-[#52525B] mb-5 leading-relaxed">
-              Bypass paywalls and anti-bot protections by saving exactly what you see.
+              Bypass paywalls and anti-bot protections by saving exactly what you see. Requires Chrome Developer Mode to install.
             </p>
-            <Link href="/chrome-extension" className="bg-[#1A1A1A] text-white px-4 py-2.5 text-center text-[10px] font-bold tracking-[0.05em] uppercase hover:bg-[#333] transition-colors whitespace-nowrap mt-auto">
-              View Instructions
+            <Link href="/extension" className="bg-[#1A1A1A] text-white px-4 py-2.5 text-center text-[10px] font-bold tracking-[0.05em] uppercase hover:bg-[#333] transition-colors whitespace-nowrap mt-auto">
+              Download Extension
             </Link>
           </div>
 
