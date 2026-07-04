@@ -42,14 +42,23 @@ async function fetchArxivMetadata(arxivId: string) {
 
 // helper to fetch standard web page
 async function fetchStandardUrl(url: string) {
-  const response = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; TheReadingRoomBot/1.0)',
-    },
-  })
+  let response;
+  try {
+    response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+      signal: AbortSignal.timeout(8000)
+    })
+  } catch (error) {
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      throw new Error('Request timed out while fetching the URL (took longer than 8s).')
+    }
+    throw new Error(`Network error while fetching URL: ${error instanceof Error ? error.message : String(error)}`)
+  }
   
   if (!response.ok) {
-    throw new Error(`Failed to fetch URL: ${response.statusText}`)
+    throw new Error(`Failed to fetch URL: ${response.statusText} (${response.status})`)
   }
 
   const html = await response.text()
@@ -58,7 +67,7 @@ async function fetchStandardUrl(url: string) {
   const article = reader.parse()
 
   if (!article) {
-    throw new Error('Failed to extract article content')
+    throw new Error('Failed to extract article content. The page might not have a readable article format.')
   }
 
   let coverImage = null

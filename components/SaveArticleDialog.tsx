@@ -47,8 +47,21 @@ export function SaveArticleDialog() {
       }
 
       if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || "Failed to save article")
+        let errorMessage = "Failed to save article"
+        const contentType = res.headers.get("content-type")
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json()
+          errorMessage = data.error || errorMessage
+        } else {
+          if (res.status === 504) {
+            errorMessage = "The request timed out. The page might be too large or slow to respond."
+          } else if (res.status >= 500) {
+            errorMessage = "An unexpected server error occurred."
+          } else {
+            errorMessage = `Failed to save article (${res.status})`
+          }
+        }
+        throw new Error(errorMessage)
       }
 
       toast.success("Document saved successfully!")
