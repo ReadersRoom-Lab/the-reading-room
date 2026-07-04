@@ -168,7 +168,11 @@ export function RoomAssignDropdown({ articleId, currentRoomId, onDeleteSuccess }
       />
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
+        <DialogContent 
+          className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
           <DialogHeader>
             <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Delete Document</DialogTitle>
             <DialogDescription className="text-muted-foreground">
@@ -179,7 +183,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId, onDeleteSuccess }
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => setIsDeleteDialogOpen(false)}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsDeleteDialogOpen(false) }}
               disabled={loading}
               className="rounded-none border-[#E5E5E5]"
             >
@@ -188,7 +192,7 @@ export function RoomAssignDropdown({ articleId, currentRoomId, onDeleteSuccess }
             <Button 
               type="button" 
               className="rounded-none bg-red-600 hover:bg-red-700 text-white"
-              onClick={deleteArticle}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteArticle() }}
               disabled={loading}
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Trash2 className="w-4 h-4 mr-2" />}

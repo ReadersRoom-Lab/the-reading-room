@@ -70,7 +70,11 @@ export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setContro
           Create Room
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none">
+      <DialogContent 
+        className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
         <DialogHeader>
           <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Create a New Room</DialogTitle>
         </DialogHeader>
