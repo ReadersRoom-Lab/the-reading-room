@@ -2,6 +2,11 @@
 
 *Automated summary of git contributions. Updated on every push.*
 
+## 📅 July 4, 2026
+**Lokeshwaran V R:**
+- Fix: graceful error handling for document and pdf upload
+
+
 ## 📅 July 3, 2026
 **Lokeshwaran V R:**
 - Docs: update CONTRIBUTIONS.md
