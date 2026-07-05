@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveBtn = document.getElementById('save-btn');
   const statusEl = document.getElementById('status-container');
 
-  // For local development this is overridden in the build script.
-  // If loading unpacked from chrome-extension/, point this at your local server.
-  const BACKEND_URL = 'http://localhost:3000';
+  // For local development, change this to http://localhost:3000
+  // The Vercel build script overrides this with NEXT_PUBLIC_APP_URL automatically.
+  const BACKEND_URL = 'https://the-reading-room.vercel.app';
 
   saveBtn.addEventListener('click', async () => {
     saveBtn.disabled = true;
