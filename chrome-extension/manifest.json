@@ -2,21 +2,10 @@
   "manifest_version": 3,
   "name": "Send to Reading Room",
   "description": "Save web pages directly to your Reading Room.",
-  "version": "1.0",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "storage"
-  ],
-  "host_permissions": [
-    "*://*/*"
-  ],
+  "version": "1.1",
+  "permissions": ["activeTab"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Save to Reading Room"
-  },
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": false
   }
 }
