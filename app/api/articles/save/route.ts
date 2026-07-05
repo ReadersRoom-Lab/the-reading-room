@@ -44,25 +44,55 @@ async function fetchArxivMetadata(arxivId: string) {
 
 // helper to fetch standard web page
 async function fetchStandardUrl(url: string) {
-  let response;
-  try {
-    response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      },
-      signal: AbortSignal.timeout(8000)
-    })
-  } catch (error) {
-    if (error instanceof Error && error.name === 'TimeoutError') {
-      throw new Error('Request timed out while fetching the URL (took longer than 8s).')
-    }
-    throw new Error(`Network error while fetching URL: ${error instanceof Error ? error.message : String(error)}`)
-  }
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch URL: ${response.statusText} (${response.status})`)
+  const BROWSER_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Cache-Control': 'max-age=0',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'sec-ch-ua': '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
   }
 
+  async function attemptFetch(attempt: number): Promise<Response> {
+    let response: Response
+    try {
+      response = await fetch(url, {
+        headers: BROWSER_HEADERS,
+        signal: AbortSignal.timeout(10000),
+      })
+    } catch (error) {
+      if (error instanceof Error && error.name === 'TimeoutError') {
+        throw new Error('Request timed out while fetching the URL (took longer than 10s).')
+      }
+      throw new Error(`Network error while fetching URL: ${error instanceof Error ? error.message : String(error)}`)
+    }
+
+    // Retry once on 429 (rate limit) after a short back-off
+    if (response.status === 429 && attempt === 1) {
+      const retryAfter = response.headers.get('Retry-After')
+      const waitMs = retryAfter ? Math.min(parseInt(retryAfter) * 1000, 4000) : 2000
+      await new Promise(resolve => setTimeout(resolve, waitMs))
+      return attemptFetch(2)
+    }
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('The article website is temporarily limiting access. Please try again in a minute.')
+      }
+      throw new Error(`Failed to fetch URL: ${response.statusText} (${response.status})`)
+    }
+
+    return response
+  }
+
+  const response = await attemptFetch(1)
   const html = await response.text()
   const { document } = parseHTML(html)
   const reader = new Readability(document)
@@ -94,6 +124,7 @@ async function fetchStandardUrl(url: string) {
     coverImage
   }
 }
+
 
 export async function POST(req: Request) {
   try {
