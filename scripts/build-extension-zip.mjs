@@ -29,7 +29,7 @@ const manifestJson = JSON.stringify({
   manifest_version: 3,
   name: "Send to Reading Room",
   description: "Save web pages directly to your Reading Room.",
-  version: "1.1",
+  version: "1.2",
   permissions: ["activeTab"],
   action: {
     default_popup: "popup.html",
