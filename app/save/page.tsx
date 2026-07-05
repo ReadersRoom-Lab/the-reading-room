@@ -26,6 +26,11 @@ function SaveHandler() {
       body: JSON.stringify({ url }),
     })
       .then(async (res) => {
+        if (res.status === 401) {
+          // Not signed in — redirect to sign-in, then come back here to complete the save
+          router.push(`/sign-in?redirect_url=${encodeURIComponent(`/save?url=${encodeURIComponent(url)}`)}`)
+          return
+        }
         if (!res.ok) {
           const data = await res.json().catch(() => ({}))
           throw new Error(data.error || `Error ${res.status}`)
@@ -40,8 +45,13 @@ function SaveHandler() {
   }, [url, router])
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
+      <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center shadow-sm">
+        <div className="mb-6">
+          <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
+            The Reading Room
+          </span>
+        </div>
         {state === "saving" && (
           <>
             <Loader2 className="w-8 h-8 animate-spin text-[#BDBDBD] mx-auto mb-4" />
@@ -73,8 +83,8 @@ function SaveHandler() {
 export default function SaveFromExtensionPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
+        <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center shadow-sm">
           <Loader2 className="w-8 h-8 animate-spin text-[#BDBDBD] mx-auto mb-4" />
           <p className="text-sm text-[#52525B]">Loading…</p>
         </div>

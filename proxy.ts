@@ -4,6 +4,7 @@ const isPublicRoute = createRouteMatcher([
   '/', 
   '/sign-in(.*)', 
   '/sign-up(.*)',
+  '/save(.*)',           // Extension save page — Clerk will redirect to sign-in if needed
   '/api/webhooks/clerk',
   '/api/articles/extension', // Extension CORS preflight must not be blocked by Clerk
   '/robots.txt',
