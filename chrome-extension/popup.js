@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // For local development, change this to http://localhost:3000
   // The Vercel build script overrides this with NEXT_PUBLIC_APP_URL automatically.
-  const BACKEND_URL = 'https://the-reading-room.vercel.app';
+  const BACKEND_URL = 'https://the-reading-room-qwsz.vercel.app';
 
   saveBtn.addEventListener('click', async () => {
     saveBtn.disabled = true;
