@@ -13,15 +13,13 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 
-// Resolve the app URL from environment variables
-// NEXT_PUBLIC_APP_URL takes priority (set this in Vercel dashboard for custom domains)
-// Falls back to VERCEL_URL (auto-set by Vercel, no https://)
-let baseUrl = 'http://localhost:3000'
-if (process.env.NEXT_PUBLIC_APP_URL) {
-  baseUrl = process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
-} else if (process.env.VERCEL_URL) {
-  baseUrl = `https://${process.env.VERCEL_URL}`
-}
+// Resolve the app URL — NEXT_PUBLIC_APP_URL must be set in Vercel dashboard.
+// VERCEL_URL is intentionally NOT used as a fallback because it returns the
+// internal team URL (the-reading-room.qwsz.vercel.app) which is unreachable.
+const PRODUCTION_URL = 'https://the-reading-room-qwsz.vercel.app'
+let baseUrl = process.env.NEXT_PUBLIC_APP_URL
+  ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
+  : PRODUCTION_URL
 
 console.log(`[build-extension] Baking URL into extension: ${baseUrl}`)
 
