@@ -5,12 +5,17 @@
  * Uses only Node.js built-ins — no npm packages.
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
+
+// Read the binary icon images
+const icon16 = readFileSync(join(ROOT, 'chrome-extension', 'icon-16.png'))
+const icon48 = readFileSync(join(ROOT, 'chrome-extension', 'icon-48.png'))
+const icon128 = readFileSync(join(ROOT, 'chrome-extension', 'icon-128.png'))
 
 // Resolve the app URL — NEXT_PUBLIC_APP_URL must be set in Vercel dashboard.
 // VERCEL_URL is intentionally NOT used as a fallback because it returns the
@@ -32,9 +37,19 @@ const manifestJson = JSON.stringify({
   description: "Save web pages directly to your Reading Room.",
   version: "1.4",
   permissions: ["activeTab", "storage", "scripting"],
+  icons: {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
   action: {
     default_popup: "popup.html",
-    default_title: "Save to Reading Room"
+    default_title: "Save to Reading Room",
+    default_icon: {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
   },
   background: {
     service_worker: "background.js"
@@ -401,6 +416,9 @@ const files = [
   ['reading-room-extension/popup.css', popupCss],
   ['reading-room-extension/popup.js', popupJs],
   ['reading-room-extension/background.js', backgroundJs],
+  ['reading-room-extension/icon-16.png', icon16],
+  ['reading-room-extension/icon-48.png', icon48],
+  ['reading-room-extension/icon-128.png', icon128],
 ]
 
 const zipBuffer = buildZip(files)

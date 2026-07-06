@@ -30,6 +30,9 @@ The absolute best way to save articles to your library is using the companion Ch
 6. **Connect your Workspace**: Open your Reading Room application in Chrome (e.g. `http://localhost:3000` or your production domain), click the extension icon, and click **Connect Workspace**.
 7. **Start saving**: Navigate to any article on the web, click the extension icon, and click **Save to Library**!
 
+**Publishing to the Chrome Web Store:**
+If you wish to publish this extension to the Chrome Web Store for one-click installation, please refer to the detailed [Chrome Web Store Submission Guide](file:///c:/Users/ASUS/Documents/personal/Readers_Room/readers-room/docs/chrome-web-store-submission.md).
+
 ---
 
 ## 🚀 Quick Start
