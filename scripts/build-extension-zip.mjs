@@ -21,6 +21,8 @@ let baseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
   : PRODUCTION_URL
 
+const displayBaseUrl = baseUrl.replace(/^https?:\/\//, '')
+
 console.log(`[build-extension] Baking URL into extension: ${baseUrl}`)
 
 // --- Extension file contents ---
@@ -29,8 +31,8 @@ const manifestJson = JSON.stringify({
   manifest_version: 3,
   name: "Send to Reading Room",
   description: "Save web pages directly to your Reading Room.",
-  version: "1.2",
-  permissions: ["activeTab"],
+  version: "1.3",
+  permissions: ["activeTab", "storage"],
   action: {
     default_popup: "popup.html",
     default_title: "Save to Reading Room"
@@ -46,20 +48,43 @@ const popupHtml = `<!DOCTYPE html>
 <body>
   <div class="container">
     <h1 class="title">The Reading Room</h1>
-    <p class="subtitle">Save this article to your library.</p>
-    <div id="status-container" class="status hidden"></div>
-    <button id="save-btn" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      Save to Library
-    </button>
+    <!-- Save View -->
+    <div id="save-view" class="view-section">
+      <p class="subtitle">Save this article to your library.</p>
+      <div id="status-container" class="status hidden"></div>
+      <button id="save-btn" class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Save to Library
+      </button>
+      <div id="connection-info" class="connection-info"></div>
+    </div>
+
+    <!-- Connect View -->
+    <div id="connect-view" class="view-section hidden">
+      <p class="subtitle">Connect this site to enable saving.</p>
+      <div class="connect-box">
+        <span id="connect-url" class="connect-url"></span>
+      </div>
+      <button id="connect-btn" class="btn btn-secondary">
+        Connect Workspace
+      </button>
+    </div>
+
+    <!-- No Connection View -->
+    <div id="no-connection-view" class="view-section hidden">
+      <p class="subtitle error-text">No connected workspace found.</p>
+      <p class="info-text">
+        To start saving, open your Reading Room dashboard (e.g. <code>localhost:3000</code> or your deployed website) and click this extension icon to connect.
+      </p>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
 </html>`
 
 const popupCss = `
-:root { --bg:#FCFBF8;--fg:#1a1a1a;--primary:#1A1A1A;--primary-fg:#F9F7F2;--muted:#52525B }
-@media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--fg:#F9F7F2;--primary:#F9F7F2;--primary-fg:#1A1A1A;--muted:#A1A1AA}}
+:root { --bg:#FCFBF8;--fg:#1a1a1a;--border:#E5E5E5;--primary:#1A1A1A;--primary-fg:#F9F7F2;--muted:#52525B }
+@media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--fg:#F9F7F2;--border:#333333;--primary:#F9F7F2;--primary-fg:#1A1A1A;--muted:#A1A1AA}}
 body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg)}
 .container{padding:24px;display:flex;flex-direction:column;gap:16px}
 .title{margin:0;font-size:20px;font-weight:700;font-family:ui-serif,Georgia,serif}
@@ -70,41 +95,151 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .status.success{background:rgba(74,222,128,.1);color:#16a34a;border:1px solid rgba(74,222,128,.2)}
 .status.error{background:rgba(248,113,113,.1);color:#dc2626;border:1px solid rgba(248,113,113,.2)}
 .hidden{display:none}
+.view-section {display: flex;flex-direction: column;gap: 16px;}
+.connection-info {margin-top: 4px;font-size: 10px;text-align: center;color: var(--muted);text-transform: uppercase;letter-spacing: 0.05em;}
+.connect-box {padding: 12px;border: 1px dashed var(--border);background-color: rgba(26, 26, 26, 0.02);text-align: center;margin: 4px 0;}
+.connect-url {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;font-size: 12px;font-weight: 600;color: var(--fg);}
+.btn-secondary {background-color: transparent;color: var(--fg);border: 1px solid var(--fg);}
+.btn-secondary:hover {background-color: rgba(26, 26, 26, 0.05);opacity: 1;}
+.info-text {font-size: 12px;line-height: 1.5;color: var(--muted);margin: 0;}
+.info-text code {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;background-color: rgba(26, 26, 26, 0.05);padding: 2px 4px;font-size: 11px;}
+.error-text {color: #dc2626 !important;font-weight: 600;}
 `
 
 // No more direct API calls — opens a tab in the authenticated Reading Room instead.
 // This bypasses all SameSite cookie restrictions and CORS issues entirely.
-const popupJs = `document.addEventListener('DOMContentLoaded', () => {
+const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
+  const saveView = document.getElementById('save-view');
+  const connectView = document.getElementById('connect-view');
+  const noConnectionView = document.getElementById('no-connection-view');
+
   const saveBtn = document.getElementById('save-btn');
   const statusEl = document.getElementById('status-container');
-  const BACKEND_URL = '${baseUrl}';
+  const connectionInfoEl = document.getElementById('connection-info');
 
-  saveBtn.addEventListener('click', async () => {
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = 'Opening...';
+  const connectBtn = document.getElementById('connect-btn');
+  const connectUrlEl = document.getElementById('connect-url');
 
-    try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  // Default fallback built into the script
+  const DEFAULT_BACKEND_URL = '${baseUrl}';
 
-      if (!tab.url || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
-        throw new Error('Cannot save this type of page.');
-      }
+  // Get active tab info
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab) return;
 
-      // Open the Reading Room save page — it handles auth and saving internally.
-      const saveUrl = BACKEND_URL + '/save?url=' + encodeURIComponent(tab.url);
-      chrome.tabs.create({ url: saveUrl });
+  const currentUrl = tab.url || '';
+  const currentTitle = tab.title || '';
 
-      statusEl.textContent = 'Opening The Reading Room\u2026';
-      statusEl.className = 'status success';
-      setTimeout(() => window.close(), 1200);
-
-    } catch (err) {
-      statusEl.textContent = err.message || 'An unexpected error occurred.';
-      statusEl.className = 'status error';
-      saveBtn.disabled = false;
-      saveBtn.innerHTML = 'Try Again';
+  // Parse current page origin
+  let currentOrigin = '';
+  try {
+    if (currentUrl.startsWith('http://') || currentUrl.startsWith('https://')) {
+      currentOrigin = new URL(currentUrl).origin;
     }
-  });
+  } catch (e) {
+    // ignore parsing errors
+  }
+
+  // Detect if active tab is the Reading Room app
+  const isAppUrl = currentOrigin && (
+    currentUrl.includes('/home') ||
+    currentUrl.includes('/library') ||
+    currentUrl.includes('/rooms') ||
+    currentUrl.includes('/vault') ||
+    currentUrl.includes('/insights') ||
+    currentUrl.includes('/save') ||
+    currentUrl.includes('/profile') ||
+    currentUrl.includes('/onboarding')
+  );
+  
+  const isReadingRoomApp = currentOrigin && (
+    isAppUrl || 
+    currentTitle.includes('The Reading Rooms') || 
+    currentOrigin.includes('localhost:3000') ||
+    currentOrigin.includes('${displayBaseUrl}')
+  );
+
+  if (isReadingRoomApp) {
+    // Show Connect view
+    saveView.classList.add('hidden');
+    noConnectionView.classList.add('hidden');
+    connectView.classList.remove('hidden');
+
+    connectUrlEl.textContent = currentOrigin.replace(/^https?:\\/\\//, '');
+
+    connectBtn.addEventListener('click', async () => {
+      connectBtn.disabled = true;
+      connectBtn.textContent = 'Connecting...';
+      
+      try {
+        await chrome.storage.local.set({ backendUrl: currentOrigin });
+        
+        // Show success
+        connectView.innerHTML = \`
+          <div class="status success" style="margin-top: 8px;">
+            Successfully connected to this workspace! You can now save articles here.
+          </div>
+        \`;
+        setTimeout(() => window.close(), 1500);
+      } catch (err) {
+        connectBtn.disabled = false;
+        connectBtn.textContent = 'Try Again';
+        alert('Failed to connect: ' + err.message);
+      }
+    });
+  } else {
+    // Show Save view or No Connection view
+    // Check if we have a saved backendUrl in chrome storage
+    const data = await chrome.storage.local.get('backendUrl');
+    let backendUrl = data.backendUrl;
+
+    if (!backendUrl) {
+      // Fallback to default backend URL
+      backendUrl = DEFAULT_BACKEND_URL;
+    }
+
+    if (backendUrl) {
+      saveView.classList.remove('hidden');
+      connectView.classList.add('hidden');
+      noConnectionView.classList.add('hidden');
+
+      // Display the connected backend URL domain
+      const displayDomain = backendUrl.replace(/^https?:\\/\\//, '');
+      connectionInfoEl.textContent = \`Connected to: \${displayDomain}\`;
+
+      saveBtn.addEventListener('click', async () => {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = 'Opening...';
+
+        try {
+          if (!currentUrl || currentUrl.startsWith('chrome://') || currentUrl.startsWith('chrome-extension://')) {
+            throw new Error('Cannot save this type of page.');
+          }
+
+          // Open the Reading Room save page — it handles auth and saving internally.
+          const saveUrl = \`\${backendUrl}/save?url=\${encodeURIComponent(currentUrl)}\`;
+          await chrome.tabs.create({ url: saveUrl });
+
+          statusEl.textContent = 'Opening The Reading Room\\\\u2026';
+          statusEl.className = 'status success';
+          statusEl.classList.remove('hidden');
+          setTimeout(() => window.close(), 1200);
+
+        } catch (err) {
+          statusEl.textContent = err.message || 'An unexpected error occurred.';
+          statusEl.className = 'status error';
+          statusEl.classList.remove('hidden');
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = 'Try Again';
+        }
+      });
+    } else {
+      // Show No Connection view
+      saveView.classList.add('hidden');
+      connectView.classList.add('hidden');
+      noConnectionView.classList.remove('hidden');
+    }
+  }
 });`
 
 // --- Pure Node.js ZIP builder (DEFLATE-STORE, no compression) ---

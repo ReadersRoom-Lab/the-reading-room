@@ -95,3 +95,64 @@ body {
 .hidden {
   display: none;
 }
+
+.view-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.connection-info {
+  margin-top: 4px;
+  font-size: 10px;
+  text-align: center;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.connect-box {
+  padding: 12px;
+  border: 1px dashed var(--border);
+  background-color: rgba(26, 26, 26, 0.02);
+  text-align: center;
+  margin: 4px 0;
+}
+
+.connect-url {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--fg);
+  border: 1px solid var(--fg);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(26, 26, 26, 0.05);
+  opacity: 1;
+}
+
+.info-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+
+.info-text code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background-color: rgba(26, 26, 26, 0.05);
+  padding: 2px 4px;
+  font-size: 11px;
+}
+
+.error-text {
+  color: #dc2626 !important;
+  font-weight: 600;
+}
+

@@ -95,7 +95,7 @@ export default function ExtensionPage() {
 
       {/* Steps */}
       <div className="mb-10">
-        <h2 className="font-heading font-bold text-xl text-[#1A1A1A] mb-6">Install in 3 steps</h2>
+        <h2 className="font-heading font-bold text-xl text-[#1A1A1A] mb-6">Install in 4 simple steps</h2>
         <div className="flex flex-col">
           {[
             {
@@ -109,8 +109,12 @@ export default function ExtensionPage() {
               codeNote: 'Enable "Developer mode" toggle (top-right), click "Load unpacked", and select the unzipped folder.',
             },
             {
-              number: "03", icon: CheckCircle, title: "Start saving!",
-              description: "Browse any article, click the Reading Room icon in your toolbar, and hit Save. It appears in your Library instantly.",
+              number: "03", icon: Settings, title: "Connect your Workspace",
+              description: 'Click the Reading Room extension icon in your Chrome toolbar while visiting this dashboard. Click "Connect Workspace" to pair them.',
+            },
+            {
+              number: "04", icon: CheckCircle, title: "Start saving!",
+              description: "Browse any web page, click the Reading Room extension icon, and hit Save. The article will appear in your Library instantly.",
             },
           ].map((step, i, arr) => {
             const Icon = step.icon
