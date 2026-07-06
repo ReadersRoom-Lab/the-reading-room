@@ -26,7 +26,9 @@ The absolute best way to save articles to your library is using the companion Ch
 2. Toggle on **Developer mode** in the top right corner.
 3. Click **Load unpacked** in the top left.
 4. Select the `chrome-extension` folder located inside this repository.
-5. Pin the extension to your toolbar. Log in, click the icon on any article, and hit "Save to Reading Room"!
+5. Pin the extension to your toolbar.
+6. **Connect your Workspace**: Open your Reading Room application in Chrome (e.g. `http://localhost:3000` or your production domain), click the extension icon, and click **Connect Workspace**.
+7. **Start saving**: Navigate to any article on the web, click the extension icon, and click **Save to Library**!
 
 ---
 

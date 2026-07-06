@@ -76,6 +76,9 @@ const popupHtml = `<!DOCTYPE html>
       <p class="info-text">
         To start saving, open your Reading Room dashboard (e.g. <code>localhost:3000</code> or your deployed website) and click this extension icon to connect.
       </p>
+      <div class="help-link-container">
+        <a id="help-link" href="#" class="help-link">View Setup Guide</a>
+      </div>
     </div>
   </div>
   <script src="popup.js"></script>
@@ -104,6 +107,9 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .info-text {font-size: 12px;line-height: 1.5;color: var(--muted);margin: 0;}
 .info-text code {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;background-color: rgba(26, 26, 26, 0.05);padding: 2px 4px;font-size: 11px;}
 .error-text {color: #dc2626 !important;font-weight: 600;}
+.help-link-container {text-align: center;margin-top: 4px;}
+.help-link {font-size: 11px;color: var(--muted);text-decoration: underline;cursor: pointer;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-weight: 500;}
+.help-link:hover {color: var(--fg);}
 `
 
 // No more direct API calls — opens a tab in the authenticated Reading Room instead.
@@ -239,6 +245,17 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
       connectView.classList.add('hidden');
       noConnectionView.classList.remove('hidden');
     }
+  }
+
+  const helpLink = document.getElementById('help-link');
+  if (helpLink) {
+    helpLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const data = await chrome.storage.local.get('backendUrl');
+      const targetUrl = \`\${data.backendUrl || DEFAULT_BACKEND_URL}/extension\`;
+      await chrome.tabs.create({ url: targetUrl });
+      window.close();
+    });
   }
 });`
 

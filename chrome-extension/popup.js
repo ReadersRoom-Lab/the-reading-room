@@ -130,4 +130,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       noConnectionView.classList.remove('hidden');
     }
   }
+
+  const helpLink = document.getElementById('help-link');
+  if (helpLink) {
+    helpLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const data = await chrome.storage.local.get('backendUrl');
+      const targetUrl = `${data.backendUrl || DEFAULT_BACKEND_URL}/extension`;
+      await chrome.tabs.create({ url: targetUrl });
+      window.close();
+    });
+  }
 });
