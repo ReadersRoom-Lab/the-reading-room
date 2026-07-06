@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import { Trash2, Save, X, BookOpen, Quote } from "lucide-react"
 
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = globalThis.window === undefined ? useEffect : useLayoutEffect;
 
 type HighlightType = {
   id: string
@@ -63,8 +63,8 @@ export function EditHighlightPopover({
 
   if (!rect) return null
 
-  const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800
-  const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1000
+  const windowHeight = globalThis.window === undefined ? 800 : globalThis.window.innerHeight;
+  const windowWidth = globalThis.window === undefined ? 1000 : globalThis.window.innerWidth;
 
   // Check if we should render above instead of below
   const spaceBelow = windowHeight - rect.bottom
