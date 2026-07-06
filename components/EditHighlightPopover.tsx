@@ -1,5 +1,7 @@
-import { useState } from "react"
+import { useState, useRef, useEffect, useLayoutEffect } from "react"
 import { Trash2, Save, X, BookOpen, Quote } from "lucide-react"
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 type HighlightType = {
   id: string
@@ -41,6 +43,15 @@ export function EditHighlightPopover({
   const [annotationType, setAnnotationType] = useState(highlight.annotation_type || "")
   const [color, setColor] = useState(highlight.colour || "ochre")
 
+  const [popoverHeight, setPopoverHeight] = useState(320)
+  const popoverRef = useRef<HTMLDivElement>(null)
+
+  useIsomorphicLayoutEffect(() => {
+    if (popoverRef.current) {
+      setPopoverHeight(popoverRef.current.offsetHeight)
+    }
+  }, [])
+
   const handleSave = () => {
     onUpdate(highlight.id, {
       colour: color,
@@ -52,12 +63,26 @@ export function EditHighlightPopover({
 
   if (!rect) return null
 
+  const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800
+  const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1000
+
+  // Check if we should render above instead of below
+  const spaceBelow = windowHeight - rect.bottom
+  const renderAbove = spaceBelow < popoverHeight + 20 && rect.top > popoverHeight + 20
+
+  const topPos = renderAbove 
+    ? Math.max(10, rect.top - popoverHeight - 10) 
+    : Math.max(10, Math.min(rect.bottom + 10, windowHeight - popoverHeight - 10))
+
+  const leftPos = Math.max(10, Math.min(rect.left, windowWidth - 308))
+
   return (
     <div 
+      ref={popoverRef}
       className="fixed z-50 bg-background border border-border shadow-xl rounded-lg p-4 w-72 animate-in fade-in zoom-in-95 duration-200"
       style={{
-        top: Math.max(20, rect.bottom + 10),
-        left: Math.max(20, rect.left),
+        top: topPos,
+        left: leftPos,
       }}
     >
       <div className="flex items-center justify-between mb-3">
