@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Trash2, Save, X } from "lucide-react"
+import { Trash2, Save, X, BookOpen, Quote } from "lucide-react"
 
 type HighlightType = {
   id: string
@@ -15,6 +15,8 @@ interface EditHighlightPopoverProps {
   onClose: () => void
   onUpdate: (id: string, data: Partial<HighlightType>) => void
   onDelete: (id: string) => void
+  onDefine?: () => void
+  onSaveConcept?: () => void
 }
 
 const COLORS = [
@@ -26,7 +28,15 @@ const COLORS = [
 
 const TAGS = ["Insight", "To Research", "Golden Quote", "Question", "Review"]
 
-export function EditHighlightPopover({ highlight, rect, onClose, onUpdate, onDelete }: Readonly<EditHighlightPopoverProps>) {
+export function EditHighlightPopover({ 
+  highlight, 
+  rect, 
+  onClose, 
+  onUpdate, 
+  onDelete,
+  onDefine,
+  onSaveConcept
+}: Readonly<EditHighlightPopoverProps>) {
   const [note, setNote] = useState(highlight.note || "")
   const [annotationType, setAnnotationType] = useState(highlight.annotation_type || "")
   const [color, setColor] = useState(highlight.colour || "ochre")
@@ -90,6 +100,23 @@ export function EditHighlightPopover({ highlight, rect, onClose, onUpdate, onDel
           placeholder="Add a note..."
           className="w-full text-sm bg-muted text-foreground rounded-md p-2 border-none outline-none min-h-[80px] resize-none focus:ring-1 focus:ring-ring"
         />
+
+        {/* Define & Save Concept Actions */}
+        <div className="flex gap-2 pt-2 border-t border-border">
+          <button 
+            onClick={() => { onDefine?.(); onClose(); }}
+            className="flex-1 border border-border hover:bg-muted p-2 rounded-md transition-colors flex items-center justify-center gap-1.5 text-xs font-medium cursor-pointer text-foreground"
+          >
+            <BookOpen className="w-3.5 h-3.5" /> Define
+          </button>
+          
+          <button 
+            onClick={() => { onSaveConcept?.(); onClose(); }}
+            className="flex-1 border border-border hover:bg-muted p-2 rounded-md transition-colors flex items-center justify-center gap-1.5 text-xs font-medium cursor-pointer text-foreground"
+          >
+            <Quote className="w-3.5 h-3.5" /> Save to Vault
+          </button>
+        </div>
 
         {/* Actions */}
         <div className="flex items-center justify-between pt-2">

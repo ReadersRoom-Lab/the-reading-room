@@ -418,6 +418,21 @@ export default function ReaderPage() {
             onClose={() => setEditingHighlight(null)}
             onUpdate={handleUpdateHighlight}
             onDelete={handleDeleteHighlight}
+            onDefine={() => {
+              setActiveSelection({
+                text: editingHighlight.highlight.content,
+                rect: editingHighlight.rect,
+                contextSnippet: ""
+              })
+              setShowDictionary(true)
+            }}
+            onSaveConcept={() => {
+              setConcept({
+                term: editingHighlight.highlight.content,
+                definition: "",
+                contextSnippet: editingHighlight.highlight.note || ""
+              })
+            }}
           />
         )}
 
