@@ -5,10 +5,9 @@
  * Uses only Node.js built-ins — no npm packages.
  */
 
-import { writeFileSync, mkdirSync } from 'fs'
-import { createHash } from 'crypto'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import { writeFileSync, mkdirSync } from 'node:fs'
+import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -40,9 +39,10 @@ const manifestJson = JSON.stringify({
 }, null, 2)
 
 const popupHtml = `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <title>The Reading Room</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -95,8 +95,8 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;background:var(--primary);color:var(--primary-fg);border:none;border-radius:0;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s}
 .btn:hover{opacity:.9}.btn:disabled{opacity:.5;cursor:not-allowed}
 .status{padding:12px;border-radius:4px;font-size:13px;line-height:1.4}
-.status.success{background:rgba(74,222,128,.1);color:#16a34a;border:1px solid rgba(74,222,128,.2)}
-.status.error{background:rgba(248,113,113,.1);color:#dc2626;border:1px solid rgba(248,113,113,.2)}
+.status.success{background:rgba(74,222,128,.1);color:#15803d;border:1px solid rgba(74,222,128,.2)}
+.status.error{background:rgba(248,113,113,.1);color:#b91c1c;border:1px solid rgba(248,113,113,.2)}
 .hidden{display:none!important}
 .view-section {display: flex;flex-direction: column;gap: 16px;}
 .connection-info {margin-top: 4px;font-size: 10px;text-align: center;color: var(--muted);text-transform: uppercase;letter-spacing: 0.05em;}
@@ -143,7 +143,7 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
       currentOrigin = new URL(currentUrl).origin;
     }
   } catch (e) {
-    // ignore parsing errors
+    console.warn('Could not parse URL origin:', e);
   }
 
   // Detect if active tab is the Reading Room app
@@ -272,7 +272,7 @@ function crc32(buf) {
     return t
   })()
   let crc = 0xFFFFFFFF
-  for (let i = 0; i < buf.length; i++) crc = table[(crc ^ buf[i]) & 0xFF] ^ (crc >>> 8)
+  for (const b of buf) crc = table[(crc ^ b) & 0xFF] ^ (crc >>> 8)
   return (crc ^ 0xFFFFFFFF) >>> 0
 }
 

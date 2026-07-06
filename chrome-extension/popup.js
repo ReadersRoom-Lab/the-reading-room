@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentOrigin = new URL(currentUrl).origin;
     }
   } catch (e) {
-    // ignore parsing errors
+    console.warn('Could not parse URL origin:', e);
   }
 
   // Detect if active tab is the Reading Room app
