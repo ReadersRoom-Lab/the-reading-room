@@ -94,7 +94,7 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .status{padding:12px;border-radius:4px;font-size:13px;line-height:1.4}
 .status.success{background:rgba(74,222,128,.1);color:#16a34a;border:1px solid rgba(74,222,128,.2)}
 .status.error{background:rgba(248,113,113,.1);color:#dc2626;border:1px solid rgba(248,113,113,.2)}
-.hidden{display:none}
+.hidden{display:none!important}
 .view-section {display: flex;flex-direction: column;gap: 16px;}
 .connection-info {margin-top: 4px;font-size: 10px;text-align: center;color: var(--muted);text-transform: uppercase;letter-spacing: 0.05em;}
 .connect-box {padding: 12px;border: 1px dashed var(--border);background-color: rgba(26, 26, 26, 0.02);text-align: center;margin: 4px 0;}
