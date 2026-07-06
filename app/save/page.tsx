@@ -5,6 +5,32 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 
+const getHtmlFromExtension = (extensionId: string, articleUrl: string): Promise<string | null> => {
+  return new Promise((resolve) => {
+    const chrome = globalThis.window === undefined ? undefined : (globalThis as any).chrome;
+    if (!chrome?.runtime?.sendMessage) {
+      return resolve(null);
+    }
+    try {
+      chrome.runtime.sendMessage(
+        extensionId,
+        { action: "getHtml", url: articleUrl },
+        (response: any) => {
+          if (chrome.runtime.lastError) {
+            console.warn("Extension message error:", chrome.runtime.lastError.message);
+            resolve(null);
+          } else {
+            resolve(response?.html || null);
+          }
+        }
+      );
+    } catch (e) {
+      console.warn("Failed to message extension:", e);
+      resolve(null);
+    }
+  });
+};
+
 function SaveHandler() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -20,29 +46,43 @@ function SaveHandler() {
       return
     }
 
-    fetch("/api/articles/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url }),
-    })
-      .then(async (res) => {
+    const saveArticle = async () => {
+      let htmlContent: string | null = null;
+      const extId = searchParams.get("extId");
+
+      if (extId) {
+        htmlContent = await getHtmlFromExtension(extId, url);
+      }
+
+      try {
+        const res = await fetch("/api/articles/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, html: htmlContent }),
+        });
+
         if (res.status === 401) {
           // Not signed in — redirect to sign-in, then come back here to complete the save
-          router.push(`/sign-in?redirect_url=${encodeURIComponent(`/save?url=${encodeURIComponent(url)}`)}`)
-          return
+          const redirectUrl = `/save?url=${encodeURIComponent(url)}${extId ? '&extId=' + extId : ''}`;
+          router.push(`/sign-in?redirect_url=${encodeURIComponent(redirectUrl)}`);
+          return;
         }
+
         if (!res.ok) {
-          const data = await res.json().catch(() => ({}))
-          throw new Error(data.error || `Error ${res.status}`)
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Error ${res.status}`);
         }
-        setState("success")
-        setTimeout(() => router.push("/library"), 2000)
-      })
-      .catch((err) => {
-        setState("error")
-        setErrorMsg(err.message || "An unexpected error occurred.")
-      })
-  }, [url, router])
+
+        setState("success");
+        setTimeout(() => router.push("/library"), 2000);
+      } catch (err) {
+        setState("error");
+        setErrorMsg((err as Error).message || "An unexpected error occurred.");
+      }
+    };
+
+    saveArticle();
+  }, [url, router, searchParams])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">

@@ -106,8 +106,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Cannot save this type of page.');
           }
 
+          // Extract HTML using scripting API
+          const results = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => document.documentElement.outerHTML
+          });
+          const html = results[0] ? results[0].result : '';
+
+          // Store temporarily in chrome storage
+          await chrome.storage.local.set({
+            lastSavedArticle: {
+              url: currentUrl,
+              html: html
+            }
+          });
+
           // Open the Reading Room save page — it handles auth and saving internally.
-          const saveUrl = `${backendUrl}/save?url=${encodeURIComponent(currentUrl)}`;
+          const saveUrl = `${backendUrl}/save?url=${encodeURIComponent(currentUrl)}&extId=${chrome.runtime.id}`;
           await chrome.tabs.create({ url: saveUrl });
 
           statusEl.textContent = 'Opening The Reading Room\u2026';

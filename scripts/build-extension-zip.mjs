@@ -30,11 +30,21 @@ const manifestJson = JSON.stringify({
   manifest_version: 3,
   name: "Send to Reading Room",
   description: "Save web pages directly to your Reading Room.",
-  version: "1.3",
-  permissions: ["activeTab", "storage"],
+  version: "1.4",
+  permissions: ["activeTab", "storage", "scripting"],
   action: {
     default_popup: "popup.html",
     default_title: "Save to Reading Room"
+  },
+  background: {
+    service_worker: "background.js"
+  },
+  externally_connectable: {
+    matches: [
+      "http://localhost:3000/*",
+      "https://*.vercel.app/*",
+      baseUrl.endsWith('/') ? baseUrl + '*' : baseUrl + '/*'
+    ]
   }
 }, null, 2)
 
@@ -222,8 +232,23 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Cannot save this type of page.');
           }
 
+          // Extract HTML using scripting API
+          const results = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => document.documentElement.outerHTML
+          });
+          const html = results[0] ? results[0].result : '';
+
+          // Store temporarily in chrome storage
+          await chrome.storage.local.set({
+            lastSavedArticle: {
+              url: currentUrl,
+              html: html
+            }
+          });
+
           // Open the Reading Room save page — it handles auth and saving internally.
-          const saveUrl = \`\${backendUrl}/save?url=\${encodeURIComponent(currentUrl)}\`;
+          const saveUrl = \`\${backendUrl}/save?url=\${encodeURIComponent(currentUrl)}&extId=\${chrome.runtime.id}\`;
           await chrome.tabs.create({ url: saveUrl });
 
           statusEl.textContent = 'Opening The Reading Room\\\\u2026';
@@ -355,11 +380,27 @@ function buildZip(files) {
 }
 
 // --- Build the zip ---
+const backgroundJs = `chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  if (message.action === 'getHtml') {
+    chrome.storage.local.get('lastSavedArticle', (result) => {
+      const data = result.lastSavedArticle || {};
+      if (data.url === message.url) {
+        sendResponse({ html: data.html });
+        chrome.storage.local.remove('lastSavedArticle');
+      } else {
+        sendResponse({ html: null });
+      }
+    });
+    return true;
+  }
+});`
+
 const files = [
   ['reading-room-extension/manifest.json', manifestJson],
   ['reading-room-extension/popup.html', popupHtml],
   ['reading-room-extension/popup.css', popupCss],
   ['reading-room-extension/popup.js', popupJs],
+  ['reading-room-extension/background.js', backgroundJs],
 ]
 
 const zipBuffer = buildZip(files)

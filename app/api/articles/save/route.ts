@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import prisma from '@/lib/prisma'
 import { parseHTML } from 'linkedom'
@@ -7,7 +7,6 @@ import sanitizeHtml from 'sanitize-html'
 import { logger } from '@/lib/logger'
 import { chunkText, generateEmbeddings } from '@/lib/embeddings'
 import { revalidatePath } from 'next/cache'
-import { after } from 'next/server'
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
@@ -77,7 +76,7 @@ async function fetchStandardUrl(url: string) {
     // Retry once on 429 (rate limit) after a short back-off
     if (response.status === 429 && attempt === 1) {
       const retryAfter = response.headers.get('Retry-After')
-      const waitMs = retryAfter ? Math.min(parseInt(retryAfter) * 1000, 4000) : 2000
+      const waitMs = retryAfter ? Math.min(Number.parseInt(retryAfter, 10) * 1000, 4000) : 2000
       await new Promise(resolve => setTimeout(resolve, waitMs))
       return attemptFetch(2)
     }
@@ -126,6 +125,93 @@ async function fetchStandardUrl(url: string) {
 }
 
 
+interface ArticleData {
+  title: string
+  author: string | null
+  content: string
+  url: string
+  sourceType: string
+}
+
+async function resolveArticleData(
+  url: string | null,
+  text: string | null,
+  sourceType: string | null,
+  pdfTitle: string | null,
+  sourceUrl: string | null,
+  html: string | null
+): Promise<{ articleData: ArticleData; coverImage: string | null }> {
+  if (text && sourceType === 'pdf') {
+    const formattedHtml = text
+      .split('\n\n')
+      .filter((p: string) => p.trim().length > 0)
+      .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
+      .join('')
+
+    return {
+      articleData: {
+        title: pdfTitle || 'Untitled PDF',
+        author: null,
+        content: formattedHtml,
+        url: sourceUrl || 'upload://pdf',
+        sourceType: 'pdf'
+      },
+      coverImage: null
+    }
+  }
+
+  if (!url) {
+    throw new Error('Invalid input: URL or PDF text is required')
+  }
+
+  if (html) {
+    const { document } = parseHTML(html)
+    const reader = new Readability(document)
+    const article = reader.parse()
+    if (!article) {
+      throw new Error('Failed to extract article content from the provided page')
+    }
+
+    let coverImage = null
+    const metaTags = document.getElementsByTagName('meta')
+    for (const metaTag of Array.from(metaTags) as any[]) {
+      const property = metaTag.getAttribute('property')
+      const name = metaTag.getAttribute('name')
+      if (property === 'og:image' || name === 'twitter:image') {
+        coverImage = metaTag.getAttribute('content')
+        break
+      }
+    }
+
+    return {
+      articleData: {
+        title: article.title || 'Untitled Article',
+        author: article.byline || null,
+        content: article.content || '',
+        url: url,
+        sourceType: 'extension'
+      },
+      coverImage
+    }
+  }
+
+  if (url.startsWith('10.') || url.includes('doi.org')) {
+    const data = await fetchDOIMetadata(url)
+    return { articleData: data, coverImage: null }
+  }
+
+  if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
+    const data = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
+    return { articleData: data, coverImage: null }
+  }
+
+  const standardRes = await fetchStandardUrl(url)
+  return {
+    articleData: standardRes.articleData,
+    coverImage: standardRes.coverImage
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { userId } = await auth()
@@ -134,7 +220,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { url, roomId, title: pdfTitle, source_url, source_type, text } = await req.json()
+    const { url, roomId, title: pdfTitle, source_url, source_type, text, html } = await req.json()
 
     if (!url && !text) {
       return NextResponse.json({ error: 'URL or PDF text is required' }, { status: 400 })
@@ -149,37 +235,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    let articleData = null;
-    let coverImage = null;
-
-    if (text && source_type === 'pdf') {
-      // It's a PDF parsed on the client
-      const formattedHtml = text
-        .split('\n\n')
-        .filter((p: string) => p.trim().length > 0)
-        .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
-        .join('')
-
-      articleData = {
-        title: pdfTitle || 'Untitled PDF',
-        author: null,
-        content: formattedHtml,
-        url: source_url || 'upload://pdf',
-        sourceType: 'pdf'
-      }
-    } else if (url) {
-      if (url.startsWith('10.') || url.includes('doi.org')) {
-        articleData = await fetchDOIMetadata(url)
-      } else if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
-        articleData = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
-      } else {
-        const standardRes = await fetchStandardUrl(url)
-        articleData = standardRes.articleData
-        coverImage = standardRes.coverImage
-      }
-    } else {
-      return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
-    }
+    const { articleData, coverImage } = await resolveArticleData(
+      url,
+      text,
+      source_type,
+      pdfTitle,
+      source_url,
+      html
+    )
 
     // Sanitize the HTML output
     const cleanContent = sanitizeHtml(articleData.content || '', {
