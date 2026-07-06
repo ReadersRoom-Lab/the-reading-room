@@ -300,8 +300,8 @@ export default function ReaderPage() {
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div className="flex flex-col">
-            <h1 className="font-heading font-semibold text-lg line-clamp-1 max-w-md">{article.title}</h1>
-            {article.author && <span className="text-xs text-muted-foreground line-clamp-1 max-w-sm">{article.author}</span>}
+            <h1 className="font-heading font-semibold text-sm sm:text-base md:text-lg line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-md">{article.title}</h1>
+            {article.author && <span className="text-xs text-muted-foreground line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm">{article.author}</span>}
           </div>
         </div>
         

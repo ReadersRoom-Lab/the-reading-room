@@ -29,11 +29,11 @@ export default async function VaultPage() {
   }) : []
 
   return (
-    <div className="flex flex-col w-full max-w-4xl mx-auto py-12 px-6 font-sans">
-      <div className="flex items-center justify-between border-b border-[#E5E5E5] pb-8 mb-12">
-        <h1 className="font-heading text-5xl font-bold text-[#1A1A1A]">Vocabulary Vault</h1>
+    <div className="flex flex-col w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 font-sans">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5E5E5] pb-8 mb-12">
+        <h1 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A]">Vocabulary Vault</h1>
         
-        <div className="relative w-72">
+        <div className="relative w-full md:w-72">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
           <input 
             type="text" 

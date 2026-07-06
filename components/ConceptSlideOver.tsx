@@ -83,7 +83,7 @@ export function ConceptSlideOver({ term, definition = "", contextSnippet, articl
   }
 
   return (
-    <aside className="absolute right-0 top-0 bottom-0 w-[400px] border-l border-border bg-[#FCFBF8] shrink-0 flex flex-col animate-in slide-in-from-right-full z-20 shadow-2xl font-sans">
+    <aside className="absolute right-0 top-0 bottom-0 w-full sm:w-[400px] border-l border-border bg-[#FCFBF8] shrink-0 flex flex-col animate-in slide-in-from-right-full z-20 shadow-2xl font-sans">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-white">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 text-muted-foreground hover:text-foreground">

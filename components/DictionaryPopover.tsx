@@ -37,12 +37,15 @@ export function DictionaryPopover({ word, rect, onClose, onSave, onHighlight }: 
 
   if (!rect) return null
 
+  const windowWidth = globalThis.window === undefined ? 1000 : globalThis.window.innerWidth
+  const leftPos = Math.max(10, Math.min(rect.left + (rect.width / 2) - 160, windowWidth - 330))
+
   return (
     <div 
       className="fixed z-50 bg-[#FCFBF8] border border-border shadow-lg rounded-md w-[320px] font-sans flex flex-col"
       style={{
         top: rect.top > 250 ? rect.top - 200 : rect.bottom + 10,
-        left: rect.left + (rect.width / 2) - 160,
+        left: leftPos,
       }}
     >
       <div className="flex justify-between items-start p-4 border-b border-border relative">

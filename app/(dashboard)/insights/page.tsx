@@ -101,22 +101,22 @@ export default function InsightsPage() {
   return (
     <div className="flex flex-col min-h-screen w-full font-sans pb-12">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-[#E5E5E5] mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#E5E5E5] mb-8">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 border border-[#E5E5E5] bg-white flex items-center justify-center shrink-0">
             <Sparkles className="w-5 h-5 text-[#1A1A1A]" />
           </div>
           <div>
-            <h1 className="font-heading text-4xl font-bold text-[#1A1A1A]">Insights Studio</h1>
+            <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[#1A1A1A]">Insights Studio</h1>
             <p className="font-serif text-sm text-[#52525B]">Reflect on your reading activity, vocabulary vault growth, and search library links.</p>
           </div>
         </div>
 
         {/* Tabs Toggle */}
-        <div className="flex border border-[#E5E5E5] bg-[#F9F7F2] p-1 gap-1">
+        <div className="flex border border-[#E5E5E5] bg-[#F9F7F2] p-1 gap-1 w-full md:w-auto justify-center">
           <button 
             onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+            className={`flex-1 md:flex-none text-center px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
               activeTab === 'analytics' 
                 ? 'bg-[#1A1A1A] text-white' 
                 : 'text-[#444748] hover:text-[#1A1A1A] hover:bg-[#E5E5E5]'
@@ -126,7 +126,7 @@ export default function InsightsPage() {
           </button>
           <button 
             onClick={() => setActiveTab('chat')}
-            className={`px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
+            className={`flex-1 md:flex-none text-center px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
               activeTab === 'chat' 
                 ? 'bg-[#1A1A1A] text-white' 
                 : 'text-[#444748] hover:text-[#1A1A1A] hover:bg-[#E5E5E5]'
@@ -209,7 +209,7 @@ export default function InsightsPage() {
             </div>
 
             {/* Heatmap Section */}
-            <div className="bg-white border border-[#E5E5E5] p-8 shadow-sm flex flex-col">
+            <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm flex flex-col">
               <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
                 <Calendar className="w-5 h-5 text-muted-foreground" />
                 <h3 className="font-heading text-lg font-bold text-[#1A1A1A]">Reading Activity Heatmap</h3>
@@ -252,7 +252,7 @@ export default function InsightsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               
               {/* Knowledge Growth Line Chart */}
-              <div className="bg-white border border-[#E5E5E5] p-8 shadow-sm md:col-span-2 flex flex-col justify-between">
+              <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm md:col-span-2 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
                     <TrendingUp className="w-5 h-5 text-muted-foreground" />
@@ -303,7 +303,7 @@ export default function InsightsPage() {
               </div>
 
               {/* Most Active Rooms Bar Chart */}
-              <div className="bg-white border border-[#E5E5E5] p-8 shadow-sm flex flex-col justify-between">
+              <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
                     <FolderOpen className="w-5 h-5 text-muted-foreground" />

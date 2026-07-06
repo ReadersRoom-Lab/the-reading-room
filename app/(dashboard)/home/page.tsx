@@ -38,7 +38,7 @@ export default async function Home() {
       {/* Page header & Promo */}
       <div className="flex flex-col gap-6">
         <div className="border-b border-[#E5E5E5] pb-6">
-          <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Good day.</h1>
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A] mb-2">Good day.</h1>
           <p className="font-sans text-sm text-[#52525B]">Here is what awaits your attention.</p>
         </div>
 
@@ -120,7 +120,7 @@ export default async function Home() {
       <section>
         <RefreshButton />
         {randomVaultEntry ? (
-          <div className="border border-[#E5E5E5] bg-white p-10">
+          <div className="border border-[#E5E5E5] bg-white p-6 sm:p-10">
             <div className="flex justify-between items-start mb-6">
               <span className="font-sans text-[11px] font-medium px-2 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.1em] uppercase">
                 {randomVaultEntry.type === 'concept' ? 'CONCEPT' : 'VOCABULARY'}
@@ -129,8 +129,8 @@ export default async function Home() {
                 {formatDistanceToNow(new Date(randomVaultEntry.created_at), { addSuffix: true })}
               </span>
             </div>
-            <h3 className="font-heading text-4xl font-bold text-[#1A1A1A] mb-3">{randomVaultEntry.term}</h3>
-            <p className="font-serif text-xl text-[#444748] leading-relaxed mb-8">
+            <h3 className="font-heading text-3xl sm:text-4xl font-bold text-[#1A1A1A] mb-3">{randomVaultEntry.term}</h3>
+            <p className="font-serif text-lg sm:text-xl text-[#444748] leading-relaxed mb-8">
               {randomVaultEntry.definition}
             </p>
             {randomVaultEntry.vaultTrails && randomVaultEntry.vaultTrails.length > 0 && (
@@ -169,7 +169,7 @@ export default async function Home() {
             <Link
               key={article.id}
               href={`/read/${article.id}`}
-              className={`block bg-white hover:bg-[#F4F3F3] transition-colors p-8 ${idx > 0 ? 'border-t border-[#E5E5E5]' : ''}`}
+              className={`block bg-white hover:bg-[#F4F3F3] transition-colors p-6 sm:p-8 ${idx > 0 ? 'border-t border-[#E5E5E5]' : ''}`}
             >
               <div className="flex justify-between items-start mb-3">
                 <span className="font-sans text-[11px] font-medium tracking-[0.1em] text-[#52525B] uppercase">

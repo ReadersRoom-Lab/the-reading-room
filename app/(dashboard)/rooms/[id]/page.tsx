@@ -62,18 +62,18 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
   const completedArticles = room.articles.filter((a: ArticleProps['article']) => a.status === 'finished')
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto py-8 px-6">
+    <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto py-8 px-4 sm:px-6">
       {/* Header */}
       <div className="flex flex-col gap-6 border-b border-border pb-8">
         <Link href="/rooms" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors w-fit">
           <ArrowLeft className="w-4 h-4" /> Back to Rooms
         </Link>
         
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex flex-col gap-2">
-            <h1 className="text-4xl font-heading font-bold">{room.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-heading font-bold">{room.name}</h1>
             {room.description && (
-              <p className="text-muted-foreground max-w-2xl text-lg font-source-serif">
+              <p className="text-muted-foreground max-w-2xl text-base sm:text-lg font-source-serif">
                 {room.description}
               </p>
             )}
@@ -83,7 +83,7 @@ export default async function RoomViewPage({ params }: Readonly<{ params: Promis
               <span>{highlightsCount} Highlights</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <LibraryImportDialog roomId={room.id} libraryArticles={libraryArticles} />
             <SaveArticleDialog defaultRoomId={room.id} compact />
             <ExportRoomButton roomId={room.id} roomName={room.name} />
