@@ -98,7 +98,13 @@ Every time you run `git commit`, Husky and `lint-staged` automatically run `pret
 
 ### 3. Branch Protection & CI Gates
 
-All code pushed to GitHub must pass the `.github/workflows/ci.yml` pipeline (`Build, Lint, and Test` checks) and the SonarCloud code quality scanner. Pull requests cannot be merged into `main` unless all automated tests and compilation checks succeed.
+All code pushed to GitHub must pass the `.github/workflows/ci.yml` pipeline (`Build, Lint, and Test` checks) and the SonarCloud code quality scanner. Pull requests cannot be merged into `main` unless all automated tests and compilation checks succeed. We enforce these requirements strictly via a GitHub Branch Ruleset on the `main` branch which:
+
+- Restricts deletions and blocks force pushes.
+- Requires a pull request before merging.
+- Requires status checks to pass (`Build, Lint, and Test` and `SonarCloud Code Analysis`).
+- Requires branches to be up to date before merging.
+- Does not allow bypassing these settings (even for admins).
 
 ---
 

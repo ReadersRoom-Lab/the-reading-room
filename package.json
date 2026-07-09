@@ -79,6 +79,7 @@
     ],
     "README.md": [
       "node scripts/generate-contributions.mjs",
+      "prettier --write CONTRIBUTIONS.md",
       "git add CONTRIBUTIONS.md"
     ]
   }

@@ -6,6 +6,8 @@ _Automated summary of git contributions. Updated on every push._
 
 **Lokeshwaran V R:**
 
+- Docs: add branch protection rules to README
+- Docs: update README and CONTRIBUTIONS with recent features
 - Fix: footer vertical overlap and width
 - Fix: layout alignment of landing page header
 - Perf: statically generate landing page for faster LCP
@@ -31,6 +33,15 @@ _Automated summary of git contributions. Updated on every push._
 - Refactor: resolve lint warnings, reduce cognitive complexity, and secure path command executions
 - Fix(ui): adjust mobile flex centering to top alignment to fix scroll jump bugs
 - Fix(ui): resolve landing/auth/onboarding/profile page scroll locks and optimizations for mobile viewports
+
+**akash:**
+
+- Docs(readme): document code quality checks, local commands, and pipeline gates for future onboarding
+- Chore(ci): fix all lint errors, add prettier format check to ci, and resolve ts typecheck issues
+- Chore(format): integrate Prettier with ESLint and format entire codebase
+- Docs(git): document pre-commit hooks and GitHub branch protection locking guidelines
+- Chore(git): configure lint-staged to run eslint on pre-commit hooks
+- Chore(ci): create continuous integration workflow and git standards document
 
 ## 📅 July 6, 2026
 
