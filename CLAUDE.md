@@ -101,21 +101,22 @@ After sign-up, Clerk redirects to `/onboarding`. On completion the user lands at
 
 ## Standard Commands
 
-| Command | Action |
-|---|---|
-| `npm run dev` | Runs the Next.js development server locally. |
-| `npm run format` | Standardizes codebase spacing and formatting (Prettier). |
-| `npm run format:check` | Verifies formatting compliance (checked by CI). |
-| `npm run lint` | Runs ESLint analysis (must return 0 issues). |
-| `npx tsc --noEmit` | Performs strict TypeScript type checks. |
-| `npm run build` | Compiles Next.js production build and packages the Chrome extension. |
-| `npm test` | Executes the unit test suite (39/39 tests). |
+| Command                | Action                                                               |
+| ---------------------- | -------------------------------------------------------------------- |
+| `npm run dev`          | Runs the Next.js development server locally.                         |
+| `npm run format`       | Standardizes codebase spacing and formatting (Prettier).             |
+| `npm run format:check` | Verifies formatting compliance (checked by CI).                      |
+| `npm run lint`         | Runs ESLint analysis (must return 0 issues).                         |
+| `npx tsc --noEmit`     | Performs strict TypeScript type checks.                              |
+| `npm run build`        | Compiles Next.js production build and packages the Chrome extension. |
+| `npm test`             | Executes the unit test suite (39/39 tests).                          |
 
 ---
 
 ## What is and isn't built
 
 **Done:**
+
 - Clerk auth, protected routes, webhook user sync.
 - Room CRUD (create, list, get, update, delete).
 - Article CRUD + URL ingestion (Readability) + PDF ingestion.
@@ -129,8 +130,8 @@ After sign-up, Clerk redirects to `/onboarding`. On completion the user lands at
 - **Continuous Integration (CI/CD)**: GitHub Actions workflow (`ci.yml`) and local Husky hooks validating all commits and blocking pull request merges on lint, type, build, or test failures.
 
 **Not built (V2 scope):**
+
 - Billing / Pro tier enforcement.
 - Collaborative rooms.
 - Mobile app.
 - Spaced Repetition (Active Recall) Vault scheduling.
-
