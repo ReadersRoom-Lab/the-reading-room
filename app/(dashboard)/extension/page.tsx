@@ -34,7 +34,7 @@ const steps = [
   },
 ]
 
-function CopyCode({ code }: { code: string }) {
+function CopyCode({ code }: Readonly<{ code: string }>) {
   const [copied, setCopied] = useState(false)
   const copy = () => {
     navigator.clipboard.writeText(code)
@@ -60,7 +60,6 @@ export default function ExtensionPage() {
     setTimeout(() => setDownloading(false), 3000)
   }
 
-  const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
   return (
     <div className="max-w-2xl mx-auto py-6">
@@ -117,9 +116,8 @@ export default function ExtensionPage() {
               description: "Browse any web page, click the Reading Room extension icon, and hit Save. The article will appear in your Library instantly.",
             },
           ].map((step, i, arr) => {
-            const Icon = step.icon
             return (
-              <div key={i} className="flex gap-5 pb-8 last:pb-0 relative">
+              <div key={step.number} className="flex gap-5 pb-8 last:pb-0 relative">
                 {i < arr.length - 1 && (
                   <div className="absolute left-[19px] top-10 bottom-0 w-px bg-[#E5E5E5]" />
                 )}

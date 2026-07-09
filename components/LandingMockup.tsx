@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Sparkles, Folder, FileText } from 'lucide-react';
 
-function HighlightAd({ isActive }: { isActive: boolean }) {
+function HighlightAd({ isActive }: Readonly<{ isActive: boolean }>) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ function HighlightAd({ isActive }: { isActive: boolean }) {
   );
 }
 
-function AIAd({ isActive }: { isActive: boolean }) {
+function AIAd({ isActive }: Readonly<{ isActive: boolean }>) {
   const [step, setStep] = useState(0);
   
   useEffect(() => {
@@ -96,7 +96,7 @@ function AIAd({ isActive }: { isActive: boolean }) {
   )
 }
 
-function OrganizeAd({ isActive }: { isActive: boolean }) {
+function OrganizeAd({ isActive }: Readonly<{ isActive: boolean }>) {
   const [step, setStep] = useState(0);
   
   useEffect(() => {

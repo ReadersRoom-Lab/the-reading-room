@@ -4,13 +4,11 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from "sonner"
-import { Library, Loader2, Plus, Check } from "lucide-react"
+import { Library, Loader2, Plus } from "lucide-react"
 import { logger } from '@/lib/logger'
-import type { ArticleProps } from "@/components/ArticleCard"
 
-export function LibraryImportDialog({ roomId, libraryArticles }: { roomId: string, libraryArticles: { id: string, title: string, source_url: string }[] }) {
+export function LibraryImportDialog({ roomId, libraryArticles }: Readonly<{ roomId: string, libraryArticles: { id: string, title: string, source_url: string }[] }>) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [articles, setArticles] = useState(libraryArticles)
