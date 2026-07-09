@@ -9,3 +9,9 @@
 # Documentation Updates
 
 - Stop auto-updating `CONTRIBUTIONS.md`. Instead, update `CONTRIBUTIONS.md` (using `node scripts/generate-contributions.mjs`) ONLY when the user explicitly asks to update `README.md`. Always update both of them together.
+
+# Daily Standup Greeting
+
+- Whenever a conversation starts or the user asks for their daily brief, check the current `bug_list.md` and `todo_list.md` artifacts.
+- Ask the user whether they are Akash (Backend) or Loki (Frontend) if you don't already know.
+- Proactively present them with their specific TODO list for the day and summarize any active bugs.
