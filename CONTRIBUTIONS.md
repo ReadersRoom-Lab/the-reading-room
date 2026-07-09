@@ -4,6 +4,8 @@
 
 ## 📅 July 9, 2026
 **Lokeshwaran V R:**
+- Chore: add daily standup greeting rule for agent
+- Chore: setup husky pre-commit hook for automated contributions log
 - Docs: update README and CONTRIBUTIONS with recent features
 - Fix: explicitly set sonar source encoding to UTF-8 and renormalize line endings
 - Fix: ignore transpiler noise at start of logger.ts

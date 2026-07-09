@@ -102,6 +102,17 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 
 ---
 
+## 🗺️ Product Roadmap (V2 & V3)
+
+We are actively building toward becoming the ultimate scholarly workspace. Upcoming capabilities include:
+- **Collaborative Rooms (V2)**: Share thematic spaces and highlights seamlessly with peers using Clerk Organizations.
+- **Third-Party Syncing (V3)**: An OAuth pipeline to automatically push highlights directly to Notion and Obsidian.
+- **Premium Text-to-Speech & AI Audio (V3)**: A sticky floating audio player serving high-quality, AI-generated reading audio for articles on the go.
+- **Omnichannel Ingestion (V3)**: Expanding our pipeline to parse EPUBs, RSS feeds, and YouTube transcripts natively.
+- **AI "Ghostreader" Automation (V3)**: Automated background queues generating TL;DRs, auto-tags, and comprehension flashcards the moment you save an article.
+
+---
+
 ## 🚀 Deployment
 
 Tested for Vercel. The `postinstall` script runs `prisma generate` automatically on deploy. Set all `.env.example` variables in Vercel's environment variables panel. Point your Clerk webhook to your production domain.
