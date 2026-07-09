@@ -16,7 +16,7 @@ const clientEnvSchema = z.object({
 
 const isServer = globalThis.window === undefined;
 
-let parsedEnv: z.infer<typeof envSchema> & Record<string, string>;
+let parsedEnv: z.infer<typeof envSchema>;
 
 if (isServer) {
   const result = envSchema.safeParse(process.env);
@@ -26,7 +26,7 @@ if (isServer) {
       `❌ Invalid environment variables. Missing keys: [${missingKeys}]. Please check your local .env configuration.`
     );
   }
-  parsedEnv = result.data as unknown as z.infer<typeof envSchema> & Record<string, string>;
+  parsedEnv = result.data;
 } else {
   const result = clientEnvSchema.safeParse({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
@@ -36,7 +36,7 @@ if (isServer) {
   }
   parsedEnv = {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
-  } as unknown as z.infer<typeof envSchema> & Record<string, string>;
+  } as unknown as z.infer<typeof envSchema>;
 }
 
 export const env = parsedEnv;
