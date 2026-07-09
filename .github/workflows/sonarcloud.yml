@@ -9,6 +9,7 @@ on:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
   DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
 
 jobs:
   sonarcloud:
@@ -21,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
