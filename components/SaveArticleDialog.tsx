@@ -7,12 +7,16 @@ import { Input } from "@/components/ui/input"
 import { Plus, FileText, Upload } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import * as pdfjsLib from "pdfjs-dist"
-
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
+// Remove static import
+// Configure PDF.js worker dynamically inside the function
 
 async function extractTextFromPdf(file: File): Promise<string> {
+  // Dynamically import pdfjs-dist
+  const pdfjsLib = await import("pdfjs-dist")
+  
+  // Configure worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
+
   const arrayBuffer = await file.arrayBuffer()
   const pdf = await pdfjsLib.getDocument({ 
     data: arrayBuffer,

@@ -163,10 +163,10 @@ export async function GET() {
     const growthData = calculateGrowthData(user.vaultEntries);
 
     // --- Most Active Rooms ---
-    const roomsData = user.rooms.map(r => ({
+    const roomsData = user.rooms.map((r: any) => ({
       name: r.name,
       articleCount: r._count.articles
-    })).sort((a, b) => b.articleCount - a.articleCount).slice(0, 5)
+    })).sort((a: any, b: any) => b.articleCount - a.articleCount).slice(0, 5)
 
     return NextResponse.json({
       streaks: {
