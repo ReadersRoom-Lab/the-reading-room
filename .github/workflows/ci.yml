@@ -27,6 +27,9 @@ jobs:
       - name: Prettier Format Check
         run: npm run format:check
 
+      - name: Security Audit (Vulnerabilities Scan)
+        run: npm audit --audit-level=high
+
       - name: Run ESLint
         run: npm run lint
 
