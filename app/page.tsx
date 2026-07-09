@@ -18,7 +18,7 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] relative flex flex-col w-full overflow-x-hidden bg-[#1A1A1A]">
+    <div className="h-[100dvh] relative flex w-full overflow-hidden bg-[#1A1A1A]">
       {/* Background with subtle animation */}
       <div className="absolute inset-0 z-0 animate-kenburns opacity-70">
         <Image
@@ -44,7 +44,7 @@ export default async function LandingPage() {
       {/* Floating Dust Particles */}
       <DustMotes />
 
-      <div className="relative z-10 flex-1 flex flex-col w-full">
+      <div className="relative z-10 h-full w-full overflow-y-auto overflow-x-hidden flex flex-col">
         {/* Top Navigation Bar */}
         <header className="border-b border-white/10 bg-transparent">
         <div className="max-w-5xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
