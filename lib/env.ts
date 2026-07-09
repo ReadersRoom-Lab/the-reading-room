@@ -36,7 +36,10 @@ if (isServer) {
   }
   parsedEnv = {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
-  } as unknown as z.infer<typeof envSchema>;
+    DATABASE_URL: "",
+    CLERK_SECRET_KEY: "",
+    GOOGLE_GENERATIVE_AI_API_KEY: "",
+  };
 }
 
 export const env = parsedEnv;
