@@ -4,6 +4,7 @@
 
 ## 📅 July 9, 2026
 **Lokeshwaran V R:**
+- Docs: update README and CONTRIBUTIONS with recent features
 - Fix: explicitly set sonar source encoding to UTF-8 and renormalize line endings
 - Fix: ignore transpiler noise at start of logger.ts
 - Fix: update sonar coverage path for c8

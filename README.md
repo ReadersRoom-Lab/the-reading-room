@@ -105,3 +105,5 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 ## 🚀 Deployment
 
 Tested for Vercel. The `postinstall` script runs `prisma generate` automatically on deploy. Set all `.env.example` variables in Vercel's environment variables panel. Point your Clerk webhook to your production domain.
+
+
