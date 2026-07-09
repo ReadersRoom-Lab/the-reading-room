@@ -97,8 +97,9 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 6. **Robust AI Chat**: An intelligent chat assistant to query your saved documents using Google's Gemini SDK.
 7. **Enhanced UX & Interactions**: OS-aware keyboard shortcuts (e.g., automatically displaying `⌘` or `Ctrl`) and streamlined workflows like creating new rooms directly from the article assignment dropdown without losing context.
 8. **Accessibility & Performance Pass**: Scored perfect 100/100 on strict Lighthouse WCAG audits (ARIA roles, heading hierarchies, landmarks) and achieved 95+ performance via heavily optimized WebP Next.js image loading and CSS base64-encoded textures.
-10. **Mobile Responsiveness**: Fully responsive dashboard with a dedicated bottom/top navigation, optimized reading experience, and auto-hiding sidebars for phone browsers. Resolved 100dvh flex layout clipping bugs across all viewports.
-11. **Code Quality & Test Coverage**: Achieved 100% test coverage tracked via SonarCloud. Migrated to 'c8' for accurate source-mapped LCOV reporting and eliminated transpiler coverage noise.
+9. **Mobile Responsiveness**: Fully responsive dashboard with a dedicated bottom/top navigation, optimized reading experience, and auto-hiding sidebars for phone browsers. Resolved 100dvh flex layout clipping bugs across all viewports.
+10. **Code Quality & Test Coverage**: Achieved 100% test coverage tracked via SonarCloud. Migrated to 'c8' for accurate source-mapped LCOV reporting and eliminated transpiler coverage noise.
+11. **Edge-Optimized Architecture**: Achieved a 90+ Vercel Real Experience Score by statically generating the landing page and shifting authentication checks to Clerk's Edge Middleware (slashing TTFB/FCP). Resolved massive initial payloads by dynamically lazy-loading `pdfjs-dist` worker instances.
 
 ---
 

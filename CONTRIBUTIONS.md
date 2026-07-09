@@ -4,6 +4,11 @@
 
 ## 📅 July 9, 2026
 **Lokeshwaran V R:**
+- Fix: footer vertical overlap and width
+- Fix: layout alignment of landing page header
+- Perf: statically generate landing page for faster LCP
+- Perf: Optimize pdfjs bundle loading and fix ts errors
+- Docs: add V2 and V3 product roadmap to README
 - Chore: add daily standup greeting rule for agent
 - Chore: setup husky pre-commit hook for automated contributions log
 - Docs: update README and CONTRIBUTIONS with recent features
