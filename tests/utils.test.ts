@@ -24,7 +24,6 @@ test('cn handles boolean false conditional', () => {
 });
 
 test('cn merges conflicting Tailwind classes (last wins)', () => {
-  // tailwind-merge resolves conflicts: p-2 and p-4 should resolve to p-4
   const result = cn('p-2', 'p-4');
   assert.ok(result.includes('p-4'));
   assert.ok(!result.includes('p-2'));
@@ -47,9 +46,22 @@ test('cn handles object syntax from clsx', () => {
   assert.ok(!result.includes('text-blue-500'));
 });
 
-test('secureRandom returns numbers between 0 and 1', () => {
+test('secureRandom returns numbers in [0, 1) using crypto', () => {
   for (let i = 0; i < 100; i++) {
     const val = secureRandom();
     assert.ok(val >= 0 && val < 1, `Value ${val} should be between 0 and 1`);
+  }
+});
+
+test('secureRandom falls back to Date.now() when crypto is unavailable', () => {
+  // Temporarily remove crypto to hit the fallback branch
+  const original = globalThis.crypto;
+  // @ts-ignore
+  delete globalThis.crypto;
+  try {
+    const val = secureRandom();
+    assert.ok(val >= 0 && val < 1, `Fallback value ${val} should be between 0 and 1`);
+  } finally {
+    globalThis.crypto = original;
   }
 });

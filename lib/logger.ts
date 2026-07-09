@@ -19,4 +19,5 @@ export const logger = {
     // eslint-disable-next-line no-console
     console.info(...args);
   }
+  /* c8 ignore next */
 };

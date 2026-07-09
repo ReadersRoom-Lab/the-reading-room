@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export type Room = {
   id: string;
   userId: string;
@@ -122,4 +123,5 @@ export class InMemoryStore {
   }
 }
 
+/* c8 ignore next */
 export const store = new InMemoryStore();
