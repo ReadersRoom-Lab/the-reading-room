@@ -49,7 +49,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     if (article.highlights?.length > 0) {
       markdown += `## Highlights (${article.highlights.length})\n\n`;
-      article.highlights.forEach((h: any) => {
+      article.highlights.forEach((h) => {
         markdown += `> ${h.content}\n`;
         if (h.note) markdown += `\n**Note:** ${h.note}\n`;
         markdown += `\n---\n\n`;
@@ -60,7 +60,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     if (article.vaultTrails?.length > 0) {
       markdown += `## Concepts & Insights (${article.vaultTrails.length})\n\n`;
-      article.vaultTrails.forEach((trail: any) => {
+      article.vaultTrails.forEach((trail) => {
         markdown += `### ${trail.vault_entry.term}\n`;
         if (trail.vault_entry.definition) {
           markdown += `> ${trail.vault_entry.definition}\n\n`;

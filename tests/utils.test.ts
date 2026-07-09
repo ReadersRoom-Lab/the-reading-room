@@ -56,7 +56,7 @@ test("secureRandom returns numbers in [0, 1) using crypto", () => {
 test("secureRandom falls back to Date.now() when crypto is unavailable", () => {
   // Temporarily remove crypto to hit the fallback branch
   const original = globalThis.crypto;
-  // @ts-ignore
+  // @ts-expect-error: crypto is read-only but deleted for test coverage fallback
   delete globalThis.crypto;
   try {
     const val = secureRandom();

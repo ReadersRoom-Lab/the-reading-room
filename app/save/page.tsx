@@ -7,7 +7,23 @@ import Link from "next/link";
 
 const getHtmlFromExtension = (extensionId: string, articleUrl: string): Promise<string | null> => {
   return new Promise((resolve) => {
-    const chrome = globalThis.window === undefined ? undefined : (globalThis as any).chrome;
+    const chrome =
+      globalThis.window === undefined
+        ? undefined
+        : (
+            globalThis as unknown as {
+              chrome?: {
+                runtime?: {
+                  sendMessage?: (
+                    id: string,
+                    message: { action: string; url: string },
+                    callback: (response: { html?: string | null } | undefined) => void
+                  ) => void;
+                  lastError?: { message?: string };
+                };
+              };
+            }
+          ).chrome;
     if (!chrome?.runtime?.sendMessage) {
       return resolve(null);
     }
@@ -15,9 +31,9 @@ const getHtmlFromExtension = (extensionId: string, articleUrl: string): Promise<
       chrome.runtime.sendMessage(
         extensionId,
         { action: "getHtml", url: articleUrl },
-        (response: any) => {
-          if (chrome.runtime.lastError) {
-            console.warn("Extension message error:", chrome.runtime.lastError.message);
+        (response: { html?: string | null } | undefined) => {
+          if (chrome?.runtime?.lastError) {
+            console.warn("Extension message error:", chrome?.runtime?.lastError?.message);
             resolve(null);
           } else {
             resolve(response?.html || null);
@@ -36,13 +52,11 @@ function SaveHandler() {
   const router = useRouter();
   const url = searchParams.get("url");
 
-  const [state, setState] = useState<"saving" | "success" | "error">("saving");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [state, setState] = useState<"saving" | "success" | "error">(url ? "saving" : "error");
+  const [errorMsg, setErrorMsg] = useState(url ? "" : "No URL provided.");
 
   useEffect(() => {
     if (!url) {
-      setState("error");
-      setErrorMsg("No URL provided.");
       return;
     }
 

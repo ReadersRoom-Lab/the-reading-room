@@ -242,7 +242,7 @@ export default function InsightsPage() {
               <div className="flex gap-[3px] min-w-[700px] justify-between">
                 {heatmapWeeks.map((week, wIdx) => (
                   <div key={week[0]?.dayStr || wIdx} className="flex flex-col gap-[3px]">
-                    {week.map((day, dIdx) => {
+                    {week.map((day) => {
                       let cellBg = "bg-[#FCFBF8] border border-[#E5E5E5]";
                       if (day.count === 1) cellBg = "bg-[#E6C79C]/30 border border-[#E6C79C]/40";
                       else if (day.count === 2)

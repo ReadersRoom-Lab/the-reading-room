@@ -9,13 +9,15 @@ function HighlightAd({ isActive }: Readonly<{ isActive: boolean }>) {
 
   useEffect(() => {
     if (!isActive) {
-      setStep(0);
       return;
     }
     const interval = setInterval(() => {
       setStep((s) => (s + 1) % 5);
     }, 1200);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setStep(0);
+    };
   }, [isActive]);
 
   const isSelected = step === 1 || step === 2;
@@ -90,11 +92,13 @@ function AIAd({ isActive }: Readonly<{ isActive: boolean }>) {
 
   useEffect(() => {
     if (!isActive) {
-      setStep(0);
       return;
     }
     const interval = setInterval(() => setStep((s) => (s + 1) % 4), 1500);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setStep(0);
+    };
   }, [isActive]);
 
   return (
@@ -147,11 +151,13 @@ function OrganizeAd({ isActive }: Readonly<{ isActive: boolean }>) {
 
   useEffect(() => {
     if (!isActive) {
-      setStep(0);
       return;
     }
     const interval = setInterval(() => setStep((s) => (s + 1) % 4), 1500);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setStep(0);
+    };
   }, [isActive]);
 
   let dragFileClass = "translate-x-0 translate-y-0 opacity-100";

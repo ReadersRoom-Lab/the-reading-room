@@ -194,7 +194,9 @@ async function resolveArticleData(
 
     let coverImage = null;
     const metaTags = document.getElementsByTagName("meta");
-    for (const metaTag of Array.from(metaTags) as any[]) {
+    for (const metaTag of Array.from(metaTags) as unknown as {
+      getAttribute: (name: string) => string | null;
+    }[]) {
       const property = metaTag.getAttribute("property");
       const name = metaTag.getAttribute("name");
       if (property === "og:image" || name === "twitter:image") {

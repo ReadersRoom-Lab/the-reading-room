@@ -166,11 +166,11 @@ export async function GET() {
 
     // --- Most Active Rooms ---
     const roomsData = user.rooms
-      .map((r: any) => ({
+      .map((r) => ({
         name: r.name,
         articleCount: r._count.articles,
       }))
-      .sort((a: any, b: any) => b.articleCount - a.articleCount)
+      .sort((a, b) => b.articleCount - a.articleCount)
       .slice(0, 5);
 
     return NextResponse.json({

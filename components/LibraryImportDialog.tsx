@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -23,13 +23,14 @@ export function LibraryImportDialog({
 }>) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [prevLibraryArticles, setPrevLibraryArticles] = useState(libraryArticles);
   const [articles, setArticles] = useState(libraryArticles);
   const [importingId, setImportingId] = useState<string | null>(null);
 
-  // Sync state if props change
-  useEffect(() => {
+  if (libraryArticles !== prevLibraryArticles) {
+    setPrevLibraryArticles(libraryArticles);
     setArticles(libraryArticles);
-  }, [libraryArticles]);
+  }
 
   const handleImport = async (articleId: string) => {
     setImportingId(articleId);
@@ -83,7 +84,7 @@ export function LibraryImportDialog({
               <Library className="w-8 h-8 text-muted-foreground/50 mb-3" />
               <p className="text-sm font-medium text-foreground">Your library is empty</p>
               <p className="text-xs text-muted-foreground mt-1">
-                All your documents are already in rooms, or you haven't saved any yet.
+                All your documents are already in rooms, or you haven&apos;t saved any yet.
               </p>
             </div>
           ) : (

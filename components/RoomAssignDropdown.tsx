@@ -161,7 +161,7 @@ export function RoomAssignDropdown({
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onClick={(e) => {
+            onClick={() => {
               setIsDeleteDialogOpen(true);
             }}
             className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:text-red-400 dark:focus:bg-red-950/20 cursor-pointer flex items-center gap-2"

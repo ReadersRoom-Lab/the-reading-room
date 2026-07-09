@@ -31,9 +31,15 @@ async function processVectorEmbeddings(textContent: string, articleId: string) {
   }
 }
 
-function extractCoverImage(document: any) {
+interface ExtractImageDocument {
+  getElementsByTagName: (
+    name: string
+  ) => ArrayLike<{ getAttribute: (name: string) => string | null }>;
+}
+
+function extractCoverImage(document: ExtractImageDocument) {
   const metaTags = document.getElementsByTagName("meta");
-  for (const metaTag of Array.from(metaTags) as any[]) {
+  for (const metaTag of Array.from(metaTags)) {
     if (
       metaTag.getAttribute("property") === "og:image" ||
       metaTag.getAttribute("name") === "twitter:image"

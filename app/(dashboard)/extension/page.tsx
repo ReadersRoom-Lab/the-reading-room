@@ -3,41 +3,6 @@
 import { useState } from "react";
 import { Download, Puzzle, CheckCircle, Settings, Copy, Check } from "lucide-react";
 
-const steps = [
-  {
-    number: "01",
-    icon: Download,
-    title: "Download & Unzip",
-    description:
-      'Click "Download Extension" below. Once downloaded, extract (unzip) the folder to a permanent location on your computer.',
-  },
-  {
-    number: "02",
-    icon: Puzzle,
-    title: "Load in Chrome",
-    description: "In Chrome, type the following into the address bar and press Enter:",
-    code: "chrome://extensions",
-    codeNote:
-      'Enable "Developer mode" (top-right toggle), then click "Load unpacked" and select the unzipped folder.',
-  },
-  {
-    number: "03",
-    icon: Settings,
-    title: "Set your app URL",
-    description:
-      'Right-click the Reading Room icon in your Chrome toolbar → click "Options". Enter this page\'s URL and click Save.',
-    code: window !== undefined ? window.location.origin : "",
-    codeNote: "This tells the extension where to send saved articles.",
-  },
-  {
-    number: "04",
-    icon: CheckCircle,
-    title: "Start saving!",
-    description:
-      "Browse any article or web page, click the Reading Room icon, and hit Save. It will appear in your Library instantly.",
-  },
-];
-
 function CopyCode({ code }: Readonly<{ code: string }>) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -176,8 +141,8 @@ export default function ExtensionPage() {
           Coming soon
         </p>
         <p className="text-sm text-[#52525B] font-sans">
-          We're working on publishing to the Chrome Web Store so installation becomes one click.
-          Stay tuned!
+          We&apos;re working on publishing to the Chrome Web Store so installation becomes one
+          click. Stay tuned!
         </p>
       </div>
     </div>
