@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+declare const process: { env: Record<string, string | undefined> };
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is missing"),
   CLERK_SECRET_KEY: z.string().min(1, "CLERK_SECRET_KEY is missing"),
