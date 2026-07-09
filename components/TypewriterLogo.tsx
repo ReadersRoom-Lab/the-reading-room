@@ -35,8 +35,9 @@ export function TypewriterLogo() {
         <span className="font-heading text-6xl xl:text-7xl font-bold text-white drop-shadow-xl tracking-tight">
           {text.split('').map((char, index) => {
             const isVisible = startIndex + index < typedChars;
+            const charId = `${startIndex + index}`;
             return (
-              <span key={index} className={isVisible ? "opacity-100" : "opacity-0"}>
+              <span key={charId} className={isVisible ? "opacity-100" : "opacity-0"}>
                 {char}
               </span>
             );

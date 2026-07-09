@@ -31,11 +31,9 @@ export default function OnboardingPage() {
     if (isSkip) {
       if (!finalName.trim()) finalName = "Reader";
       if (!finalRoomName.trim()) finalRoomName = "My Library";
-    } else {
-      if (!formData.roomName.trim()) {
-        setError("Please enter a room name.");
-        return;
-      }
+    } else if (!formData.roomName.trim()) {
+      setError("Please enter a room name.");
+      return;
     }
 
     setIsLoading(true);
