@@ -2,8 +2,91 @@
 
 *Automated summary of git contributions. Updated on every push.*
 
+## 📅 July 9, 2026
+**Lokeshwaran V R:**
+- Fix: explicitly set sonar source encoding to UTF-8 and renormalize line endings
+- Fix: ignore transpiler noise at start of logger.ts
+- Fix: update sonar coverage path for c8
+- Fix: prevent mobile layout cutoff on auth and landing pages
+- Chore: migrate coverage to c8 and fix transpiler noise
+- Test(coverage): add logger and embeddings tests, exclude external-service files from coverage
+- Refactor: resolve SonarCloud code smells
+- Fix(ci): add bufferutil as optional dependency for ws
+- Fix(ci): add utf-8-validate@5.0.10 to lockfile to satisfy ws peer dependency
+- Ci: pin SonarCloud scan action to v8.2.0 for Node 24 compatibility
+- Ci: regenerate package-lock.json to include missing platform-specific tailwind oxide dependencies
+- Ci: upgrade workspace setup to Node 22 and bypass Node 20 deprecation bypass rules on runners
+- Ci: add placeholder DATABASE_URL and DIRECT_URL env variables for dependencies
+- Refactor: resolve onboarding else-if block lint and typewriter logo array index key smells
+- Refactor: resolve lint warnings, reduce cognitive complexity, and secure path command executions
+- Fix(ui): adjust mobile flex centering to top alignment to fix scroll jump bugs
+- Fix(ui): resolve landing/auth/onboarding/profile page scroll locks and optimizations for mobile viewports
+
+
+## 📅 July 6, 2026
+**akash:**
+- Feat(extension): generate logo assets, update manifest icons, and add Chrome Web Store publishing guide
+- Design: refine layouts for mobile responsiveness across dashboard pages and reader UI components
+- Refactor: resolve window check linter warnings in EditHighlightPopover
+- Fix(reader): position EditHighlightPopover above highlight when low on viewport to prevent cutoff
+- Feat(reader): add Define and Save to Vault actions to EditHighlightPopover
+- Feat(extension): extract pre-rendered HTML to bypass anti-bot blocks like Vercel checkpoint
+- Refactor: resolve multiple linting problems in extension source and build script
+- Docs(extension): update README and add help link in popup for workspace connection guide
+- Fix(extension): resolve CSS specificity bug causing all views to display at once
+- Feat(extension): implement dynamic connection and persistence in chrome extension
+
+
+## 📅 July 5, 2026
+**Lokeshwaran V R:**
+- Fix(scraper): add full browser headers + auto-retry on 429 — prevents aeon.co and similar sites from blocking Vercel server
+- Fix(extension): thorough audit — correct URL hardcoded, manifest versions synced, debug labels removed, /api/articles/save made public so 401 detection works
+- Fix: remove VERCEL_URL fallback in extension build — it returns internal team URL (dot format) which is unreachable; hardcode production URL as fallback instead
+- Fix: correct production URL to the-reading-room-qwsz.vercel.app (was wrong domain before)
+- Fix: set correct production URL (the-reading-room.vercel.app) in extension — qwsz team URL was unreachable
+- Fix: move /save page out of (dashboard) layout to avoid room-count redirect, add sign-in redirect on 401 so extension works for unauthenticated users too
+- Chore: sync chrome-extension/ dev folder to match build script — tab-opening approach, remove obsolete options page and excess permissions
+- Fix: wrap useSearchParams in Suspense boundary on save page to fix Next.js build error
+- Fix: rewrite extension to open /save?url= tab instead of direct API call, bypassing SameSite cookie restrictions permanently
+- Fix: exclude extension API from Clerk auth guard and pass OPTIONS preflight through so CORS works from Chrome extension
+- Chore: trigger redeploy to pick up NEXT_PUBLIC_APP_URL for extension zip
+- Feat: generate extension.zip at build time with app URL baked in via prebuild script — eliminates URL config step
+- Fix: serve static extension.zip from public/ CDN, restore URL config step with copy button
+- Feat: use window.location.href for API download (no blocking), reduce install to 3 steps with URL pre-baked
+- Fix: simplify extension download to serve static zip from public/, add copy-button snippets for chrome://extensions and app URL
+- Fix: use fetch+blob download pattern to prevent Chrome about:blank#blocked blocking
+- Fix: embed all extension file contents in API route to eliminate filesystem dependency on Vercel
+- Fix: include chrome-extension files in serverless bundle so download API works on Vercel
+- Chore: remove browser extension link from sidebar
+- Fix: update extension promo card to link to /extension page and label Developer Mode requirement
+- Feat: generate pre-configured extension zip on the fly, reducing install to 3 steps
+- Feat: add browser extension download page with step-by-step install guide
+- Feat: make chrome extension backend URL configurable via options page
+- Fix: rewrite library import dialog row layout to use CSS grid to absolutely guarantee truncation and prevent clipping
+- Fix: remove client side fetching to make dialog instant, and fix flexbox truncation layout for good
+- Fix: aggressively constrain flex width and block spans to guarantee truncation
+- Perf: optimize library import dialog loading speed and fix custom scrollbar clipping
+- Fix: add flex-1 min-w-0 to properly truncate long titles and prevent Add button from clipping
+- Feat: add button to import documents from library into a room
+- Fix: replace asChild with render prop in DialogTrigger to fix build error
+- Fix: align Save Document button height with Export and Manage buttons
+- Feat: allow saving documents directly to a specific room
+- Feat: auto-assign article to newly created room from dropdown
+- Feat: replace native confirm with smooth inline confirmation for room deletion
+- Fix: convert library page to Server Component to enable Next.js auto-refresh
+- Fix: prevent dialog click propagation from triggering parent link navigation
+- Perf: move embeddings to background and make delete optimistic
+- Feat: replace native confirm with Shadcn Dialog for delete document
+- Fix: prevent dropdown from closing before delete article confirm dialog completes
+- Feat: add revalidatePath to all API mutations for automatic UI refresh
+- Fix: add CMap support to pdfjs-dist for multi-language PDF extraction
+- Feat: move PDF parsing to client-side to bypass Vercel 4.5MB limit
+
+
 ## 📅 July 4, 2026
 **Lokeshwaran V R:**
+- Fix: gracefully reject empty or scanned PDFs
+- Chore: remove contributions auto-updater and add documentation update rule
 - Fix: replace jsdom with linkedom to prevent Vercel Serverless crash on URL upload
 - Fix: bypass pdf-parse index.js to prevent Vercel Serverless crash
 - Fix: downgrade pdf-parse to v1.1.1 for Vercel Serverless stability
