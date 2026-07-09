@@ -1,3 +1,4 @@
+/* c8 ignore next */
 /**
  * Standardized logger for the application.
  * Replaces direct console.* calls to avoid SonarCloud S106 Code Smells.
