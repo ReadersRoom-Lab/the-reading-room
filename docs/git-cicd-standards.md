@@ -52,7 +52,16 @@ We use **Conventional Commits** to keep history readable, structured, and easy t
 
 ---
 
-## 3. Pull Request Quality Gates
+## 3. Local Pre-Commit Hooks (Husky & lint-staged)
+
+To prevent code with linter errors from ever entering the git history, we use **Husky** and **lint-staged**:
+* Every time you run `git commit`, Husky runs the pre-commit hook.
+* This hook runs `npx lint-staged`, which executes `eslint --fix` on only the files you modified (staged).
+* **If there is a linter error that cannot be resolved automatically, the commit is blocked.** You must fix the error before you can successfully commit.
+
+---
+
+## 4. Pull Request Quality Gates
 
 Before any PR can be merged into `main`, it must pass these automated quality gates verified by our CI pipeline:
 
@@ -63,19 +72,32 @@ Before any PR can be merged into `main`, it must pass these automated quality ga
 3. **Production Compilation**:
    * Next.js must build cleanly: `npm run build`. This step also automatically runs `prebuild` which regenerates the companion Chrome Extension ZIP (`public/extension.zip`).
 4. **Unit Test Execution**:
-   * All unit tests (`npm test`) must pass. Unlike SonarCloud checks, the CI pipeline is configured to **fail** and block the merge if any single test fails.
+   * All unit tests (`npm test`) must pass. The CI pipeline will fail and block the merge if any single test fails.
 
 ---
 
-## 4. Continuous Integration (GitHub Actions)
+## 5. Continuous Integration (GitHub Actions)
 
-We have configured a GitHub Action at `.github/workflows/ci.yml` that runs on every PR and commit push to `main`.
+We have configured two GitHub Action workflows inside `.github/workflows/`:
+1. **`ci.yml`**: Runs linting, type checks, production builds, unit tests, and uploads the compiled extension ZIP as a build artifact.
+2. **`sonarcloud.yml`**: Runs SonarCloud code quality analysis and generates coverage reports.
 
-### Workflow Steps:
-1. **Checkout Code**: Grabs the codebase.
-2. **Set up Node.js**: Boots Node.js environment and configures local caching of npm packages to keep builds under 1 minute.
-3. **Install Dependencies**: Executes `npm ci` to fetch packages exactly matching `package-lock.json`.
-4. **Verify Lint & Types**: Runs ESLint and the TypeScript compiler.
-5. **Next.js Build**: Builds the production bundle and packs the Chrome Extension ZIP.
-6. **Test Run**: Executes the Node.js test runner suite.
-7. **Artifact Upload**: Uploads the freshly compiled `public/extension.zip` directly to the GitHub Action run. This allows developers to download and test the extension matching the exact commit in the pull request.
+---
+
+## 6. Locking the `main` Branch in GitHub Settings
+
+To enforce these quality gates, repository administrators must configure **Branch Protection Rules** on GitHub:
+
+1. Go to your repository on GitHub.
+2. Click **Settings** (top tab) -> **Branches** (left menu).
+3. Under **Branch protection rules**, click **Add branch protection rule** (or edit the rule for `main`).
+4. Set **Branch name pattern** to `main`.
+5. Check **Require a pull request before merging**.
+6. Check **Require status checks to pass before merging**.
+7. In the search bar for status checks, search and select:
+   * `Build, Lint, and Test` (enforces ESLint, TypeScript compilation, Next.js build, and unit tests).
+   * `SonarCloud Code Analysis` (enforces SonarCloud scan and quality gates).
+8. Check **Require branches to be up to date before merging** (forces developers to resolve conflicts before merging).
+9. Check **Do not allow bypassing the above settings** (forces admins to follow rules too).
+10. Click **Save changes**.
+
