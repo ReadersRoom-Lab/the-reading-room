@@ -1,28 +1,25 @@
-"use client"
+"use client";
 
-import { useUser, SignOutButton } from "@clerk/nextjs"
-import Link from "next/link"
-import { ArrowLeft, User, Shield, LogOut } from "lucide-react"
-import { useState } from "react"
+import { useUser, SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
+import { ArrowLeft, User, Shield, LogOut } from "lucide-react";
+import { useState } from "react";
 
 export function ProfileNav() {
-  const { user } = useUser()
-  const [active, setActive] = useState<"profile" | "security">("profile")
+  const { user } = useUser();
+  const [active, setActive] = useState<"profile" | "security">("profile");
 
   const navigate = (page: "profile" | "security") => {
-    setActive(page)
+    setActive(page);
     // Clerk hash routing: '' = profile page, '/security/' = security page
-    globalThis.location.hash = page === "profile" ? "" : "/security/"
-  }
+    globalThis.location.hash = page === "profile" ? "" : "/security/";
+  };
 
   const initial =
-    user?.firstName?.[0] ??
-    user?.emailAddresses[0]?.emailAddress[0]?.toUpperCase() ??
-    "R"
+    user?.firstName?.[0] ?? user?.emailAddresses[0]?.emailAddress[0]?.toUpperCase() ?? "R";
 
   return (
     <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto md:overflow-x-hidden">
-
       {/* Back link */}
       <div className="hidden md:block border-b border-[#E5E5E5] px-6 py-4">
         <Link
@@ -37,15 +34,15 @@ export function ProfileNav() {
       {/* User identity card */}
       <div className="hidden md:block px-6 py-6 border-b border-[#E5E5E5]">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded bg-[#1A1A1A] flex items-center justify-center font-serif text-white font-bold">R</div>
+          <div className="w-8 h-8 rounded bg-[#1A1A1A] flex items-center justify-center font-serif text-white font-bold">
+            R
+          </div>
           <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
             The Reading Rooms
           </span>
         </div>
         <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center mb-4 shrink-0">
-          <span className="font-heading text-lg font-bold text-[#F9F7F2]">
-            {initial}
-          </span>
+          <span className="font-heading text-lg font-bold text-[#F9F7F2]">{initial}</span>
         </div>
         <p className="font-heading text-base font-semibold text-[#1A1A1A] truncate leading-tight">
           {user?.fullName ?? user?.firstName ?? "Reader"}
@@ -89,7 +86,12 @@ export function ProfileNav() {
       {/* Clerk attribution */}
       <div className="hidden md:flex px-6 py-3 border-t border-[#E5E5E5] flex items-center gap-2">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shrink-0 opacity-40">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round"/>
+          <path
+            d="M21 12a9 9 0 1 1-6.219-8.56"
+            stroke="#1A1A1A"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
         </svg>
         <span className="font-sans text-[10px] tracking-[0.06em] text-[#BDBDBD] uppercase">
           Secured by{" "}
@@ -114,5 +116,5 @@ export function ProfileNav() {
         </SignOutButton>
       </div>
     </aside>
-  )
+  );
 }

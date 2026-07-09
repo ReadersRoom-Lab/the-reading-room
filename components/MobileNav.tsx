@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Menu, X, Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react"
-import { GlobalSearchDialog } from "@/components/GlobalSearchDialog"
-import { SaveArticleDialog } from "@/components/SaveArticleDialog"
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, X, Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
+import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
+import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 
 export function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const toggleMenu = () => setIsOpen(!isOpen)
-  const closeMenu = () => setIsOpen(false)
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <>
@@ -74,9 +74,9 @@ export function MobileNav() {
             >
               <Sparkles className="w-5 h-5 shrink-0" /> Insights
             </Link>
-            
+
             <div className="my-2 border-t border-[#E5E5E5]" />
-            
+
             <Link
               href="/profile"
               onClick={closeMenu}
@@ -88,5 +88,5 @@ export function MobileNav() {
         </div>
       )}
     </>
-  )
+  );
 }

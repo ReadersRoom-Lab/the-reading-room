@@ -1,0 +1,11 @@
+.next/
+node_modules/
+public/
+out/
+build/
+coverage/
+tsconfig.json
+package-lock.json
+package.json
+lcov.info
+lcov-logger.info

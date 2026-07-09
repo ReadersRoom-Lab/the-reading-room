@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from '@clerk/nextjs'
-import { ui } from '@clerk/ui'
+import { ClerkProvider } from "@clerk/nextjs";
+import { ui } from "@clerk/ui";
 import { Inter, Source_Serif_4, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -98,8 +98,8 @@ export default function RootLayout({
             fontFamily: "var(--font-inter)",
             fontWeight: "600",
             color: "#1A1A1A",
-          }
-        }
+          },
+        },
       }}
     >
       <html

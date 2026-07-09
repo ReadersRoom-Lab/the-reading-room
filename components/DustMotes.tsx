@@ -1,9 +1,11 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { secureRandom } from '@/lib/utils';
+"use client";
+import { useEffect, useState } from "react";
+import { secureRandom } from "@/lib/utils";
 
 export function DustMotes() {
-  const [motes, setMotes] = useState<Array<{ id: number; left: string; size: number; delay: string; duration: string }>>([]);
+  const [motes, setMotes] = useState<
+    Array<{ id: number; left: string; size: number; delay: string; duration: string }>
+  >([]);
 
   useEffect(() => {
     // Generate static motes on mount to avoid hydration mismatch

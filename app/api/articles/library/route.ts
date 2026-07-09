@@ -1,38 +1,38 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import prisma from '@/lib/prisma'
-import { logger } from '@/lib/logger'
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   try {
-    const { userId } = await auth()
-    
+    const { userId } = await auth();
+
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const articles = await prisma.article.findMany({
       where: { user_id: user.id, room_id: null },
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: "desc" },
       select: {
         id: true,
         title: true,
         source_url: true,
-        room_id: true
-      }
-    })
+        room_id: true,
+      },
+    });
 
-    return NextResponse.json(articles)
+    return NextResponse.json(articles);
   } catch (error) {
-    logger.error('Error fetching library articles:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    logger.error("Error fetching library articles:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

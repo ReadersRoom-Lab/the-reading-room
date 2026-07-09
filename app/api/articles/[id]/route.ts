@@ -1,132 +1,114 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import prisma from '@/lib/prisma'
-import { logger } from '@/lib/logger'
-import { revalidatePath } from 'next/cache'
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import { logger } from "@/lib/logger";
+import { revalidatePath } from "next/cache";
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params
-    const { userId } = await auth()
+    const { id } = await params;
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const article = await prisma.article.findUnique({
-      where: { id: id }
-    })
+      where: { id: id },
+    });
 
     if (article?.user_id !== user.id) {
-      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
-    return NextResponse.json(article)
+    return NextResponse.json(article);
   } catch (error) {
-    logger.error("Error fetching article:", error)
-    return NextResponse.json(
-      { error: 'Failed to fetch article' },
-      { status: 500 }
-    )
+    logger.error("Error fetching article:", error);
+    return NextResponse.json({ error: "Failed to fetch article" }, { status: 500 });
   }
 }
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params
-    const { userId } = await auth()
+    const { id } = await params;
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const articleCheck = await prisma.article.findUnique({
-      where: { id: id }
-    })
+      where: { id: id },
+    });
 
     if (articleCheck?.user_id !== user.id) {
-      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
-    const { reading_progress, status } = await req.json()
+    const { reading_progress, status } = await req.json();
 
     const article = await prisma.article.update({
       where: { id: id },
       data: {
         ...(reading_progress !== undefined && { reading_progress }),
         ...(status !== undefined && { status }),
-      }
-    })
+      },
+    });
 
-    revalidatePath('/', 'layout')
-    return NextResponse.json(article)
+    revalidatePath("/", "layout");
+    return NextResponse.json(article);
   } catch (error) {
-    logger.error("Error updating article:", error)
-    return NextResponse.json(
-      { error: 'Failed to update article' },
-      { status: 500 }
-    )
+    logger.error("Error updating article:", error);
+    return NextResponse.json({ error: "Failed to update article" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params
-    const { userId } = await auth()
+    const { id } = await params;
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const article = await prisma.article.findUnique({
-      where: { id: id }
-    })
+      where: { id: id },
+    });
 
     if (article?.user_id !== user.id) {
-      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
     await prisma.article.delete({
-      where: { id: id }
-    })
+      where: { id: id },
+    });
 
-    revalidatePath('/', 'layout')
-    return NextResponse.json({ success: true })
+    revalidatePath("/", "layout");
+    return NextResponse.json({ success: true });
   } catch (error) {
-    logger.error("Error deleting article:", error)
-    return NextResponse.json(
-      { error: 'Failed to delete article' },
-      { status: 500 }
-    )
+    logger.error("Error deleting article:", error);
+    return NextResponse.json({ error: "Failed to delete article" }, { status: 500 });
   }
 }

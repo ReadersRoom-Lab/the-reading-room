@@ -6,9 +6,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @keyframes kenburns {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.05) translate(-1%, -1%); }
-  100% { transform: scale(1) translate(0, 0); }
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.05) translate(-1%, -1%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
 }
 
 .animate-kenburns {
@@ -16,8 +22,14 @@
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-slide-up {
@@ -26,8 +38,14 @@
 }
 
 @keyframes page-transition {
-  0% { opacity: 0; filter: blur(4px); }
-  100% { opacity: 1; filter: blur(0); }
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
 }
 
 .animate-page-transition {
@@ -35,12 +53,18 @@
 }
 
 @keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes blink {
-  50% { border-color: transparent; }
+  50% {
+    border-color: transparent;
+  }
 }
 
 .animate-typing-1 {
@@ -57,17 +81,29 @@
   overflow: hidden;
   white-space: nowrap;
   border-right: 4px solid white;
-  animation: typing 1.2s steps(20, end) 0.8s forwards, blink 1s step-end infinite;
+  animation:
+    typing 1.2s steps(20, end) 0.8s forwards,
+    blink 1s step-end infinite;
   display: inline-block;
   width: 0;
   vertical-align: bottom;
 }
 
 @keyframes float {
-  0% { transform: translateY(0px) translateX(0px); opacity: 0; }
-  20% { opacity: 0.8; }
-  80% { opacity: 0.8; }
-  100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+  0% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
 }
 
 .animate-float {
@@ -75,14 +111,29 @@
 }
 
 @keyframes shimmer {
-  100% { transform: translateX(100%); }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fire-glow {
-  0%, 100% { opacity: 0.8; transform: scale(1) translate(0, 0); }
-  25% { opacity: 0.95; transform: scale(1.05) translate(1%, -1%); }
-  50% { opacity: 0.75; transform: scale(0.95) translate(-1%, 2%); }
-  75% { opacity: 0.9; transform: scale(1.02) translate(2%, 1%); }
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1) translate(0, 0);
+  }
+  25% {
+    opacity: 0.95;
+    transform: scale(1.05) translate(1%, -1%);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(0.95) translate(-1%, 2%);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scale(1.02) translate(2%, 1%);
+  }
 }
 
 .animate-fire-glow {
@@ -137,20 +188,20 @@
 
 :root {
   /* ── Parchment & Ink Design Tokens ── */
-  --parchment-base: #F9F7F2;
-  --ink-text: #1A1A1A;
-  --muted-gold: #E6C79C;
-  --ui-grey-light: #E5E5E5;
-  --ui-grey-medium: #BDBDBD;
+  --parchment-base: #f9f7f2;
+  --ink-text: #1a1a1a;
+  --muted-gold: #e6c79c;
+  --ui-grey-light: #e5e5e5;
+  --ui-grey-medium: #bdbdbd;
 
   /* Shadcn Semantic Mapping */
   --background: var(--parchment-base);
   --foreground: var(--ink-text);
 
-  --card: #FFFFFF;
+  --card: #ffffff;
   --card-foreground: var(--ink-text);
 
-  --popover: #FFFFFF;
+  --popover: #ffffff;
   --popover-foreground: var(--ink-text);
 
   /* Primary = Ink, not Indigo */
@@ -161,7 +212,7 @@
   --secondary-foreground: var(--ink-text);
 
   --muted: var(--ui-grey-light);
-  --muted-foreground: #52525B;
+  --muted-foreground: #52525b;
 
   --accent: var(--ui-grey-light);
   --accent-foreground: var(--ink-text);
@@ -172,11 +223,11 @@
   --input: var(--ui-grey-medium);
   --ring: var(--ink-text);
 
-  --chart-1: #D4AF37;
-  --chart-2: #2DD4BF;
-  --chart-3: #FB923C;
-  --chart-4: #818CF8;
-  --chart-5: #F472B6;
+  --chart-1: #d4af37;
+  --chart-2: #2dd4bf;
+  --chart-3: #fb923c;
+  --chart-4: #818cf8;
+  --chart-5: #f472b6;
 
   /* Sharp corners — design spec requires 0px */
   --radius: 0rem;
@@ -194,7 +245,7 @@
 .dark {
   --parchment-base: #111111;
   --ink-text: #fdfdfc;
-  --muted-gold: #C4A882;
+  --muted-gold: #c4a882;
   --ui-grey-light: #2a2a2a;
   --ui-grey-medium: #4a4a4a;
 
@@ -217,11 +268,11 @@
   --input: var(--ui-grey-medium);
   --ring: var(--ink-text);
 
-  --chart-1: #D4AF37;
-  --chart-2: #2DD4BF;
-  --chart-3: #FB923C;
-  --chart-4: #818CF8;
-  --chart-5: #F472B6;
+  --chart-1: #d4af37;
+  --chart-2: #2dd4bf;
+  --chart-3: #fb923c;
+  --chart-4: #818cf8;
+  --chart-5: #f472b6;
 
   --sidebar: var(--parchment-base);
   --sidebar-foreground: var(--ink-text);
@@ -277,7 +328,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: #F9F7F2;
+  background-color: #f9f7f2;
 }
 
 @media (max-width: 768px) {
@@ -336,7 +387,7 @@
   height: 100% !important;
   max-width: none !important;
   overflow-y: auto !important;
-  background-color: #F9F7F2 !important;
+  background-color: #f9f7f2 !important;
   padding: 3rem 4rem !important;
 }
 
@@ -358,8 +409,8 @@
 
 /* ── Custom Selection Highlighting ── */
 ::selection {
-  background-color: #E6C79C !important; /* var(--muted-gold) */
-  color: #1A1A1A !important;
+  background-color: #e6c79c !important; /* var(--muted-gold) */
+  color: #1a1a1a !important;
 }
 
 /* 
@@ -370,8 +421,8 @@
 .auth-container .cl-formFieldInput:focus,
 .auth-container .cl-formFieldInputGroup:focus-within {
   background-color: rgba(0, 0, 0, 0.4) !important;
-  border-color: #C4A882 !important;
-  box-shadow: 0 0 0 1px #C4A882 !important;
+  border-color: #c4a882 !important;
+  box-shadow: 0 0 0 1px #c4a882 !important;
 }
 
 .auth-container .cl-formFieldLabel {
@@ -383,7 +434,7 @@
 .auth-container input:-webkit-autofill:hover,
 .auth-container input:-webkit-autofill:focus,
 .auth-container input:-webkit-autofill:active {
-  -webkit-text-fill-color: #FDFBF7 !important;
+  -webkit-text-fill-color: #fdfbf7 !important;
   transition: background-color 9999s ease-in-out 0s !important;
 }
 
@@ -402,14 +453,13 @@
 /* Gold hover states for links */
 .auth-container .cl-formFieldAction,
 .auth-container .cl-footerActionLink {
-  color: #BDBDBD !important;
+  color: #bdbdbd !important;
   transition: all 0.2s ease !important;
   text-decoration: none !important;
 }
 
 .auth-container .cl-formFieldAction:hover,
 .auth-container .cl-footerActionLink:hover {
-  color: #C4A882 !important;
+  color: #c4a882 !important;
   text-shadow: 0 0 8px rgba(196, 168, 130, 0.4) !important;
 }
-

@@ -1,9 +1,11 @@
 # Project Contributions Log
 
-*Automated summary of git contributions. Updated on every push.*
+_Automated summary of git contributions. Updated on every push._
 
 ## 📅 July 9, 2026
+
 **Lokeshwaran V R:**
+
 - Fix: footer vertical overlap and width
 - Fix: layout alignment of landing page header
 - Perf: statically generate landing page for faster LCP
@@ -30,9 +32,10 @@
 - Fix(ui): adjust mobile flex centering to top alignment to fix scroll jump bugs
 - Fix(ui): resolve landing/auth/onboarding/profile page scroll locks and optimizations for mobile viewports
 
-
 ## 📅 July 6, 2026
+
 **akash:**
+
 - Feat(extension): generate logo assets, update manifest icons, and add Chrome Web Store publishing guide
 - Design: refine layouts for mobile responsiveness across dashboard pages and reader UI components
 - Refactor: resolve window check linter warnings in EditHighlightPopover
@@ -44,9 +47,10 @@
 - Fix(extension): resolve CSS specificity bug causing all views to display at once
 - Feat(extension): implement dynamic connection and persistence in chrome extension
 
-
 ## 📅 July 5, 2026
+
 **Lokeshwaran V R:**
+
 - Fix(scraper): add full browser headers + auto-retry on 429 — prevents aeon.co and similar sites from blocking Vercel server
 - Fix(extension): thorough audit — correct URL hardcoded, manifest versions synced, debug labels removed, /api/articles/save made public so 401 detection works
 - Fix: remove VERCEL_URL fallback in extension build — it returns internal team URL (dot format) which is unreachable; hardcode production URL as fallback instead
@@ -90,9 +94,10 @@
 - Fix: add CMap support to pdfjs-dist for multi-language PDF extraction
 - Feat: move PDF parsing to client-side to bypass Vercel 4.5MB limit
 
-
 ## 📅 July 4, 2026
+
 **Lokeshwaran V R:**
+
 - Fix: gracefully reject empty or scanned PDFs
 - Chore: remove contributions auto-updater and add documentation update rule
 - Fix: replace jsdom with linkedom to prevent Vercel Serverless crash on URL upload
@@ -101,9 +106,10 @@
 - Fix: externalize pdf-parse and napi-rs/canvas for Vercel Serverless
 - Fix: graceful error handling for document and pdf upload
 
-
 ## 📅 July 3, 2026
+
 **Lokeshwaran V R:**
+
 - Docs: update CONTRIBUTIONS.md
 - Feat: implement mobile responsiveness for landing page and dashboard
 - Ci: implement automated contributions log generation
@@ -137,9 +143,11 @@
 - Chore: trigger vercel build
 
 **Vercel:**
+
 - Install Vercel Speed Insights
 
 **akash:**
+
 - Fix: remove non-native interactive div wrapper in RoomAssignDropdown and widen coverage exclusions to resolve SonarQube quality gate failures
 - Fix: resolve coverage report path for TypeScript files and correct test glob pattern in workflow
 - Fix: resolve SonarQube quality gate failures by using static imports in coverage tests, ignoring lcov file, and excluding components/API routes from CPD
@@ -147,9 +155,10 @@
 - Fix: replace Math.random with cryptographically secure random values to resolve SonarQube PRNG security hotspots
 - Chore: restore sonar-project.properties to fix SonarQube quality gate failures
 
-
 ## 📅 July 2, 2026
+
 **Lokeshwaran V R:**
+
 - Fix linting, type errors, and RoomAssignDropdown issues
 - Fix Prisma build initialization error by lazy loading client
 - Fix Next.js AST parser crash by removing String.raw in Clerk middleware config
@@ -259,12 +268,14 @@
 - Fix: resolve IDE warnings and accessibility issues
 
 **akash:**
+
 - Fix: dialog trigger styling, clerk colorForeground type error, and article export schema error
 - Fix: resolve Next.js segment config error in proxy.ts, fix script TS types and user schema mismatch in test-rag
 
-
 ## 📅 July 1, 2026
+
 **akash:**
+
 - Docs: update README.md and add DEVELOPER_GUIDE.md detailing completed features and next steps
 - Feat: replace Room View highlights placeholder and implement Room Settings & Delete dialog
 - Fix: resolve new linter warnings on mouse events and semantic roles in ReaderPage
@@ -283,6 +294,7 @@
 - Fix: add lib/store.ts re-export and sync local changes
 
 **Lokeshwaran V R:**
+
 - Docs: update README with SonarCloud CI details and Scholarly Minimalism UI aesthetic
 - Fix: resolve nested ternaries, redundant code blocks, and accessibility roles for SonarCloud
 - Fix: replace console calls with logger and ignore HTML injection rules in SonarCloud
@@ -301,9 +313,10 @@
 - Chore: ignore .clerk directory
 - Docs: update README with latest features
 
-
 ## 📅 June 30, 2026
+
 **Lokeshwaran V R:**
+
 - Fix: Add postinstall script for prisma generate to fix Vercel build
 - Feat: Add Global Search (Cmd+K) and AI Synthesis Engine Insights
 - Feat(ingest): add DOI, arXiv, and PDF ingestion; add literature export
@@ -315,6 +328,7 @@
 - Feat: complete phase 1 backend and phase 2 article saving
 
 **akash:**
+
 - Docs: note GitHub repo push status
 - Chore: add API smoke test and update documentation
 - Chore: commit current backend persistence and API updates
@@ -323,6 +337,5 @@
 - Initial commit from Create Next App
 
 **ReadersRoom-Lab:**
+
 - Initial commit
-
-

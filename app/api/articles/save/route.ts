@@ -1,136 +1,156 @@
-import { NextResponse, after } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import prisma from '@/lib/prisma'
-import { parseHTML } from 'linkedom'
-import { Readability } from '@mozilla/readability'
-import sanitizeHtml from 'sanitize-html'
-import { logger } from '@/lib/logger'
-import { chunkText, generateEmbeddings } from '@/lib/embeddings'
-import { revalidatePath } from 'next/cache'
+import { NextResponse, after } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import { parseHTML } from "linkedom";
+import { Readability } from "@mozilla/readability";
+import sanitizeHtml from "sanitize-html";
+import { logger } from "@/lib/logger";
+import { chunkText, generateEmbeddings } from "@/lib/embeddings";
+import { revalidatePath } from "next/cache";
 
 // helper to fetch DOI
 async function fetchDOIMetadata(doi: string) {
-  const cleanDoi = doi.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//, '')
-  const res = await fetch(`https://api.crossref.org/works/${cleanDoi}`)
-  if (!res.ok) throw new Error('DOI not found')
-  const data = await res.json()
-  const message = data.message
-  
-  const title = message.title?.[0] || 'Untitled Article'
-  const author = message.author?.map((a: { given: string; family: string }) => `${a.given} ${a.family}`).join(', ') || null
-  const content = message.abstract ? `<p>${message.abstract}</p>` : '<p>No abstract available.</p>'
-  
-  return { title, author, content, url: `https://doi.org/${cleanDoi}`, sourceType: 'doi' }
+  const cleanDoi = doi.replace(/^(https?:\/\/)?(dx\.)?doi\.org\//, "");
+  const res = await fetch(`https://api.crossref.org/works/${cleanDoi}`);
+  if (!res.ok) throw new Error("DOI not found");
+  const data = await res.json();
+  const message = data.message;
+
+  const title = message.title?.[0] || "Untitled Article";
+  const author =
+    message.author
+      ?.map((a: { given: string; family: string }) => `${a.given} ${a.family}`)
+      .join(", ") || null;
+  const content = message.abstract ? `<p>${message.abstract}</p>` : "<p>No abstract available.</p>";
+
+  return { title, author, content, url: `https://doi.org/${cleanDoi}`, sourceType: "doi" };
 }
 
 // helper to fetch arXiv
 async function fetchArxivMetadata(arxivId: string) {
-  const cleanId = arxivId.replace(/^(https?:\/\/)?arxiv\.org\/(abs|pdf)\//, '').replace(/\.pdf$/, '')
-  const res = await fetch(`http://export.arxiv.org/api/query?id_list=${cleanId}`)
-  if (!res.ok) throw new Error('arXiv ID not found')
-  const xml = await res.text()
-  
-  const { document } = parseHTML(xml)
-  const entry = document.querySelector('entry')
-  if (!entry) throw new Error('arXiv entry not found')
-  
-  const title = entry.querySelector('title')?.textContent?.trim() || 'Untitled Article'
-  const authors = Array.from(entry.querySelectorAll('author name')).map(n => n.textContent).join(', ')
-  const abstract = entry.querySelector('summary')?.textContent?.trim() || 'No abstract available.'
-  
-  return { title, author: authors, content: `<p>${abstract}</p>`, url: `https://arxiv.org/abs/${cleanId}`, sourceType: 'arxiv' }
+  const cleanId = arxivId
+    .replace(/^(https?:\/\/)?arxiv\.org\/(abs|pdf)\//, "")
+    .replace(/\.pdf$/, "");
+  const res = await fetch(`http://export.arxiv.org/api/query?id_list=${cleanId}`);
+  if (!res.ok) throw new Error("arXiv ID not found");
+  const xml = await res.text();
+
+  const { document } = parseHTML(xml);
+  const entry = document.querySelector("entry");
+  if (!entry) throw new Error("arXiv entry not found");
+
+  const title = entry.querySelector("title")?.textContent?.trim() || "Untitled Article";
+  const authors = Array.from(entry.querySelectorAll("author name"))
+    .map((n) => n.textContent)
+    .join(", ");
+  const abstract = entry.querySelector("summary")?.textContent?.trim() || "No abstract available.";
+
+  return {
+    title,
+    author: authors,
+    content: `<p>${abstract}</p>`,
+    url: `https://arxiv.org/abs/${cleanId}`,
+    sourceType: "arxiv",
+  };
 }
 
 // helper to fetch standard web page
 async function fetchStandardUrl(url: string) {
   const BROWSER_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Cache-Control': 'max-age=0',
-    'Upgrade-Insecure-Requests': '1',
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'none',
-    'Sec-Fetch-User': '?1',
-    'sec-ch-ua': '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
-  }
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    Accept:
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Cache-Control": "max-age=0",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "sec-ch-ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+  };
 
   async function attemptFetch(attempt: number): Promise<Response> {
-    let response: Response
+    let response: Response;
     try {
       response = await fetch(url, {
         headers: BROWSER_HEADERS,
         signal: AbortSignal.timeout(10000),
-      })
+      });
     } catch (error) {
-      if (error instanceof Error && error.name === 'TimeoutError') {
-        throw new Error('Request timed out while fetching the URL (took longer than 10s).')
+      if (error instanceof Error && error.name === "TimeoutError") {
+        throw new Error("Request timed out while fetching the URL (took longer than 10s).");
       }
-      throw new Error(`Network error while fetching URL: ${error instanceof Error ? error.message : String(error)}`)
+      throw new Error(
+        `Network error while fetching URL: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
 
     // Retry once on 429 (rate limit) after a short back-off
     if (response.status === 429 && attempt === 1) {
-      const retryAfter = response.headers.get('Retry-After')
-      const waitMs = retryAfter ? Math.min(Number.parseInt(retryAfter, 10) * 1000, 4000) : 2000
-      await new Promise(resolve => setTimeout(resolve, waitMs))
-      return attemptFetch(2)
+      const retryAfter = response.headers.get("Retry-After");
+      const waitMs = retryAfter ? Math.min(Number.parseInt(retryAfter, 10) * 1000, 4000) : 2000;
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+      return attemptFetch(2);
     }
 
     if (!response.ok) {
       if (response.status === 429) {
-        throw new Error('The article website is temporarily limiting access. Please try again in a minute.')
+        throw new Error(
+          "The article website is temporarily limiting access. Please try again in a minute."
+        );
       }
-      throw new Error(`Failed to fetch URL: ${response.statusText} (${response.status})`)
+      throw new Error(`Failed to fetch URL: ${response.statusText} (${response.status})`);
     }
 
-    return response
+    return response;
   }
 
-  const response = await attemptFetch(1)
-  const html = await response.text()
-  const { document } = parseHTML(html)
-  const reader = new Readability(document)
-  const article = reader.parse()
+  const response = await attemptFetch(1);
+  const html = await response.text();
+  const { document } = parseHTML(html);
+  const reader = new Readability(document);
+  const article = reader.parse();
 
   if (!article) {
-    throw new Error('Failed to extract article content. The page might not have a readable article format.')
+    throw new Error(
+      "Failed to extract article content. The page might not have a readable article format."
+    );
   }
 
-  let coverImage = null
-  const metaTags = document.getElementsByTagName('meta')
+  let coverImage = null;
+  const metaTags = document.getElementsByTagName("meta");
   for (const metaTag of Array.from(metaTags)) {
-    const property = metaTag.getAttribute('property')
-    const name = metaTag.getAttribute('name')
-    if (property === 'og:image' || name === 'twitter:image') {
-      coverImage = metaTag.getAttribute('content')
-      break
+    const property = metaTag.getAttribute("property");
+    const name = metaTag.getAttribute("name");
+    if (property === "og:image" || name === "twitter:image") {
+      coverImage = metaTag.getAttribute("content");
+      break;
     }
   }
 
   return {
     articleData: {
-      title: article.title || 'Untitled Article',
+      title: article.title || "Untitled Article",
       author: article.byline || null,
-      content: article.content || '',
+      content: article.content || "",
       url: url,
-      sourceType: 'url'
+      sourceType: "url",
     },
-    coverImage
-  }
+    coverImage,
+  };
 }
 
-
 interface ArticleData {
-  title: string
-  author: string | null
-  content: string
-  url: string
-  sourceType: string
+  title: string;
+  author: string | null;
+  content: string;
+  url: string;
+  sourceType: string;
 }
 
 async function resolveArticleData(
@@ -141,98 +161,98 @@ async function resolveArticleData(
   sourceUrl: string | null,
   html: string | null
 ): Promise<{ articleData: ArticleData; coverImage: string | null }> {
-  if (text && sourceType === 'pdf') {
+  if (text && sourceType === "pdf") {
     const formattedHtml = text
-      .split('\n\n')
+      .split("\n\n")
       .filter((p: string) => p.trim().length > 0)
-      .map((p: string) => `<p>${p.replaceAll('\n', ' ')}</p>`)
-      .join('')
+      .map((p: string) => `<p>${p.replaceAll("\n", " ")}</p>`)
+      .join("");
 
     return {
       articleData: {
-        title: pdfTitle || 'Untitled PDF',
+        title: pdfTitle || "Untitled PDF",
         author: null,
         content: formattedHtml,
-        url: sourceUrl || 'upload://pdf',
-        sourceType: 'pdf'
+        url: sourceUrl || "upload://pdf",
+        sourceType: "pdf",
       },
-      coverImage: null
-    }
+      coverImage: null,
+    };
   }
 
   if (!url) {
-    throw new Error('Invalid input: URL or PDF text is required')
+    throw new Error("Invalid input: URL or PDF text is required");
   }
 
   if (html) {
-    const { document } = parseHTML(html)
-    const reader = new Readability(document)
-    const article = reader.parse()
+    const { document } = parseHTML(html);
+    const reader = new Readability(document);
+    const article = reader.parse();
     if (!article) {
-      throw new Error('Failed to extract article content from the provided page')
+      throw new Error("Failed to extract article content from the provided page");
     }
 
-    let coverImage = null
-    const metaTags = document.getElementsByTagName('meta')
+    let coverImage = null;
+    const metaTags = document.getElementsByTagName("meta");
     for (const metaTag of Array.from(metaTags) as any[]) {
-      const property = metaTag.getAttribute('property')
-      const name = metaTag.getAttribute('name')
-      if (property === 'og:image' || name === 'twitter:image') {
-        coverImage = metaTag.getAttribute('content')
-        break
+      const property = metaTag.getAttribute("property");
+      const name = metaTag.getAttribute("name");
+      if (property === "og:image" || name === "twitter:image") {
+        coverImage = metaTag.getAttribute("content");
+        break;
       }
     }
 
     return {
       articleData: {
-        title: article.title || 'Untitled Article',
+        title: article.title || "Untitled Article",
         author: article.byline || null,
-        content: article.content || '',
+        content: article.content || "",
         url: url,
-        sourceType: 'extension'
+        sourceType: "extension",
       },
-      coverImage
-    }
+      coverImage,
+    };
   }
 
-  if (url.startsWith('10.') || url.includes('doi.org')) {
-    const data = await fetchDOIMetadata(url)
-    return { articleData: data, coverImage: null }
+  if (url.startsWith("10.") || url.includes("doi.org")) {
+    const data = await fetchDOIMetadata(url);
+    return { articleData: data, coverImage: null };
   }
 
-  if (url.includes('arxiv.org') || url.startsWith('arxiv:')) {
-    const data = await fetchArxivMetadata(url.replace(/^arxiv:/, ''))
-    return { articleData: data, coverImage: null }
+  if (url.includes("arxiv.org") || url.startsWith("arxiv:")) {
+    const data = await fetchArxivMetadata(url.replace(/^arxiv:/, ""));
+    return { articleData: data, coverImage: null };
   }
 
-  const standardRes = await fetchStandardUrl(url)
+  const standardRes = await fetchStandardUrl(url);
   return {
     articleData: standardRes.articleData,
-    coverImage: standardRes.coverImage
-  }
+    coverImage: standardRes.coverImage,
+  };
 }
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth()
-    
+    const { userId } = await auth();
+
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { url, roomId, title: pdfTitle, source_url, source_type, text, html } = await req.json()
+    const { url, roomId, title: pdfTitle, source_url, source_type, text, html } = await req.json();
 
     if (!url && !text) {
-      return NextResponse.json({ error: 'URL or PDF text is required' }, { status: 400 })
+      return NextResponse.json({ error: "URL or PDF text is required" }, { status: 400 });
     }
 
     // Ensure the user exists in our DB
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const { articleData, coverImage } = await resolveArticleData(
@@ -242,20 +262,20 @@ export async function POST(req: Request) {
       pdfTitle,
       source_url,
       html
-    )
+    );
 
     // Sanitize the HTML output
-    const cleanContent = sanitizeHtml(articleData.content || '', {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img' ])
-    })
+    const cleanContent = sanitizeHtml(articleData.content || "", {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    });
 
     // Calculate word count and read time
     // Create a temporary JSDOM just to extract textContent for word count
-    const { document } = parseHTML(`<div>${cleanContent}</div>`)
-    const textContent = document.body.textContent || '';
-    
-    const wordCount = textContent.trim().split(/\s+/).length
-    const readTimeMinutes = Math.ceil(wordCount / 200) // Assumes ~200 WPM
+    const { document } = parseHTML(`<div>${cleanContent}</div>`);
+    const textContent = document.body.textContent || "";
+
+    const wordCount = textContent.trim().split(/\s+/).length;
+    const readTimeMinutes = Math.ceil(wordCount / 200); // Assumes ~200 WPM
 
     // Save to database
     const savedArticle = await prisma.article.create({
@@ -271,44 +291,44 @@ export async function POST(req: Request) {
         word_count: wordCount,
         read_time_minutes: readTimeMinutes,
         date_accessed: new Date(),
-        status: 'unread',
+        status: "unread",
         reading_progress: 0,
-      }
-    })
+      },
+    });
 
     // --- Vector Search & RAG: Generate Embeddings ---
     after(async () => {
       try {
-        const textChunks = chunkText(textContent, 1000)
+        const textChunks = chunkText(textContent, 1000);
         if (textChunks.length > 0) {
-          const embeddings = await generateEmbeddings(textChunks)
-          
+          const embeddings = await generateEmbeddings(textChunks);
+
           for (let i = 0; i < textChunks.length; i++) {
-            const chunk = textChunks[i]
-            const embedding = embeddings[i]
-            
+            const chunk = textChunks[i];
+            const embedding = embeddings[i];
+
             if (embedding && embedding.length > 0) {
-              const embeddingString = `[${embedding.join(',')}]`
+              const embeddingString = `[${embedding.join(",")}]`;
               await prisma.$executeRaw`
                 INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
                 VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
-              `
+              `;
             }
           }
         }
       } catch (embedError) {
-        logger.error('Failed to generate embeddings for article:', embedError)
+        logger.error("Failed to generate embeddings for article:", embedError);
         // We don't fail the save if embeddings fail, just log it.
       }
-    })
+    });
 
-    revalidatePath('/', 'layout')
-    return NextResponse.json(savedArticle, { status: 201 })
+    revalidatePath("/", "layout");
+    return NextResponse.json(savedArticle, { status: 201 });
   } catch (error) {
-    logger.error('Error saving article:', error)
-    const err = error as Error
+    logger.error("Error saving article:", error);
+    const err = error as Error;
     // Return the actual error message to the client instead of a generic 500
-    const errorMessage = err.message || 'Internal Server Error'
-    return NextResponse.json({ error: errorMessage }, { status: 500 })
+    const errorMessage = err.message || "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

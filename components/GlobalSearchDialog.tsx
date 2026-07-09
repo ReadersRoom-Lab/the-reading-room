@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Command,
   CommandDialog,
@@ -10,72 +10,72 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
-import { FileText, Folder, BookOpen, Search } from "lucide-react"
-import { logger } from '@/lib/logger'
+} from "@/components/ui/command";
+import { FileText, Folder, BookOpen, Search } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function GlobalSearchDialog() {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<{
-    articles: Record<string, string>[],
-    rooms: Record<string, string>[],
-    concepts: Record<string, string>[]
-  }>({ articles: [], rooms: [], concepts: [] })
-  
-  const [isMac, setIsMac] = useState(true)
-  const [mounted, setMounted] = useState(false)
-  
-  const router = useRouter()
+    articles: Record<string, string>[];
+    rooms: Record<string, string>[];
+    concepts: Record<string, string>[];
+  }>({ articles: [], rooms: [], concepts: [] });
+
+  const [isMac, setIsMac] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true)
+    setMounted(true);
     if (globalThis.window !== undefined) {
-      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform))
+      setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.platform));
     }
 
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   useEffect(() => {
     if (!query) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setResults({ articles: [], rooms: [], concepts: [] })
-      return
+      setResults({ articles: [], rooms: [], concepts: [] });
+      return;
     }
 
     const timer = setTimeout(async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
-          const data = await res.json()
-          setResults(data)
+          const data = await res.json();
+          setResults(data);
         }
       } catch (error) {
-        logger.error("Search failed:", error)
+        logger.error("Search failed:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }, 300)
+    }, 300);
 
-    return () => clearTimeout(timer)
-  }, [query])
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const runCommand = useCallback((command: () => unknown) => {
-    setOpen(false)
-    command()
-  }, [])
+    setOpen(false);
+    command();
+  }, []);
 
   let shortcutKey = "⌘";
   if (mounted && !isMac) {
@@ -97,16 +97,14 @@ export function GlobalSearchDialog() {
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
-          <CommandInput 
-            placeholder="Search articles, rooms, and concepts..." 
+          <CommandInput
+            placeholder="Search articles, rooms, and concepts..."
             value={query}
             onValueChange={setQuery}
           />
           <CommandList>
-            <CommandEmpty>
-              {loading ? "Searching..." : "No results found."}
-            </CommandEmpty>
-            
+            <CommandEmpty>{loading ? "Searching..." : "No results found."}</CommandEmpty>
+
             {results.articles.length > 0 && (
               <CommandGroup heading="Articles">
                 {results.articles.map((article) => (
@@ -114,7 +112,7 @@ export function GlobalSearchDialog() {
                     key={article.id}
                     value={`article-${article.id}-${article.title}`}
                     onSelect={() => {
-                      runCommand(() => router.push(`/read/${article.id}`))
+                      runCommand(() => router.push(`/read/${article.id}`));
                     }}
                   >
                     <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -134,7 +132,7 @@ export function GlobalSearchDialog() {
                     key={room.id}
                     value={`room-${room.id}-${room.name}`}
                     onSelect={() => {
-                      runCommand(() => router.push(`/rooms/${room.id}`))
+                      runCommand(() => router.push(`/rooms/${room.id}`));
                     }}
                   >
                     <Folder className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -151,7 +149,7 @@ export function GlobalSearchDialog() {
                     key={concept.id}
                     value={`concept-${concept.id}-${concept.term}`}
                     onSelect={() => {
-                      runCommand(() => router.push(`/vault`))
+                      runCommand(() => router.push(`/vault`));
                     }}
                   >
                     <BookOpen className="mr-2 h-4 w-4 text-muted-foreground" />
@@ -167,5 +165,5 @@ export function GlobalSearchDialog() {
         </Command>
       </CommandDialog>
     </>
-  )
+  );
 }

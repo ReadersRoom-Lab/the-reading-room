@@ -20,11 +20,12 @@ export default function SignInPage() {
         />
       </div>
       <div className="absolute inset-0 z-10 bg-black/50" />
-      <div className="absolute inset-0 z-10 pointer-events-none"><DustMotes /></div>
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <DustMotes />
+      </div>
 
       {/* Left Side: Logo (Hidden on Mobile) */}
       <div className="hidden lg:flex flex-1 relative z-20">
-        
         {/* Back Button */}
         <div className="absolute top-8 left-8">
           <Link
@@ -44,20 +45,25 @@ export default function SignInPage() {
 
       {/* Right Side: Auth Form */}
       <div className="w-full h-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-white/95 backdrop-blur-xl border-l border-white/20 shadow-2xl">
-        
         {/* Mobile Header */}
         <header className="relative z-10 lg:hidden px-6 py-6 border-b border-gray-200 flex items-center justify-between">
           <Link href="/" className="font-heading text-xl font-bold text-gray-900">
             The Reading Rooms
           </Link>
-          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm font-medium text-gray-500">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 font-sans text-sm font-medium text-gray-500"
+          >
             <ArrowLeft className="w-4 h-4" />
             Back
           </Link>
         </header>
 
         <main className="relative z-10 flex-1 flex flex-col items-center justify-start lg:justify-center p-6 sm:p-12 pt-8 pb-24 overflow-y-auto">
-          <div className="w-full max-w-[400px] animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+          <div
+            className="w-full max-w-[400px] animate-slide-up"
+            style={{ animationDelay: "0.2s", animationFillMode: "both" }}
+          >
             <SignIn forceRedirectUrl="/home" />
           </div>
         </main>

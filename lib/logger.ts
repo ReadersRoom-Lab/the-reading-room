@@ -19,6 +19,6 @@ export const logger = {
   info: (...args: unknown[]) => {
     // eslint-disable-next-line no-console
     console.info(...args);
-  }
+  },
   /* c8 ignore next */
 };

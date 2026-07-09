@@ -5,7 +5,7 @@ export type Room = {
   name: string;
   description?: string;
   coverColor: string;
-  mode: 'reading';
+  mode: "reading";
   createdAt: string;
 };
 
@@ -20,7 +20,7 @@ export type Article = {
   content: string;
   coverImage?: string;
   readingProgress: number;
-  status: 'unread' | 'in_progress' | 'complete';
+  status: "unread" | "in_progress" | "complete";
   wordCount: number;
   readTimeMinutes: number;
   dateAccessed: string;
@@ -32,7 +32,7 @@ export type Highlight = {
   articleId: string;
   userId: string;
   content: string;
-  colour: 'amber' | 'teal' | 'coral';
+  colour: "amber" | "teal" | "coral";
   note?: string;
   positionStart: number;
   positionEnd: number;
@@ -51,7 +51,7 @@ export class InMemoryStore {
       name,
       description,
       coverColor,
-      mode: 'reading',
+      mode: "reading",
       createdAt: new Date().toISOString(),
     };
     this.rooms.push(room);
@@ -70,21 +70,24 @@ export class InMemoryStore {
       title?: string;
       content?: string;
       author?: string;
-    },
+    }
   ): Article {
     const article: Article = {
       id: crypto.randomUUID(),
       userId,
       roomId: payload.roomId,
-      title: payload.title ?? 'Untitled article',
+      title: payload.title ?? "Untitled article",
       author: payload.author,
       sourceUrl: payload.url,
-      sourceType: 'url',
-      content: payload.content ?? '',
+      sourceType: "url",
+      content: payload.content ?? "",
       readingProgress: 0,
-      status: 'unread',
+      status: "unread",
       wordCount: payload.content?.split(/\s+/).filter(Boolean).length ?? 0,
-      readTimeMinutes: Math.max(1, Math.ceil((payload.content?.split(/\s+/).filter(Boolean).length ?? 1) / 200)),
+      readTimeMinutes: Math.max(
+        1,
+        Math.ceil((payload.content?.split(/\s+/).filter(Boolean).length ?? 1) / 200)
+      ),
       dateAccessed: new Date().toISOString().slice(0, 10),
       createdAt: new Date().toISOString(),
     };
@@ -101,7 +104,17 @@ export class InMemoryStore {
     return this.articles.find((article) => article.userId === userId && article.id === articleId);
   }
 
-  createHighlight(userId: string, articleId: string, payload: { content: string; colour: Highlight['colour']; note?: string; positionStart: number; positionEnd: number; }): Highlight {
+  createHighlight(
+    userId: string,
+    articleId: string,
+    payload: {
+      content: string;
+      colour: Highlight["colour"];
+      note?: string;
+      positionStart: number;
+      positionEnd: number;
+    }
+  ): Highlight {
     const highlight: Highlight = {
       id: crypto.randomUUID(),
       articleId,
@@ -119,7 +132,10 @@ export class InMemoryStore {
   }
 
   listHighlights(userId: string, articleId?: string): Highlight[] {
-    return this.highlights.filter((highlight) => highlight.userId === userId && (!articleId || highlight.articleId === articleId));
+    return this.highlights.filter(
+      (highlight) =>
+        highlight.userId === userId && (!articleId || highlight.articleId === articleId)
+    );
   }
 }
 

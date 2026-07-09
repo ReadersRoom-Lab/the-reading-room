@@ -19,10 +19,11 @@ Before you can upload your extension, Google requires you to register as a Chrom
 
 The build system is already set up to package the extension automatically when your Next.js application builds (or when you run the packager script).
 
-* The packager script bakes your production backend URL (e.g. `https://the-reading-room-qwsz.vercel.app`) into the extension code and packages it with the high-quality assets we generated (`icon-16.png`, `icon-48.png`, and `icon-128.png`).
-* The packaged zip file is created at: `public/extension.zip`.
+- The packager script bakes your production backend URL (e.g. `https://the-reading-room-qwsz.vercel.app`) into the extension code and packages it with the high-quality assets we generated (`icon-16.png`, `icon-48.png`, and `icon-128.png`).
+- The packaged zip file is created at: `public/extension.zip`.
 
 To run the package builder manually:
+
 ```bash
 node scripts/build-extension-zip.mjs
 ```
@@ -36,11 +37,11 @@ Once your developer profile is active:
 1. In the **Chrome Developer Dashboard**, click the **Add new item** button in the top right.
 2. Select and upload the `public/extension.zip` file.
 3. Fill out the **Store Listing** fields:
-   * **Name**: `Send to Reading Room`
-   * **Summary**: `Save web pages and articles directly to your Reading Room workspace, bypassing paywalls and firewalls.`
-   * **Description**:
+   - **Name**: `Send to Reading Room`
+   - **Summary**: `Save web pages and articles directly to your Reading Room workspace, bypassing paywalls and firewalls.`
+   - **Description**:
      ```
-     The Send to Reading Room extension is the ultimate companion for your Reading Room workspace. 
+     The Send to Reading Room extension is the ultimate companion for your Reading Room workspace.
 
      Features:
      - Save exactly what is rendered on your active tab directly to your library.
@@ -49,8 +50,8 @@ Once your developer profile is active:
 
      To connect, open your Reading Room dashboard, click the extension icon, and select 'Connect Workspace'.
      ```
-   * **Category**: `Productivity`
-   * **Language**: `English`
+   - **Category**: `Productivity`
+   - **Language**: `English`
 
 ---
 
@@ -58,9 +59,9 @@ Once your developer profile is active:
 
 You will need to upload promotional graphics to make the listing look professional:
 
-* **Store Icon**: Upload the generated `chrome-extension/icon-128.png` file (128x128 px).
-* **Screenshots**: Take 1 to 5 screenshots of the extension popup saving an article (dimensions must be either `1280x800` or `640x400` pixels).
-* **Promo Tiles**: Prepare a small promo tile (`440x280` px) which Google uses to feature the extension in search results.
+- **Store Icon**: Upload the generated `chrome-extension/icon-128.png` file (128x128 px).
+- **Screenshots**: Take 1 to 5 screenshots of the extension popup saving an article (dimensions must be either `1280x800` or `640x400` pixels).
+- **Promo Tiles**: Prepare a small promo tile (`440x280` px) which Google uses to feature the extension in search results.
 
 ---
 
@@ -70,9 +71,9 @@ Chrome Web Store reviewers are very strict about user data permissions. In the *
 
 1. **Single Purpose**: State that the extension's sole purpose is to "Allow users to save the current tab's content directly to their Reading Room workspace."
 2. **Permissions Justifications**:
-   * `activeTab`: Used to capture the URL and title of the page the user explicitly requests to save.
-   * `scripting`: Used to extract the pre-rendered HTML content of the active page to bypass server-side scraping blocks.
-   * `storage`: Used to securely cache the workspace URL and capture states.
+   - `activeTab`: Used to capture the URL and title of the page the user explicitly requests to save.
+   - `scripting`: Used to extract the pre-rendered HTML content of the active page to bypass server-side scraping blocks.
+   - `storage`: Used to securely cache the workspace URL and capture states.
 3. **Data Usage**: Certify that the extension does not sell user data, does not use it for advertising/credit-scoring, and only transmits page HTML to the user's connected workspace endpoint.
 
 ---

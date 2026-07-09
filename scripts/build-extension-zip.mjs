@@ -5,63 +5,67 @@
  * Uses only Node.js built-ins — no npm packages.
  */
 
-import { writeFileSync, mkdirSync, readFileSync } from 'node:fs'
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = join(__dirname, '..')
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, "..");
 
 // Read the binary icon images
-const icon16 = readFileSync(join(ROOT, 'chrome-extension', 'icon-16.png'))
-const icon48 = readFileSync(join(ROOT, 'chrome-extension', 'icon-48.png'))
-const icon128 = readFileSync(join(ROOT, 'chrome-extension', 'icon-128.png'))
+const icon16 = readFileSync(join(ROOT, "chrome-extension", "icon-16.png"));
+const icon48 = readFileSync(join(ROOT, "chrome-extension", "icon-48.png"));
+const icon128 = readFileSync(join(ROOT, "chrome-extension", "icon-128.png"));
 
 // Resolve the app URL — NEXT_PUBLIC_APP_URL must be set in Vercel dashboard.
 // VERCEL_URL is intentionally NOT used as a fallback because it returns the
 // internal team URL (the-reading-room.qwsz.vercel.app) which is unreachable.
-const PRODUCTION_URL = 'https://the-reading-room-qwsz.vercel.app'
+const PRODUCTION_URL = "https://the-reading-room-qwsz.vercel.app";
 let baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
-  : PRODUCTION_URL
+  ? process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "")
+  : PRODUCTION_URL;
 
-const displayBaseUrl = baseUrl.replace(/^https?:\/\//, '')
+const displayBaseUrl = baseUrl.replace(/^https?:\/\//, "");
 
-console.log(`[build-extension] Baking URL into extension: ${baseUrl}`)
+console.log(`[build-extension] Baking URL into extension: ${baseUrl}`);
 
 // --- Extension file contents ---
 
-const manifestJson = JSON.stringify({
-  manifest_version: 3,
-  name: "Send to Reading Room",
-  description: "Save web pages directly to your Reading Room.",
-  version: "1.4",
-  permissions: ["activeTab", "storage", "scripting"],
-  icons: {
-    "16": "icon-16.png",
-    "48": "icon-48.png",
-    "128": "icon-128.png"
+const manifestJson = JSON.stringify(
+  {
+    manifest_version: 3,
+    name: "Send to Reading Room",
+    description: "Save web pages directly to your Reading Room.",
+    version: "1.4",
+    permissions: ["activeTab", "storage", "scripting"],
+    icons: {
+      16: "icon-16.png",
+      48: "icon-48.png",
+      128: "icon-128.png",
+    },
+    action: {
+      default_popup: "popup.html",
+      default_title: "Save to Reading Room",
+      default_icon: {
+        16: "icon-16.png",
+        48: "icon-48.png",
+        128: "icon-128.png",
+      },
+    },
+    background: {
+      service_worker: "background.js",
+    },
+    externally_connectable: {
+      matches: [
+        "http://localhost:3000/*",
+        "https://*.vercel.app/*",
+        baseUrl.endsWith("/") ? baseUrl + "*" : baseUrl + "/*",
+      ],
+    },
   },
-  action: {
-    default_popup: "popup.html",
-    default_title: "Save to Reading Room",
-    default_icon: {
-      "16": "icon-16.png",
-      "48": "icon-48.png",
-      "128": "icon-128.png"
-    }
-  },
-  background: {
-    service_worker: "background.js"
-  },
-  externally_connectable: {
-    matches: [
-      "http://localhost:3000/*",
-      "https://*.vercel.app/*",
-      baseUrl.endsWith('/') ? baseUrl + '*' : baseUrl + '/*'
-    ]
-  }
-}, null, 2)
+  null,
+  2
+);
 
 const popupHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -108,7 +112,7 @@ const popupHtml = `<!DOCTYPE html>
   </div>
   <script src="popup.js"></script>
 </body>
-</html>`
+</html>`;
 
 const popupCss = `
 :root { --bg:#FCFBF8;--fg:#1a1a1a;--border:#E5E5E5;--primary:#1A1A1A;--primary-fg:#F9F7F2;--muted:#52525B }
@@ -135,7 +139,7 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .help-link-container {text-align: center;margin-top: 4px;}
 .help-link {font-size: 11px;color: var(--muted);text-decoration: underline;cursor: pointer;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;font-weight: 500;}
 .help-link:hover {color: var(--fg);}
-`
+`;
 
 // No more direct API calls — opens a tab in the authenticated Reading Room instead.
 // This bypasses all SameSite cookie restrictions and CORS issues entirely.
@@ -297,101 +301,106 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
       window.close();
     });
   }
-});`
+});`;
 
 // --- Pure Node.js ZIP builder (DEFLATE-STORE, no compression) ---
 
 function crc32(buf) {
   const table = (() => {
-    const t = new Uint32Array(256)
+    const t = new Uint32Array(256);
     for (let i = 0; i < 256; i++) {
-      let c = i
-      for (let j = 0; j < 8; j++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1)
-      t[i] = c
+      let c = i;
+      for (let j = 0; j < 8; j++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      t[i] = c;
     }
-    return t
-  })()
-  let crc = 0xFFFFFFFF
-  for (const b of buf) crc = table[(crc ^ b) & 0xFF] ^ (crc >>> 8)
-  return (crc ^ 0xFFFFFFFF) >>> 0
+    return t;
+  })();
+  let crc = 0xffffffff;
+  for (const b of buf) crc = table[(crc ^ b) & 0xff] ^ (crc >>> 8);
+  return (crc ^ 0xffffffff) >>> 0;
 }
 
-function writeUint16LE(buf, offset, val) { buf[offset] = val & 0xFF; buf[offset + 1] = (val >> 8) & 0xFF }
+function writeUint16LE(buf, offset, val) {
+  buf[offset] = val & 0xff;
+  buf[offset + 1] = (val >> 8) & 0xff;
+}
 function writeUint32LE(buf, offset, val) {
-  buf[offset] = val & 0xFF; buf[offset + 1] = (val >> 8) & 0xFF
-  buf[offset + 2] = (val >> 16) & 0xFF; buf[offset + 3] = (val >> 24) & 0xFF
+  buf[offset] = val & 0xff;
+  buf[offset + 1] = (val >> 8) & 0xff;
+  buf[offset + 2] = (val >> 16) & 0xff;
+  buf[offset + 3] = (val >> 24) & 0xff;
 }
 
 function buildZip(files) {
-  const entries = []
-  const localHeaders = []
-  let offset = 0
+  const entries = [];
+  const localHeaders = [];
+  let offset = 0;
 
   for (const [name, content] of files) {
-    const nameBytes = Buffer.from(name, 'utf8')
-    const dataBytes = Buffer.from(content)
-    const crc = crc32(dataBytes)
-    const size = dataBytes.length
+    const nameBytes = Buffer.from(name, "utf8");
+    const dataBytes = Buffer.from(content);
+    const crc = crc32(dataBytes);
+    const size = dataBytes.length;
 
     // Local file header (30 bytes + name)
-    const local = Buffer.alloc(30 + nameBytes.length)
-    writeUint32LE(local, 0, 0x04034B50)  // signature
-    writeUint16LE(local, 4, 20)           // version needed
-    writeUint16LE(local, 6, 0)            // flags
-    writeUint16LE(local, 8, 0)            // compression: STORE
-    writeUint16LE(local, 10, 0)           // mod time
-    writeUint16LE(local, 12, 0)           // mod date
-    writeUint32LE(local, 14, crc)         // crc32
-    writeUint32LE(local, 18, size)        // compressed size
-    writeUint32LE(local, 22, size)        // uncompressed size
-    writeUint16LE(local, 26, nameBytes.length)
-    writeUint16LE(local, 28, 0)           // extra field length
-    nameBytes.copy(local, 30)
+    const local = Buffer.alloc(30 + nameBytes.length);
+    writeUint32LE(local, 0, 0x04034b50); // signature
+    writeUint16LE(local, 4, 20); // version needed
+    writeUint16LE(local, 6, 0); // flags
+    writeUint16LE(local, 8, 0); // compression: STORE
+    writeUint16LE(local, 10, 0); // mod time
+    writeUint16LE(local, 12, 0); // mod date
+    writeUint32LE(local, 14, crc); // crc32
+    writeUint32LE(local, 18, size); // compressed size
+    writeUint32LE(local, 22, size); // uncompressed size
+    writeUint16LE(local, 26, nameBytes.length);
+    writeUint16LE(local, 28, 0); // extra field length
+    nameBytes.copy(local, 30);
 
-    entries.push({ nameBytes, crc, size, offset })
-    localHeaders.push(local, dataBytes)
-    offset += local.length + size
+    entries.push({ nameBytes, crc, size, offset });
+    localHeaders.push(local, dataBytes);
+    offset += local.length + size;
   }
 
   // Central directory
-  const centralDir = []
-  let cdSize = 0
+  const centralDir = [];
+  let cdSize = 0;
   for (const { nameBytes, crc, size, offset: localOffset } of entries) {
-    const cd = Buffer.alloc(46 + nameBytes.length)
-    writeUint32LE(cd, 0, 0x02014B50)     // signature
-    writeUint16LE(cd, 4, 20)              // version made by
-    writeUint16LE(cd, 6, 20)              // version needed
-    writeUint16LE(cd, 8, 0)               // flags
-    writeUint16LE(cd, 10, 0)              // compression
-    writeUint16LE(cd, 12, 0)              // mod time
-    writeUint16LE(cd, 14, 0)              // mod date
-    writeUint32LE(cd, 16, crc)
-    writeUint32LE(cd, 20, size)           // compressed size
-    writeUint32LE(cd, 24, size)           // uncompressed size
-    writeUint16LE(cd, 28, nameBytes.length)
-    writeUint16LE(cd, 30, 0)              // extra field length
-    writeUint16LE(cd, 32, 0)              // comment length
-    writeUint16LE(cd, 34, 0)              // disk number
-    writeUint16LE(cd, 36, 0)              // internal attrs
-    writeUint32LE(cd, 38, 0)              // external attrs
-    writeUint32LE(cd, 42, localOffset)    // local header offset
-    nameBytes.copy(cd, 46)
-    centralDir.push(cd)
-    cdSize += cd.length
+    const cd = Buffer.alloc(46 + nameBytes.length);
+    writeUint32LE(cd, 0, 0x02014b50); // signature
+    writeUint16LE(cd, 4, 20); // version made by
+    writeUint16LE(cd, 6, 20); // version needed
+    writeUint16LE(cd, 8, 0); // flags
+    writeUint16LE(cd, 10, 0); // compression
+    writeUint16LE(cd, 12, 0); // mod time
+    writeUint16LE(cd, 14, 0); // mod date
+    writeUint32LE(cd, 16, crc);
+    writeUint32LE(cd, 20, size); // compressed size
+    writeUint32LE(cd, 24, size); // uncompressed size
+    writeUint16LE(cd, 28, nameBytes.length);
+    writeUint16LE(cd, 30, 0); // extra field length
+    writeUint16LE(cd, 32, 0); // comment length
+    writeUint16LE(cd, 34, 0); // disk number
+    writeUint16LE(cd, 36, 0); // internal attrs
+    writeUint32LE(cd, 38, 0); // external attrs
+    writeUint32LE(cd, 42, localOffset); // local header offset
+    nameBytes.copy(cd, 46);
+    centralDir.push(cd);
+    cdSize += cd.length;
   }
 
   // End of central directory record
-  const eocd = Buffer.alloc(22)
-  writeUint32LE(eocd, 0, 0x06054B50)
-  writeUint16LE(eocd, 4, 0)
-  writeUint16LE(eocd, 6, 0)
-  writeUint16LE(eocd, 8, entries.length)
-  writeUint16LE(eocd, 10, entries.length)
-  writeUint32LE(eocd, 12, cdSize)
-  writeUint32LE(eocd, 16, offset)
-  writeUint16LE(eocd, 20, 0)
+  const eocd = Buffer.alloc(22);
+  writeUint32LE(eocd, 0, 0x06054b50);
+  writeUint16LE(eocd, 4, 0);
+  writeUint16LE(eocd, 6, 0);
+  writeUint16LE(eocd, 8, entries.length);
+  writeUint16LE(eocd, 10, entries.length);
+  writeUint32LE(eocd, 12, cdSize);
+  writeUint32LE(eocd, 16, offset);
+  writeUint16LE(eocd, 20, 0);
 
-  return Buffer.concat([...localHeaders, ...centralDir, eocd])
+  return Buffer.concat([...localHeaders, ...centralDir, eocd]);
 }
 
 // --- Build the zip ---
@@ -408,22 +417,24 @@ const backgroundJs = `chrome.runtime.onMessageExternal.addListener((message, sen
     });
     return true;
   }
-});`
+});`;
 
 const files = [
-  ['reading-room-extension/manifest.json', manifestJson],
-  ['reading-room-extension/popup.html', popupHtml],
-  ['reading-room-extension/popup.css', popupCss],
-  ['reading-room-extension/popup.js', popupJs],
-  ['reading-room-extension/background.js', backgroundJs],
-  ['reading-room-extension/icon-16.png', icon16],
-  ['reading-room-extension/icon-48.png', icon48],
-  ['reading-room-extension/icon-128.png', icon128],
-]
+  ["reading-room-extension/manifest.json", manifestJson],
+  ["reading-room-extension/popup.html", popupHtml],
+  ["reading-room-extension/popup.css", popupCss],
+  ["reading-room-extension/popup.js", popupJs],
+  ["reading-room-extension/background.js", backgroundJs],
+  ["reading-room-extension/icon-16.png", icon16],
+  ["reading-room-extension/icon-48.png", icon48],
+  ["reading-room-extension/icon-128.png", icon128],
+];
 
-const zipBuffer = buildZip(files)
+const zipBuffer = buildZip(files);
 
-mkdirSync(join(ROOT, 'public'), { recursive: true })
-writeFileSync(join(ROOT, 'public', 'extension.zip'), zipBuffer)
+mkdirSync(join(ROOT, "public"), { recursive: true });
+writeFileSync(join(ROOT, "public", "extension.zip"), zipBuffer);
 
-console.log(`[build-extension] Generated public/extension.zip (${zipBuffer.length} bytes) with URL: ${baseUrl}`)
+console.log(
+  `[build-extension] Generated public/extension.zip (${zipBuffer.length} bytes) with URL: ${baseUrl}`
+);

@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import { zipSync, strToU8 } from 'fflate'
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { zipSync, strToU8 } from "fflate";
 
 export async function GET(req: Request) {
-  const { userId } = await auth()
+  const { userId } = await auth();
   if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const reqUrl = new URL(req.url)
-  const baseUrl = `${reqUrl.protocol}//${reqUrl.host}`
+  const reqUrl = new URL(req.url);
+  const baseUrl = `${reqUrl.protocol}//${reqUrl.host}`;
 
   // --- manifest.json ---
   const manifest = {
@@ -21,9 +21,9 @@ export async function GET(req: Request) {
     host_permissions: [`${baseUrl}/*`],
     action: {
       default_popup: "popup.html",
-      default_title: "Save to Reading Room"
-    }
-  }
+      default_title: "Save to Reading Room",
+    },
+  };
 
   // --- popup.html ---
   const popupHtml = `<!DOCTYPE html>
@@ -44,7 +44,7 @@ export async function GET(req: Request) {
   </div>
   <script src="popup.js"></script>
 </body>
-</html>`
+</html>`;
 
   // --- popup.css ---
   const popupCss = `:root {
@@ -75,7 +75,7 @@ body { width: 320px; margin: 0; padding: 0; font-family: -apple-system, BlinkMac
 .status { padding: 12px; border-radius: 4px; font-size: 13px; line-height: 1.4; }
 .status.success { background-color: rgba(74,222,128,0.1); color: #16a34a; border: 1px solid rgba(74,222,128,0.2); }
 .status.error { background-color: rgba(248,113,113,0.1); color: #dc2626; border: 1px solid rgba(248,113,113,0.2); }
-.hidden { display: none; }`
+.hidden { display: none; }`;
 
   // --- popup.js (URL pre-baked, no options page needed) ---
   const popupJs = `document.addEventListener('DOMContentLoaded', () => {
@@ -132,21 +132,24 @@ body { width: 320px; margin: 0; padding: 0; font-family: -apple-system, BlinkMac
       saveBtn.innerHTML = \`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Try Again\`;
     }
   });
-});`
+});`;
 
   // Build zip entirely in memory — no filesystem access
-  const zipped = zipSync({
-    'reading-room-extension/manifest.json': strToU8(JSON.stringify(manifest, null, 2)),
-    'reading-room-extension/popup.html': strToU8(popupHtml),
-    'reading-room-extension/popup.css': strToU8(popupCss),
-    'reading-room-extension/popup.js': strToU8(popupJs),
-  }, { level: 6 })
+  const zipped = zipSync(
+    {
+      "reading-room-extension/manifest.json": strToU8(JSON.stringify(manifest, null, 2)),
+      "reading-room-extension/popup.html": strToU8(popupHtml),
+      "reading-room-extension/popup.css": strToU8(popupCss),
+      "reading-room-extension/popup.js": strToU8(popupJs),
+    },
+    { level: 6 }
+  );
 
   return new NextResponse(zipped, {
     headers: {
-      'Content-Type': 'application/zip',
-      'Content-Disposition': 'attachment; filename="reading-room-extension.zip"',
-      'Cache-Control': 'no-store',
+      "Content-Type": "application/zip",
+      "Content-Disposition": 'attachment; filename="reading-room-extension.zip"',
+      "Cache-Control": "no-store",
     },
-  })
+  });
 }

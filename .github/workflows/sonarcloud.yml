@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis accuracy
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis accuracy
 
       - uses: actions/setup-node@v4
         with:
@@ -30,11 +30,10 @@ jobs:
       - name: Run tests with coverage
         run: |
           npx c8 --reporter=lcov --reporter=text --all --src lib --include "lib/**/*.ts" --exclude "lib/prisma.ts" --exclude "lib/embeddings.ts" node --import tsx --test 'tests/*.test.ts'
-        continue-on-error: true   # don't fail the build if tests fail; Sonar still needs the coverage file
+        continue-on-error: true # don't fail the build if tests fail; Sonar still needs the coverage file
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-

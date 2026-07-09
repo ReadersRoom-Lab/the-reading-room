@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "node --import tsx --test tests/*.test.ts",
     "api:smoke": "node --import tsx ./scripts/api-smoke.ts",
     "postinstall": "prisma generate",
@@ -58,8 +60,10 @@
     "c8": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
+    "prettier": "^3.9.4",
     "tailwindcss": "^4",
     "tsx": "^4.20.4",
     "typescript": "^5"
@@ -70,6 +74,7 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
+      "prettier --write",
       "eslint --fix"
     ],
     "README.md": [

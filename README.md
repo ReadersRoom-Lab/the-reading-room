@@ -22,6 +22,7 @@ The Reading Room is built around a simple, powerful 4-step workflow:
 The absolute best way to save articles to your library is using the companion Chrome Extension. It saves exactly what is rendered on your screen, which completely bypasses paywalls and anti-bot protections.
 
 **How to install:**
+
 1. Navigate to `chrome://extensions/` in your Chrome browser.
 2. Toggle on **Developer mode** in the top right corner.
 3. Click **Load unpacked** in the top left.
@@ -80,6 +81,7 @@ App runs at `http://localhost:3000`.
 ## 🎨 UI / UX Aesthetic
 
 The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
+
 - A `0px` border-radius policy on all interactive elements (buttons, inputs, cards).
 - Flat backgrounds with simple ink borders instead of heavily layered drop-shadows.
 - Typography prioritizes high legibility with classic serif reading options and crisp sans-serif menus.
@@ -106,6 +108,7 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 ## 🗺️ Product Roadmap (V2 & V3)
 
 We are actively building toward becoming the ultimate scholarly workspace. Upcoming capabilities include:
+
 - **Collaborative Rooms (V2)**: Share thematic spaces and highlights seamlessly with peers using Clerk Organizations.
 - **Third-Party Syncing (V3)**: An OAuth pipeline to automatically push highlights directly to Notion and Obsidian.
 - **Premium Text-to-Speech & AI Audio (V3)**: A sticky floating audio player serving high-quality, AI-generated reading audio for articles on the go.
@@ -117,5 +120,3 @@ We are actively building toward becoming the ultimate scholarly workspace. Upcom
 ## 🚀 Deployment
 
 Tested for Vercel. The `postinstall` script runs `prisma generate` automatically on deploy. Set all `.env.example` variables in Vercel's environment variables panel. Point your Clerk webhook to your production domain.
-
-

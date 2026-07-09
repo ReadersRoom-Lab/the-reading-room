@@ -1,68 +1,79 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
-import { Plus, Loader2 } from "lucide-react"
-import { logger } from '@/lib/logger'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { Plus, Loader2 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 interface CreateRoomDialogProps {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  hideTrigger?: boolean
-  onSuccess?: (roomId?: string) => void
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  hideTrigger?: boolean;
+  onSuccess?: (roomId?: string) => void;
 }
 
-export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setControlledOpen, hideTrigger, onSuccess }: Readonly<CreateRoomDialogProps> = {}) {
-  const router = useRouter()
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
-  const open = controlledOpen ?? uncontrolledOpen
-  const setOpen = setControlledOpen ?? setUncontrolledOpen
+export function CreateRoomDialog({
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  hideTrigger,
+  onSuccess,
+}: Readonly<CreateRoomDialogProps> = {}) {
+  const router = useRouter();
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = setControlledOpen ?? setUncontrolledOpen;
 
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!name.trim()) {
-      toast.error("Room name is required")
-      return
+      toast.error("Room name is required");
+      return;
     }
 
-    setLoading(true)
-    
+    setLoading(true);
+
     try {
       const res = await fetch("/api/rooms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, description })
-      })
+        body: JSON.stringify({ name, description }),
+      });
 
       if (!res.ok) {
-        throw new Error("Failed to create room")
+        throw new Error("Failed to create room");
       }
 
-      const newRoom = await res.json()
+      const newRoom = await res.json();
 
-      toast.success("Room created successfully")
-      setOpen(false)
-      setName("")
-      setDescription("")
-      onSuccess?.(newRoom.id)
-      router.refresh()
+      toast.success("Room created successfully");
+      setOpen(false);
+      setName("");
+      setDescription("");
+      onSuccess?.(newRoom.id);
+      router.refresh();
     } catch (error) {
-      logger.error(error)
-      toast.error("An error occurred")
+      logger.error(error);
+      toast.error("An error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -72,18 +83,22 @@ export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setContro
           Create Room
         </DialogTrigger>
       )}
-      <DialogContent 
+      <DialogContent
         className="sm:max-w-[425px] border border-[#E5E5E5] shadow-none bg-white rounded-none"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
         <DialogHeader>
-          <DialogTitle className="font-heading text-xl text-[#1A1A1A]">Create a New Room</DialogTitle>
+          <DialogTitle className="font-heading text-xl text-[#1A1A1A]">
+            Create a New Room
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor="name" className="text-sm font-medium">Room Name</label>
-            <Input 
+            <label htmlFor="name" className="text-sm font-medium">
+              Room Name
+            </label>
+            <Input
               id="name"
               placeholder="e.g. Philosophy, Design, History"
               value={name}
@@ -92,8 +107,10 @@ export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setContro
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="description" className="text-sm font-medium">Description (Optional)</label>
-            <Textarea 
+            <label htmlFor="description" className="text-sm font-medium">
+              Description (Optional)
+            </label>
+            <Textarea
               id="description"
               placeholder="What is this room about?"
               value={description}
@@ -109,5 +126,5 @@ export function CreateRoomDialog({ open: controlledOpen, onOpenChange: setContro
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

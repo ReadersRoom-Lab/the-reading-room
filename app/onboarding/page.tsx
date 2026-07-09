@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -70,7 +77,8 @@ export default function OnboardingPage() {
       setError(null);
       router.push("/home");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred during onboarding.";
+      const msg =
+        err instanceof Error ? err.message : "An unexpected error occurred during onboarding.";
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -127,7 +135,12 @@ export default function OnboardingPage() {
     <div className="flex min-h-[100dvh] w-full flex-col items-center justify-start md:justify-center p-4 sm:p-8 bg-zinc-50/50 relative overflow-y-auto pt-16 pb-12 md:py-8">
       {/* Skip button in header */}
       <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
-        <Button variant="ghost" className="text-zinc-500 hover:text-zinc-900" onClick={handleSkip} disabled={isLoading}>
+        <Button
+          variant="ghost"
+          className="text-zinc-500 hover:text-zinc-900"
+          onClick={handleSkip}
+          disabled={isLoading}
+        >
           Skip Setup
         </Button>
       </div>
@@ -146,9 +159,12 @@ export default function OnboardingPage() {
             {step === 6 && "Create Your First Room"}
           </CardTitle>
           <CardDescription className="text-center text-zinc-500 max-w-[280px] mx-auto mt-2">
-            {step === 1 && "A smart, AI-powered space for organizing and synthesizing your knowledge."}
-            {step === 2 && "Save articles, highlight key insights, and organize them into beautiful themed rooms."}
-            {step === 3 && "Your personal AI automatically builds a vocabulary vault from the concepts you interact with."}
+            {step === 1 &&
+              "A smart, AI-powered space for organizing and synthesizing your knowledge."}
+            {step === 2 &&
+              "Save articles, highlight key insights, and organize them into beautiful themed rooms."}
+            {step === 3 &&
+              "Your personal AI automatically builds a vocabulary vault from the concepts you interact with."}
             {step === 4 && "Let's personalize your reading experience."}
             {step === 5 && "How many articles do you want to read each week?"}
             {step === 6 && "Rooms are themed shelves for your articles."}
@@ -188,7 +204,9 @@ export default function OnboardingPage() {
           {step === 4 && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-zinc-700">What should we call you?</Label>
+                <Label htmlFor="name" className="text-zinc-700">
+                  What should we call you?
+                </Label>
                 <Input
                   id="name"
                   placeholder="Your name"
@@ -205,7 +223,9 @@ export default function OnboardingPage() {
           {step === 5 && (
             <div className="space-y-4 animate-in fade-in duration-300">
               <div className="space-y-2">
-                <Label htmlFor="goal" className="text-zinc-700">Target articles per week</Label>
+                <Label htmlFor="goal" className="text-zinc-700">
+                  Target articles per week
+                </Label>
                 <Input
                   id="goal"
                   type="number"
@@ -224,7 +244,9 @@ export default function OnboardingPage() {
           {step === 6 && (
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="space-y-2">
-                <Label htmlFor="roomName" className="text-zinc-700">Room Name</Label>
+                <Label htmlFor="roomName" className="text-zinc-700">
+                  Room Name
+                </Label>
                 <Input
                   id="roomName"
                   placeholder="e.g. Technology, Philosophy, Fiction"
@@ -236,12 +258,14 @@ export default function OnboardingPage() {
                 />
               </div>
               <div className="space-y-3">
-                <Label htmlFor="roomColor" className="text-zinc-700">Cover Color</Label>
+                <Label htmlFor="roomColor" className="text-zinc-700">
+                  Cover Color
+                </Label>
                 <div className="flex gap-3">
                   {["#D4AF37", "#2DD4BF", "#FB923C", "#818CF8", "#F472B6"].map((color) => (
                     <button
                       key={color}
-                      className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 ${formData.roomColor === color ? 'border-zinc-900 scale-110 ring-2 ring-zinc-200 ring-offset-2' : 'border-transparent'}`}
+                      className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 ${formData.roomColor === color ? "border-zinc-900 scale-110 ring-2 ring-zinc-200 ring-offset-2" : "border-transparent"}`}
                       style={{ backgroundColor: color }}
                       onClick={() => setFormData({ ...formData, roomColor: color })}
                       aria-label={`Select color ${color}`}
@@ -254,7 +278,12 @@ export default function OnboardingPage() {
           )}
         </CardContent>
         <CardFooter className="flex justify-between bg-zinc-50/30 pb-6">
-          <Button variant="outline" onClick={handleBack} disabled={step === 1 || isLoading} className="w-[100px] bg-white">
+          <Button
+            variant="outline"
+            onClick={handleBack}
+            disabled={step === 1 || isLoading}
+            className="w-[100px] bg-white"
+          >
             Back
           </Button>
           <Button onClick={handleNext} disabled={isLoading} className="w-[120px]">

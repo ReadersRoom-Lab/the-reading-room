@@ -1,22 +1,22 @@
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { logger } from '@/lib/logger'
+import { PrismaClient } from "@prisma/client";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { logger } from "@/lib/logger";
 
 const globalForPrisma = globalThis as unknown as { prisma2?: PrismaClient };
 
 function getTcpUrl(url: string | undefined) {
   if (!url) return undefined;
-  if (url.startsWith('prisma+postgres://')) {
+  if (url.startsWith("prisma+postgres://")) {
     try {
       const urlObj = new URL(url);
-      const apiKey = urlObj.searchParams.get('api_key');
+      const apiKey = urlObj.searchParams.get("api_key");
       if (apiKey) {
-        const decoded = JSON.parse(Buffer.from(apiKey, 'base64').toString('utf-8'));
+        const decoded = JSON.parse(Buffer.from(apiKey, "base64").toString("utf-8"));
         return decoded.databaseUrl;
       }
     } catch (e) {
-      logger.error('Failed to parse api_key', e);
+      logger.error("Failed to parse api_key", e);
     }
   }
   return url;
@@ -32,7 +32,7 @@ function createPrismaClient(): PrismaClient {
       globalForPrisma.prisma2 = new PrismaCtor({ adapter });
     } else {
       globalForPrisma.prisma2 = new PrismaCtor({
-        datasourceUrl: "postgres://dummy:dummy@dummy:5432/dummy"
+        datasourceUrl: "postgres://dummy:dummy@dummy:5432/dummy",
       });
     }
   }
@@ -42,11 +42,11 @@ function createPrismaClient(): PrismaClient {
 
 const prisma = new Proxy({} as PrismaClient, {
   get: (target, prop) => {
-    if (prop === 'then') return undefined; // Prevent Promise chaining issues
+    if (prop === "then") return undefined; // Prevent Promise chaining issues
     const client = createPrismaClient();
     const value = Reflect.get(client, prop);
-    return typeof value === 'function' ? value.bind(client) : value;
-  }
+    return typeof value === "function" ? value.bind(client) : value;
+  },
 });
 
 export function getPrisma(): PrismaClient {

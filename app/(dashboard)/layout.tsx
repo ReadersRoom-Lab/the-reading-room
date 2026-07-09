@@ -3,9 +3,9 @@ import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { MobileNav } from "@/components/MobileNav";
-import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
-import { redirect } from 'next/navigation';
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
@@ -15,20 +15,20 @@ export default async function DashboardLayout({
   const { userId } = await auth();
 
   if (!userId) {
-    redirect('/sign-in');
+    redirect("/sign-in");
   }
 
   const user = await prisma.user.findUnique({
     where: { clerk_id: userId },
     include: {
       _count: {
-        select: { rooms: true }
-      }
-    }
+        select: { rooms: true },
+      },
+    },
   });
 
   if (!user || user._count.rooms === 0) {
-    redirect('/onboarding');
+    redirect("/onboarding");
   }
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-[#F9F7F2] overflow-hidden">
@@ -36,7 +36,6 @@ export default async function DashboardLayout({
 
       {/* Sidebar */}
       <aside className="hidden md:flex w-64 border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex-col">
-
         {/* Brand */}
         <div className="border-b border-[#E5E5E5] px-6 py-5">
           <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
@@ -86,7 +85,6 @@ export default async function DashboardLayout({
           >
             <Sparkles className="w-4 h-4 shrink-0" /> Insights
           </Link>
-
         </nav>
 
         {/* Profile at bottom */}
@@ -102,9 +100,7 @@ export default async function DashboardLayout({
 
       {/* Main content */}
       <main role="main" className="flex-1 min-w-0 overflow-y-auto bg-[#FAFAFA]">
-        <div className="max-w-6xl mx-auto px-4 py-6 md:px-10 md:py-10">
-          {children}
-        </div>
+        <div className="max-w-6xl mx-auto px-4 py-6 md:px-10 md:py-10">{children}</div>
       </main>
     </div>
   );

@@ -1,47 +1,47 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import prisma from '@/lib/prisma'
-import { logger } from '@/lib/logger'
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth()
-    
+    const { userId } = await auth();
+
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const { term, definition, passage, article_id, room_id, type, user_note } = await req.json()
+    const { term, definition, passage, article_id, room_id, type, user_note } = await req.json();
 
     if (!term || !article_id || !passage) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Check if vault entry already exists for this term and user
     let vaultEntry = await prisma.vaultEntry.findFirst({
-      where: { 
+      where: {
         user_id: user.id,
-        term: { equals: term, mode: 'insensitive' }
-      }
-    })
+        term: { equals: term, mode: "insensitive" },
+      },
+    });
 
     vaultEntry ??= await prisma.vaultEntry.create({
       data: {
         user_id: user.id,
         term,
-        type: type || 'concept',
-        definition: definition || '',
-        user_note
-      }
-    })
+        type: type || "concept",
+        definition: definition || "",
+        user_note,
+      },
+    });
 
     // Create the trail
     const trail = await prisma.vaultTrail.create({
@@ -49,31 +49,31 @@ export async function POST(req: Request) {
         vault_entry_id: vaultEntry.id,
         article_id,
         room_id,
-        passage
-      }
-    })
+        passage,
+      },
+    });
 
-    return NextResponse.json({ vaultEntry, trail }, { status: 201 })
+    return NextResponse.json({ vaultEntry, trail }, { status: 201 });
   } catch (error) {
-    logger.error('Error creating vault entry:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    logger.error("Error creating vault entry:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
 export async function GET() {
   try {
-    const { userId } = await auth()
-    
+    const { userId } = await auth();
+
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerk_id: userId }
-    })
+      where: { clerk_id: userId },
+    });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     const vaultEntries = await prisma.vaultEntry.findMany({
@@ -82,16 +82,16 @@ export async function GET() {
         vaultTrails: {
           include: {
             article: true,
-            room: true
-          }
-        }
+            room: true,
+          },
+        },
       },
-      orderBy: { created_at: 'desc' }
-    })
+      orderBy: { created_at: "desc" },
+    });
 
-    return NextResponse.json(vaultEntries, { status: 200 })
+    return NextResponse.json(vaultEntries, { status: 200 });
   } catch (error) {
-    logger.error('Error fetching vault entries:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    logger.error("Error fetching vault entries:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
