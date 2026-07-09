@@ -9,7 +9,6 @@ on:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
   DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
 
 jobs:
   sonarcloud:
@@ -40,7 +39,7 @@ jobs:
         continue-on-error: true   # don't fail the build if tests fail; Sonar still needs the coverage file
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@master
+        uses: SonarSource/sonarqube-scan-action@v8.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
