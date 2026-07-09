@@ -58,7 +58,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-12 flex flex-col min-h-0">
+      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-12 flex flex-col">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full my-auto">
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-6">
@@ -112,8 +112,8 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-transparent">
-        <div className="max-w-5xl mx-auto px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-white/10 bg-transparent flex-none">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
           <p className="font-sans text-xs text-white/50 tracking-[0.03em]">
             © 2026 The Reading Rooms
           </p>
