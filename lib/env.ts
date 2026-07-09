@@ -1,69 +1,51 @@
+/**
+ * Environment variable validation using Zod.
+ * Import this in server-side API routes to get typed, validated env vars.
+ * This module is safe to import during build time — it will warn in CI
+ * but never throw, preventing build failures due to missing secrets.
+ */
 import { z } from "zod";
 
-declare const process: { env: Record<string, string | undefined> };
-
 const envSchema = z.object({
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is missing"),
-  CLERK_SECRET_KEY: z.string().min(1, "CLERK_SECRET_KEY is missing"),
-  GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1, "GOOGLE_GENERATIVE_AI_API_KEY is missing"),
+  DATABASE_URL: z.string().min(1),
+  CLERK_SECRET_KEY: z.string().min(1),
+  GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
   CLERK_WEBHOOK_SECRET: z.string().optional(),
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z
-    .string()
-    .min(1, "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is missing"),
-});
-
-const clientEnvSchema = z.object({
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
 });
 
-const isServer = globalThis.window === undefined;
-const skipValidation =
-  process.env.SKIP_ENV_VALIDATION === "true" ||
-  process.env.CI === "true" ||
-  process.env.VERCEL === "1";
-
-let parsedEnv: z.infer<typeof envSchema>;
-
-if (isServer) {
-  const result = envSchema.safeParse(process.env);
-  if (result.success) {
-    parsedEnv = result.data;
-  } else {
-    const missingKeys = result.error.issues.map((issue) => issue.path.join(".")).join(", ");
-    if (skipValidation) {
-      console.warn(`⚠️ Warning: Missing environment variables in CI/build: [${missingKeys}]`);
-      parsedEnv = {
-        DATABASE_URL: process.env.DATABASE_URL || "",
-        CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY || "",
-        GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY || "",
-        CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET || "",
-        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
-      };
-    } else {
-      throw new Error(
-        `❌ Invalid environment variables. Missing keys: [${missingKeys}]. Please check your local .env configuration.`
-      );
-    }
+// Safely read env — works in both Node.js (server) and Edge/browser contexts
+function getEnvVars(): Record<string, string | undefined> {
+  if (typeof process !== "undefined" && process.env) {
+    return process.env as Record<string, string | undefined>;
   }
-} else {
-  const result = clientEnvSchema.safeParse({
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  });
-  if (!result.success) {
-    if (skipValidation) {
-      console.warn(
-        `⚠️ Warning: Missing client-side publishable key in CI/build: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-      );
-    } else {
-      throw new Error(`❌ Missing client-side publishable key: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`);
-    }
-  }
-  parsedEnv = {
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || "",
-    DATABASE_URL: "",
-    CLERK_SECRET_KEY: "",
-    GOOGLE_GENERATIVE_AI_API_KEY: "",
-  };
+  return {};
 }
 
-export const env = parsedEnv;
+const raw = getEnvVars();
+const result = envSchema.safeParse(raw);
+
+if (!result.success) {
+  const missingKeys = result.error.issues.map((issue) => issue.path.join(".")).join(", ");
+  // In CI/build environments, warn instead of crashing
+  // CI=true is set automatically by GitHub Actions; VERCEL=1 is set by Vercel
+  const isBuild =
+    raw["CI"] === "true" || raw["VERCEL"] === "1" || raw["SKIP_ENV_VALIDATION"] === "true";
+
+  if (isBuild) {
+    console.warn(`⚠️ [env] Missing variables in CI/build environment: [${missingKeys}]`);
+  } else {
+    throw new Error(
+      `❌ Invalid environment variables. Missing: [${missingKeys}]. ` +
+        `Please check your .env.local file.`
+    );
+  }
+}
+
+export const env = {
+  DATABASE_URL: raw["DATABASE_URL"] ?? "",
+  CLERK_SECRET_KEY: raw["CLERK_SECRET_KEY"] ?? "",
+  GOOGLE_GENERATIVE_AI_API_KEY: raw["GOOGLE_GENERATIVE_AI_API_KEY"] ?? "",
+  CLERK_WEBHOOK_SECRET: raw["CLERK_WEBHOOK_SECRET"],
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: raw["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"] ?? "",
+};
