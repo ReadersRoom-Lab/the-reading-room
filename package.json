@@ -69,6 +69,9 @@
     "utf-8-validate": "^5.0.10"
   },
   "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ],
     "README.md": [
       "node scripts/generate-contributions.mjs",
       "git add CONTRIBUTIONS.md"
