@@ -99,23 +99,38 @@ The Clerk webhook at `app/api/webhooks/clerk/route.ts` creates and updates `User
 
 After sign-up, Clerk redirects to `/onboarding`. On completion the user lands at `/home` (the dashboard). The middleware protects all `/dashboard` routes — if no `User` row exists, API routes return 404; handle this case in the UI.
 
+## Standard Commands
+
+| Command | Action |
+|---|---|
+| `npm run dev` | Runs the Next.js development server locally. |
+| `npm run format` | Standardizes codebase spacing and formatting (Prettier). |
+| `npm run format:check` | Verifies formatting compliance (checked by CI). |
+| `npm run lint` | Runs ESLint analysis (must return 0 issues). |
+| `npx tsc --noEmit` | Performs strict TypeScript type checks. |
+| `npm run build` | Compiles Next.js production build and packages the Chrome extension. |
+| `npm test` | Executes the unit test suite (39/39 tests). |
+
+---
+
 ## What is and isn't built
 
 **Done:**
-
-- Clerk auth, protected routes, webhook user sync
-- Room CRUD (create, list, get, update, delete)
-- Article CRUD + URL ingestion (Readability) + PDF ingestion
-- Highlights (create, list, delete)
-- Vocabulary vault (create, list)
-- Global search (Cmd+K)
-- AI chat per room (Gemini)
-- Room export
-- Dashboard pages: Home, Library, Rooms, Vault, Archive, Insights
+- Clerk auth, protected routes, webhook user sync.
+- Room CRUD (create, list, get, update, delete).
+- Article CRUD + URL ingestion (Readability) + PDF ingestion.
+- Highlights (create, list, delete).
+- Vocabulary vault (create, list).
+- Global search (Cmd+K).
+- AI chat per room (Gemini).
+- Room export.
+- Dashboard pages: Home, Library, Rooms, Vault, Archive, Insights.
+- **Companion Chrome Extension**: Packaged into `public/extension.zip` with fully interactive popups, workspace coupling, page saving, and custom brand assets.
+- **Continuous Integration (CI/CD)**: GitHub Actions workflow (`ci.yml`) and local Husky hooks validating all commits and blocking pull request merges on lint, type, build, or test failures.
 
 **Not built (V2 scope):**
+- Billing / Pro tier enforcement.
+- Collaborative rooms.
+- Mobile app.
+- Spaced Repetition (Active Recall) Vault scheduling.
 
-- Billing / Pro tier enforcement
-- Collaborative rooms
-- Mobile app
-- Browser extension

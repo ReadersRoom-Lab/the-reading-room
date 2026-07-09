@@ -78,6 +78,26 @@ App runs at `http://localhost:3000`.
 
 ---
 
+## 🛠️ Code Quality & Local Verification
+
+To maintain code quality and prevent errors, we use strict linting, type checks, and formatting rules that run locally and on our GitHub Action CI/CD pipeline:
+
+### 1. Verification Commands
+Run these commands locally to verify your code is clean before pushing:
+* **Format Check**: `npm run format:check` (checks codebase formatting using Prettier)
+* **Linting**: `npm run lint` (checks code quality and styling using ESLint)
+* **TypeScript Compilation**: `npx tsc --noEmit` (verifies type safety)
+* **Tests**: `npm test` (runs all 39 unit tests)
+* **Full Production Build**: `npm run build` (tests Next.js compilation and extension packaging)
+
+### 2. Local Pre-Commit Hooks
+Every time you run `git commit`, Husky and `lint-staged` automatically run `prettier --write` and `eslint --fix` on your modified files. If any formatting or syntax errors are found and cannot be automatically resolved, your commit will be blocked.
+
+### 3. Branch Protection & CI Gates
+All code pushed to GitHub must pass the `.github/workflows/ci.yml` pipeline (`Build, Lint, and Test` checks) and the SonarCloud code quality scanner. Pull requests cannot be merged into `main` unless all automated tests and compilation checks succeed.
+
+---
+
 ## 🎨 UI / UX Aesthetic
 
 The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
