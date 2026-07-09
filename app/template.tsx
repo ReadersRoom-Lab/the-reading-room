@@ -10,7 +10,7 @@ export default function Template({ children }: Readonly<{ children: React.ReactN
     // when unmounting due to a Next.js route change (e.g. clicking a link inside a search dialog).
     // This forcibly cleans them up on every page transition.
     document.body.style.pointerEvents = "";
-    document.body.removeAttribute("data-scroll-locked");
+    delete document.body.dataset.scrollLocked;
     
     // The div with .animate-page-transition is a direct child of body in the React tree (via root layout)
     // Radix targets it to hide it from screen readers when a modal opens.

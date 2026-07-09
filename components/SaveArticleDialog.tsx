@@ -12,6 +12,24 @@ import * as pdfjsLib from "pdfjs-dist"
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
 
+async function extractTextFromPdf(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer()
+  const pdf = await pdfjsLib.getDocument({ 
+    data: arrayBuffer,
+    cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+    cMapPacked: true
+  }).promise
+  
+  let extractedText = ''
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i)
+    const textContent = await page.getTextContent()
+    const pageText = textContent.items.map((item: any) => item.str).join(' ')
+    extractedText += pageText + '\n\n'
+  }
+  return extractedText
+}
+
 export function SaveArticleDialog({ defaultRoomId, compact }: { defaultRoomId?: string, compact?: boolean } = {}) {
   const [open, setOpen] = useState(false)
   const [url, setUrl] = useState("")
@@ -34,20 +52,7 @@ export function SaveArticleDialog({ defaultRoomId, compact }: { defaultRoomId?: 
       let res;
       if (file) {
         // Extract text on the client side using pdfjs-dist
-        const arrayBuffer = await file.arrayBuffer()
-        const pdf = await pdfjsLib.getDocument({ 
-          data: arrayBuffer,
-          cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
-          cMapPacked: true
-        }).promise
-        
-        let extractedText = ''
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i)
-          const textContent = await page.getTextContent()
-          const pageText = textContent.items.map((item: any) => item.str).join(' ')
-          extractedText += pageText + '\n\n'
-        }
+        const extractedText = await extractTextFromPdf(file)
 
         if (!extractedText.trim()) {
           throw new Error('Could not extract any text from this PDF. It appears to be a scanned document or an image-based PDF, which we cannot read without OCR software.')
@@ -81,17 +86,15 @@ export function SaveArticleDialog({ defaultRoomId, compact }: { defaultRoomId?: 
       if (!res.ok) {
         let errorMessage = "Failed to save article"
         const contentType = res.headers.get("content-type")
-        if (contentType && contentType.includes("application/json")) {
+        if (contentType?.includes("application/json")) {
           const data = await res.json()
           errorMessage = data.error || errorMessage
+        } else if (res.status === 504) {
+          errorMessage = "The request timed out. The page might be too large or slow to respond."
+        } else if (res.status >= 500) {
+          errorMessage = "An unexpected server error occurred."
         } else {
-          if (res.status === 504) {
-            errorMessage = "The request timed out. The page might be too large or slow to respond."
-          } else if (res.status >= 500) {
-            errorMessage = "An unexpected server error occurred."
-          } else {
-            errorMessage = `Failed to save article (${res.status})`
-          }
+          errorMessage = `Failed to save article (${res.status})`
         }
         throw new Error(errorMessage)
       }
