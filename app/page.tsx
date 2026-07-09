@@ -1,21 +1,12 @@
 import Link from "next/link"
 import { ArrowRight, BookOpen } from "lucide-react"
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
 import { TypewriterLogo } from "@/components/TypewriterLogo"
 import { StreamingQuote } from "@/components/StreamingQuote"
 import { LandingMockup } from "@/components/LandingMockup"
 import { DustMotes } from "@/components/DustMotes"
 import Image from "next/image"
 
-
-
-export default async function LandingPage() {
-  const { userId } = await auth()
-
-  if (userId) {
-    redirect("/home")
-  }
+export default function LandingPage() {
 
   return (
     <div className="h-[100dvh] relative flex w-full overflow-hidden bg-[#1A1A1A]">
@@ -26,6 +17,7 @@ export default async function LandingPage() {
           alt="Library Background"
           fill
           priority
+          sizes="100vw"
           quality={75}
           className="object-cover object-center"
         />

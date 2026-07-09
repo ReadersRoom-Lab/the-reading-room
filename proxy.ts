@@ -17,6 +17,12 @@ export default clerkMiddleware(async (auth, request) => {
   // manages its own authentication for actual POST requests.
   if (request.method === 'OPTIONS') return
 
+  const { userId } = await auth()
+  
+  if (userId && request.nextUrl.pathname === '/') {
+    return Response.redirect(new URL('/home', request.url))
+  }
+
   if (!isPublicRoute(request)) {
     await auth.protect()
   }
