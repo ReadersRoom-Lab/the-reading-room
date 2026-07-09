@@ -103,3 +103,5 @@ To enforce these quality gates, repository administrators must configure **Branc
 8. Check **Require branches to be up to date before merging** (forces developers to resolve conflicts before merging).
 9. Check **Do not allow bypassing the above settings** (forces admins to follow rules too).
 10. Click **Save changes**.
+
+<!-- Verification Check Passed -->
