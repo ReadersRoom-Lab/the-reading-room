@@ -18,16 +18,15 @@ export default function ProfilePage() {
         </span>
       </header>
 
-      {/* Two-panel layout with explicit height to avoid flex resolution issues */}
+      {/* Two-panel layout with responsive height and scrolling rules */}
       <div
-        className="flex overflow-hidden"
-        style={{ height: "calc(100vh - 2.75rem)" }}
+        className="flex flex-col md:flex-row overflow-visible md:overflow-hidden h-auto md:h-[calc(100vh-2.75rem)]"
       >
         {/* Our custom sidebar */}
         <ProfileNav />
 
         {/* Clerk content — simple scrollable wrapper, no forced sizing */}
-        <div className="flex-1 overflow-y-auto bg-[#F9F7F2]">
+        <div className="flex-1 overflow-visible md:overflow-y-auto bg-[#F9F7F2]">
             <UserProfile
               routing="hash"
               appearance={{

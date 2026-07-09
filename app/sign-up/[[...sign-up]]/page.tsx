@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function SignUpPage() {
   return (
-    <div className="h-[100dvh] overflow-hidden flex w-full relative bg-black">
+    <div className="min-h-[100dvh] lg:h-[100dvh] lg:overflow-hidden flex flex-col lg:flex-row w-full relative bg-black">
       {/* Full Page Background */}
       <div className="absolute inset-0 z-0 animate-kenburns opacity-70">
         <Image
@@ -43,7 +43,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Right Side: Auth Form */}
-      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-white/95 backdrop-blur-xl border-l border-white/20 overflow-hidden shadow-2xl">
+      <div className="w-full lg:w-[500px] xl:w-[600px] flex flex-col relative z-20 bg-white/95 backdrop-blur-xl border-l border-white/20 overflow-visible lg:overflow-hidden shadow-2xl min-h-[100dvh] lg:min-h-0">
         
         {/* Mobile Header */}
         <header className="relative z-10 lg:hidden px-6 py-6 border-b border-gray-200 flex items-center justify-between">
@@ -56,7 +56,7 @@ export default function SignUpPage() {
           </Link>
         </header>
 
-        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 overflow-y-auto">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 lg:overflow-y-auto">
           <div className="w-full max-w-[400px] animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
             <SignUp forceRedirectUrl="/home" />
           </div>

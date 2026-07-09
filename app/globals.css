@@ -280,6 +280,14 @@
   background-color: #F9F7F2;
 }
 
+@media (max-width: 768px) {
+  .profile-page {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+}
+
 /* ── Root / Card / Scroll ──────────────────────────────────────── */
 
 /* Clerk root fills the flex wrapper */

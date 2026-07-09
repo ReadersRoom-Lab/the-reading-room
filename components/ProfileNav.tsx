@@ -21,10 +21,10 @@ export function ProfileNav() {
     "R"
 
   return (
-    <aside className="w-64 border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-col overflow-y-auto">
+    <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto md:overflow-x-hidden">
 
       {/* Back link */}
-      <div className="border-b border-[#E5E5E5] px-6 py-4">
+      <div className="hidden md:block border-b border-[#E5E5E5] px-6 py-4">
         <Link
           href="/home"
           className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#52525B] hover:text-[#1A1A1A] transition-colors"
@@ -35,7 +35,7 @@ export function ProfileNav() {
       </div>
 
       {/* User identity card */}
-      <div className="px-6 py-6 border-b border-[#E5E5E5]">
+      <div className="hidden md:block px-6 py-6 border-b border-[#E5E5E5]">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-8 h-8 rounded bg-[#1A1A1A] flex items-center justify-center font-serif text-white font-bold">R</div>
           <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
@@ -56,14 +56,14 @@ export function ProfileNav() {
       </div>
 
       {/* Navigation */}
-      <nav className="px-3 py-5 flex flex-col gap-0.5 flex-1">
-        <p className="px-3 mb-2 font-sans text-[10px] font-semibold tracking-[0.14em] text-[#BDBDBD] uppercase">
+      <nav className="px-4 py-3 md:px-3 md:py-5 flex flex-row md:flex-col gap-2 md:gap-0.5 items-center md:items-stretch flex-1">
+        <p className="hidden md:block px-3 mb-2 font-sans text-[10px] font-semibold tracking-[0.14em] text-[#BDBDBD] uppercase">
           Account
         </p>
 
         <button
           onClick={() => navigate("profile")}
-          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-left transition-colors w-full ${
+          className={`flex items-center justify-center md:justify-start gap-3 px-4 py-2.5 md:px-3 md:py-2.5 text-sm font-sans font-medium transition-colors w-full md:w-full ${
             active === "profile"
               ? "bg-[#E5E5E5] text-[#1A1A1A]"
               : "text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A]"
@@ -75,7 +75,7 @@ export function ProfileNav() {
 
         <button
           onClick={() => navigate("security")}
-          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-left transition-colors w-full ${
+          className={`flex items-center justify-center md:justify-start gap-3 px-4 py-2.5 md:px-3 md:py-2.5 text-sm font-sans font-medium transition-colors w-full md:w-full ${
             active === "security"
               ? "bg-[#E5E5E5] text-[#1A1A1A]"
               : "text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A]"
@@ -87,7 +87,7 @@ export function ProfileNav() {
       </nav>
 
       {/* Clerk attribution */}
-      <div className="px-6 py-3 border-t border-[#E5E5E5] flex items-center gap-2">
+      <div className="hidden md:flex px-6 py-3 border-t border-[#E5E5E5] flex items-center gap-2">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shrink-0 opacity-40">
           <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#1A1A1A" strokeWidth="2.5" strokeLinecap="round"/>
         </svg>
@@ -105,11 +105,11 @@ export function ProfileNav() {
       </div>
 
       {/* Sign Out */}
-      <div className="p-4 border-t border-[#E5E5E5]">
+      <div className="p-3 md:p-4 border-t-0 md:border-t border-[#E5E5E5] shrink-0">
         <SignOutButton>
-          <button className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-[#1A1A1A] text-[#F9F7F2] font-sans text-sm font-semibold transition-colors hover:bg-[#333]">
+          <button className="flex items-center justify-center gap-2 w-full px-4 py-2 md:py-2.5 bg-[#1A1A1A] text-[#F9F7F2] font-sans text-sm font-semibold transition-colors hover:bg-[#333]">
             <LogOut className="w-4 h-4" />
-            Sign Out
+            <span className="hidden sm:inline md:inline">Sign Out</span>
           </button>
         </SignOutButton>
       </div>

@@ -104,9 +104,9 @@ export default function RootLayout({
     >
       <html
         lang="en"
-        className={`${inter.variable} ${sourceSerif.variable} ${geistMono.variable} h-full antialiased`}
+        className={`${inter.variable} ${sourceSerif.variable} ${geistMono.variable} min-h-screen antialiased`}
       >
-        <body className="min-h-full flex flex-col text-foreground bg-background">
+        <body className="min-h-screen flex flex-col text-foreground bg-background">
           {children}
           <Toaster />
           <SpeedInsights />

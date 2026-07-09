@@ -7,7 +7,7 @@ export function DustMotes() {
 
   useEffect(() => {
     // Generate static motes on mount to avoid hydration mismatch
-    const generatedMotes = Array.from({ length: 40 }).map((_, i) => ({
+    const generatedMotes = Array.from({ length: 15 }).map((_, i) => ({
       id: i,
       left: `${secureRandom() * 100}%`,
       size: secureRandom() * 2 + 1,

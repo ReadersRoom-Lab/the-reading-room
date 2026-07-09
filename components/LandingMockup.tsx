@@ -4,15 +4,19 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Sparkles, Folder, FileText } from 'lucide-react';
 
-function HighlightAd() {
+function HighlightAd({ isActive }: { isActive: boolean }) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
+    if (!isActive) {
+      setStep(0);
+      return;
+    }
     const interval = setInterval(() => {
       setStep((s) => (s + 1) % 5);
     }, 1200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isActive]);
 
   const isSelected = step === 1 || step === 2;
   const isMenuVisible = step === 2 || step === 3;
@@ -55,13 +59,17 @@ function HighlightAd() {
   );
 }
 
-function AIAd() {
+function AIAd({ isActive }: { isActive: boolean }) {
   const [step, setStep] = useState(0);
   
   useEffect(() => {
+    if (!isActive) {
+      setStep(0);
+      return;
+    }
     const interval = setInterval(() => setStep(s => (s + 1) % 4), 1500);
     return () => clearInterval(interval);
-  }, []);
+  }, [isActive]);
 
   return (
     <div className="p-6 h-full flex flex-col justify-center relative">
@@ -88,13 +96,17 @@ function AIAd() {
   )
 }
 
-function OrganizeAd() {
+function OrganizeAd({ isActive }: { isActive: boolean }) {
   const [step, setStep] = useState(0);
   
   useEffect(() => {
+    if (!isActive) {
+      setStep(0);
+      return;
+    }
     const interval = setInterval(() => setStep(s => (s + 1) % 4), 1500);
     return () => clearInterval(interval);
-  }, []);
+  }, [isActive]);
 
   let dragFileClass = "translate-x-0 translate-y-0 opacity-100";
   if (step === 1) {
@@ -188,13 +200,13 @@ export function LandingMockup() {
           {/* Ad Container */}
           <div className="relative w-full h-[220px] bg-white">
             <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 0 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
-              <HighlightAd />
+              <HighlightAd isActive={activeAd === 0} />
             </div>
             <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 1 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
-              <AIAd />
+              <AIAd isActive={activeAd === 1} />
             </div>
             <div className={cn("absolute inset-0 transition-opacity duration-1000", activeAd === 2 ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
-              <OrganizeAd />
+              <OrganizeAd isActive={activeAd === 2} />
             </div>
           </div>
         </div>
