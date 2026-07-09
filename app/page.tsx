@@ -38,12 +38,12 @@ export default function LandingPage() {
 
       <div className="relative z-10 h-full w-full overflow-y-auto overflow-x-hidden flex flex-col">
         {/* Top Navigation Bar */}
-        <header className="border-b border-white/10 bg-transparent">
-        <div className="max-w-5xl mx-auto px-8 lg:px-12 py-4 flex items-center justify-between">
+        <header className="border-b border-white/10 bg-transparent flex-none">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between w-full">
           <Link href="/" className="font-heading text-xl font-bold text-white drop-shadow-md">
             The Reading Rooms
           </Link>
-          <nav className="flex items-center gap-8">
+          <nav className="flex items-center gap-4 sm:gap-8">
             <Link href="/sign-in" className="font-sans text-sm font-medium text-white/80 hover:text-white transition-colors">
               Sign In
             </Link>
@@ -57,9 +57,9 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section - Using flex to vertically center on desktop, top-align on mobile to prevent scroll clipping */}
-      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-6 flex flex-col justify-start lg:justify-center min-h-0">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+      {/* Hero Section */}
+      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-12 flex flex-col min-h-0">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full my-auto">
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-6">
           <p className="font-sans text-xs font-bold tracking-[0.15em] text-white/70 uppercase animate-slide-up" style={{ animationDelay: '100ms' }}>
