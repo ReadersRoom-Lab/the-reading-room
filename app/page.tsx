@@ -65,8 +65,8 @@ export default async function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section - Using flex to vertically center and reduce padding to prevent scroll on desktop */}
-      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-6 flex flex-col justify-center min-h-0">
+      {/* Hero Section - Using flex to vertically center on desktop, top-align on mobile to prevent scroll clipping */}
+      <main role="main" className="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 lg:py-6 flex flex-col justify-start lg:justify-center min-h-0">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
           {/* Left Column: Hero Text */}
           <div className="lg:col-span-5 flex flex-col gap-6">

@@ -56,7 +56,7 @@ export default function SignUpPage() {
           </Link>
         </header>
 
-        <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-6 sm:p-12 lg:overflow-y-auto">
+        <main className="relative z-10 flex-1 flex flex-col items-center justify-start lg:justify-center p-6 sm:p-12 pt-8 pb-16 lg:overflow-y-auto">
           <div className="w-full max-w-[400px] animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
             <SignUp forceRedirectUrl="/home" />
           </div>

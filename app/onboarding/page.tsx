@@ -126,7 +126,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] w-full flex-col items-center justify-center p-4 sm:p-8 bg-zinc-50/50 relative overflow-y-auto py-12">
+    <div className="flex min-h-[100dvh] w-full flex-col items-center justify-start md:justify-center p-4 sm:p-8 bg-zinc-50/50 relative overflow-y-auto pt-16 pb-12 md:py-8">
       {/* Skip button in header */}
       <div className="absolute top-4 right-4 sm:top-8 sm:right-8">
         <Button variant="ghost" className="text-zinc-500 hover:text-zinc-900" onClick={handleSkip} disabled={isLoading}>
