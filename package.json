@@ -61,6 +61,7 @@
     "typescript": "^5"
   },
   "optionalDependencies": {
+    "bufferutil": "^4.0.1",
     "utf-8-validate": "^5.0.10"
   }
 }
