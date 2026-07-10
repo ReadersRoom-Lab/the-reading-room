@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by SonarCloud for blame info and new-code detection
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,8 +43,14 @@ jobs:
         env:
           NEXT_PUBLIC_APP_URL: https://the-reading-room-qwsz.vercel.app
 
-      - name: Run Unit Tests
-        run: npm test
+      - name: Run Unit Tests with Coverage
+        run: npm run test:coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Upload Extension Artifact
         uses: actions/upload-artifact@v4
