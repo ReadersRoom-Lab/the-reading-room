@@ -27,7 +27,7 @@ export function ProfileNav() {
           className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#52525B] hover:text-[#1A1A1A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          The Reading Rooms
+          ReadrSpace
         </Link>
       </div>
 
@@ -38,7 +38,7 @@ export function ProfileNav() {
             R
           </div>
           <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
-            The Reading Rooms
+            ReadrSpace
           </span>
         </div>
         <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center mb-4 shrink-0">

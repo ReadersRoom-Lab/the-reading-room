@@ -103,7 +103,7 @@ function SaveHandler() {
       <div className="max-w-sm w-full border border-[#E5E5E5] bg-white p-10 text-center shadow-sm">
         <div className="mb-6">
           <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
-            The Reading Room
+            ReadrSpace
           </span>
         </div>
         {state === "saving" && (

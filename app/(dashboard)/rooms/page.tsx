@@ -100,7 +100,7 @@ export default async function RoomsPage() {
                   <div className="p-6 sm:p-8">
                     <div className="flex justify-between items-start mb-4">
                       <span className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#52525B] uppercase">
-                        {isResearch ? "Research Room" : "Reading Room"}
+                        {isResearch ? "Research Room" : "ReadrSpace"}
                       </span>
                       <span className="font-sans text-[11px] tracking-[0.05em] text-[#52525B]">
                         {format(new Date(room.created_at), "MMM dd, yyyy")}

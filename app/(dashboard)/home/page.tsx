@@ -50,7 +50,7 @@ export default async function Home() {
           {/* How to Use */}
           <div className="xl:col-span-2 bg-[#1A1A1A] text-white px-8 py-6">
             <h2 className="font-heading text-lg font-bold mb-5 text-[#F9F7F2]">
-              How to Use The Reading Room
+              How to Use ReadrSpace
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
               <div className="flex items-start gap-3">

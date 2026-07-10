@@ -41,7 +41,7 @@ export default function LandingPage() {
         <header className="border-b border-white/10 bg-transparent flex-none">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 flex items-center justify-between w-full">
             <Link href="/" className="font-heading text-xl font-bold text-white drop-shadow-md">
-              The Reading Rooms
+              ReadrSpace
             </Link>
             <nav className="flex items-center gap-4 sm:gap-8">
               <Link
@@ -134,7 +134,7 @@ export default function LandingPage() {
         <footer className="border-t border-white/10 bg-transparent flex-none">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
             <p className="font-sans text-xs text-white/50 tracking-[0.03em]">
-              © 2026 The Reading Rooms
+              © 2026 ReadrSpace
             </p>
             <p className="font-serif text-xs italic text-white/40">Read deeply. Think clearly.</p>
           </div>

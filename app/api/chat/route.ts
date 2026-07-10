@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     });
 
     const contextContext = `
-    You are the "Reading Room AI", an advanced synthesis assistant for a researcher.
+    You are the "ReadrSpace AI", an advanced synthesis assistant for a researcher.
     You help the user synthesize, analyze, and recall information from their saved library.
     
     Here is some relevant context from their library based on their query:

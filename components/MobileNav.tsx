@@ -17,7 +17,7 @@ export function MobileNav() {
       {/* Top Bar */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#F9F7F2] border-b border-[#E5E5E5] sticky top-0 z-40">
         <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
-          The Reading Rooms
+          ReadrSpace
         </span>
         <button onClick={toggleMenu} className="p-2 text-[#1A1A1A]" aria-label="Toggle Menu">
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

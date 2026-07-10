@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Reading Rooms",
+  title: "ReadrSpace",
   description: "A digital sanctuary for thoughtful reading and research.",
 };
 
