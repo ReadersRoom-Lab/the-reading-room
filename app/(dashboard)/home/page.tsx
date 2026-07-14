@@ -177,7 +177,7 @@ export default async function Home() {
                       <span className="font-sans text-[8px] font-semibold text-[#52525B] uppercase tracking-wider block">
                         Meaning & Explanation
                       </span>
-                      <p className="font-serif text-[11px] text-[#1A1A1A] leading-relaxed line-clamp-3">
+                      <p className="font-serif text-[11px] text-[#1A1A1A] leading-relaxed">
                         {entry.definition}
                       </p>
                     </div>
