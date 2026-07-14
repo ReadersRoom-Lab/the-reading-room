@@ -49,8 +49,4 @@ const prisma = new Proxy({} as PrismaClient, {
   },
 });
 
-export function getPrisma(): PrismaClient {
-  return createPrismaClient();
-}
-
 export default prisma;
