@@ -27,7 +27,7 @@ export function ProfileNav() {
           className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#52525B] hover:text-[#1A1A1A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          ReadrSpace
+          Back to Home
         </Link>
       </div>
 
