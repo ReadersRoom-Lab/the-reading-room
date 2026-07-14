@@ -56,9 +56,7 @@ export default function ExtensionPage() {
       {/* Download CTA */}
       <div className="border border-[#E5E5E5] bg-white p-6 mb-10 flex items-center justify-between gap-6">
         <div>
-          <p className="font-heading font-bold text-lg text-[#1A1A1A] mb-1">
-            ReadrSpace Extension
-          </p>
+          <p className="font-heading font-bold text-lg text-[#1A1A1A] mb-1">ReadrSpace Extension</p>
           <p className="text-sm text-[#52525B] font-sans">Chrome · Developer Mode install</p>
         </div>
         <button

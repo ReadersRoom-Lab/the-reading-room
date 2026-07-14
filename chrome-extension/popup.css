@@ -5,6 +5,8 @@
   --primary: #1a1a1a;
   --primary-fg: #f9f7f2;
   --muted: #52525b;
+  --success-fg: #15803d;
+  --error-fg: #b91c1c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,6 +17,8 @@
     --primary: #f9f7f2;
     --primary-fg: #1a1a1a;
     --muted: #a1a1aa;
+    --success-fg: #4ade80;
+    --error-fg: #f87171;
   }
 }
 
@@ -83,13 +87,13 @@ body {
 
 .status.success {
   background-color: rgba(74, 222, 128, 0.1);
-  color: #15803d;
+  color: var(--success-fg);
   border: 1px solid rgba(74, 222, 128, 0.2);
 }
 
 .status.error {
   background-color: rgba(248, 113, 113, 0.1);
-  color: #b91c1c;
+  color: var(--error-fg);
   border: 1px solid rgba(248, 113, 113, 0.2);
 }
 

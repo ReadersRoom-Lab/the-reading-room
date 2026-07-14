@@ -133,9 +133,7 @@ export default function LandingPage() {
         {/* Footer */}
         <footer className="border-t border-white/10 bg-transparent flex-none">
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
-            <p className="font-sans text-xs text-white/50 tracking-[0.03em]">
-              © 2026 ReadrSpace
-            </p>
+            <p className="font-sans text-xs text-white/50 tracking-[0.03em]">© 2026 ReadrSpace</p>
             <p className="font-serif text-xs italic text-white/40">Read deeply. Think clearly.</p>
           </div>
         </footer>
