@@ -5,10 +5,9 @@ import { cn } from "@/lib/utils";
 export function TypewriterLogo() {
   const [typedChars, setTypedChars] = useState(0);
 
-  const line1 = "The";
-  const line2 = "Reading";
-  const line3 = "Rooms";
-  const fullText = line1 + line2 + line3;
+  const line1 = "Readr";
+  const line2 = "Space";
+  const fullText = line1 + line2;
 
   useEffect(() => {
     if (typedChars < fullText.length) {
@@ -20,7 +19,7 @@ export function TypewriterLogo() {
   const showCursor = (lineIndex: number, lineLength: number, startIndex: number) => {
     if (typedChars === fullText.length) return false; // Hide cursor when finished
 
-    if (lineIndex < 2) {
+    if (lineIndex < 1) {
       return typedChars >= startIndex && typedChars < startIndex + lineLength;
     } else {
       return typedChars >= startIndex && typedChars <= startIndex + lineLength;
@@ -57,7 +56,6 @@ export function TypewriterLogo() {
     <div className="flex flex-col items-start gap-2">
       {renderLine(line1, 0, 0)}
       {renderLine(line2, line1.length, 1)}
-      {renderLine(line3, line1.length + line2.length, 2)}
     </div>
   );
 }
