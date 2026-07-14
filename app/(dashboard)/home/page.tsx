@@ -18,21 +18,33 @@ export default async function Home() {
       })
     : [];
 
-  const vaultCount = user ? await prisma.vaultEntry.count({ where: { user_id: user.id } }) : 0;
-  let randomVaultEntry = null;
+  const vaultEntries = user
+    ? await prisma.vaultEntry.findMany({
+        where: { user_id: user.id },
+        select: { id: true },
+      })
+    : [];
 
-  if (vaultCount > 0 && user) {
-    const skip = Math.floor(secureRandom() * vaultCount);
-    randomVaultEntry = await prisma.vaultEntry.findFirst({
-      where: { user_id: user.id },
-      skip,
-      include: {
-        vaultTrails: {
-          include: { article: true },
-        },
-      },
-    });
-  }
+  const randomEntries =
+    vaultEntries.length > 0 && user
+      ? await (async () => {
+          const shuffledIds = vaultEntries
+            .map((e) => e.id)
+            .sort(() => secureRandom() - 0.5)
+            .slice(0, 8);
+
+          const entries = await prisma.vaultEntry.findMany({
+            where: { id: { in: shuffledIds } },
+            include: {
+              vaultTrails: {
+                include: { article: true },
+              },
+            },
+          });
+
+          return [...entries].sort((a, b) => shuffledIds.indexOf(a.id) - shuffledIds.indexOf(b.id));
+        })()
+      : [];
 
   return (
     <div className="flex flex-col gap-10">
@@ -136,32 +148,53 @@ export default async function Home() {
       {/* Today's Rediscovery */}
       <section>
         <RefreshButton />
-        {randomVaultEntry ? (
-          <div className="border border-[#E5E5E5] bg-white p-6 sm:p-10">
-            <div className="flex justify-between items-start mb-6">
-              <span className="font-sans text-[11px] font-medium px-2 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.1em] uppercase">
-                {randomVaultEntry.type === "concept" ? "CONCEPT" : "VOCABULARY"}
-              </span>
-              <span className="font-sans text-[11px] tracking-[0.05em] text-[#52525B] uppercase">
-                {formatDistanceToNow(new Date(randomVaultEntry.created_at), { addSuffix: true })}
-              </span>
-            </div>
-            <h3 className="font-heading text-3xl sm:text-4xl font-bold text-[#1A1A1A] mb-3">
-              {randomVaultEntry.term}
-            </h3>
-            <p className="font-serif text-lg sm:text-xl text-[#444748] leading-relaxed mb-8">
-              {randomVaultEntry.definition}
-            </p>
-            {randomVaultEntry.vaultTrails && randomVaultEntry.vaultTrails.length > 0 && (
-              <div className="pt-5 border-t border-[#E5E5E5]">
-                <p className="font-sans text-[11px] tracking-[0.05em] text-[#52525B]">
-                  {"Encountered in "}
-                  <span className="italic font-serif text-[#1A1A1A] text-sm">
-                    &quot;{randomVaultEntry.vaultTrails[0].article.title}&quot;
-                  </span>
-                </p>
+        {randomEntries.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {randomEntries.map((entry) => (
+              <div key={entry.id} className="group perspective-1000 h-28 w-full cursor-pointer">
+                <div className="relative w-full h-full duration-500 preserve-3d group-hover:rotate-y-180">
+                  {/* Front Side */}
+                  <div className="absolute inset-0 w-full h-full backface-hidden bg-white border border-[#E5E5E5] p-4 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <span className="font-sans text-[8px] font-semibold px-1.5 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.05em] uppercase">
+                        {entry.type === "concept" ? "CONCEPT" : "VOCAB"}
+                      </span>
+                      <span className="font-sans text-[9px] text-[#52525B]">
+                        {formatDistanceToNow(new Date(entry.created_at), { addSuffix: true })}
+                      </span>
+                    </div>
+                    <h4 className="font-heading text-lg font-bold text-[#1A1A1A] truncate">
+                      {entry.term}
+                    </h4>
+                    <span className="text-[9px] font-sans text-[#bdbdbd] tracking-wider uppercase">
+                      Hover to reveal
+                    </span>
+                  </div>
+
+                  {/* Back Side */}
+                  <div className="absolute inset-0 w-full h-full rotate-y-180 backface-hidden bg-[#F9F7F2] border border-[#E6C79C] p-4 flex flex-col justify-between overflow-y-auto">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-sans text-[8px] font-semibold text-[#52525B] uppercase tracking-wider block">
+                        Meaning & Explanation
+                      </span>
+                      <p className="font-serif text-[11px] text-[#1A1A1A] leading-relaxed line-clamp-3">
+                        {entry.definition}
+                      </p>
+                    </div>
+                    {entry.vaultTrails && entry.vaultTrails.length > 0 && (
+                      <div className="pt-1.5 border-t border-[#E5E5E5] mt-1.5">
+                        <p className="font-sans text-[8px] text-[#52525B] truncate">
+                          {"From: "}
+                          <span className="italic font-serif text-[#1A1A1A]">
+                            &quot;{entry.vaultTrails[0].article.title}&quot;
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            )}
+            ))}
           </div>
         ) : (
           <div className="border border-[#E5E5E5] bg-white p-10 text-center">
