@@ -65,7 +65,7 @@ export default function OnboardingPage() {
         body: JSON.stringify({
           name: finalRoomName,
           cover_color: formData.roomColor,
-          description: "My first reading room, created during onboarding.",
+          description: "My first ReadrSpace, created during onboarding.",
         }),
       });
 
@@ -151,7 +151,7 @@ export default function OnboardingPage() {
             <Progress value={(step / totalSteps) * 100} className="h-1.5" />
           </div>
           <CardTitle className="font-heading text-2xl tracking-tight text-zinc-900 text-center">
-            {step === 1 && "Welcome to The Reading Room"}
+            {step === 1 && "Welcome to ReadrSpace"}
             {step === 2 && "Curate Your Library"}
             {step === 3 && "The Vocabulary Vault"}
             {step === 4 && "Make It Yours"}

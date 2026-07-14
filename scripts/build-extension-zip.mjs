@@ -34,8 +34,8 @@ console.log(`[build-extension] Baking URL into extension: ${baseUrl}`);
 const manifestJson = JSON.stringify(
   {
     manifest_version: 3,
-    name: "Send to Reading Room",
-    description: "Save web pages directly to your Reading Room.",
+    name: "Send to ReadrSpace",
+    description: "Save web pages directly to your ReadrSpace.",
     version: "1.4",
     permissions: ["activeTab", "storage", "scripting"],
     icons: {
@@ -45,7 +45,7 @@ const manifestJson = JSON.stringify(
     },
     action: {
       default_popup: "popup.html",
-      default_title: "Save to Reading Room",
+      default_title: "Save to ReadrSpace",
       default_icon: {
         16: "icon-16.png",
         48: "icon-48.png",
@@ -71,12 +71,12 @@ const popupHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>The Reading Room</title>
+  <title>ReadrSpace</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
-    <h1 class="title">The Reading Room</h1>
+    <h1 class="title">ReadrSpace</h1>
     <!-- Save View -->
     <div id="save-view" class="view-section">
       <p class="subtitle">Save this article to your library.</p>
@@ -103,7 +103,7 @@ const popupHtml = `<!DOCTYPE html>
     <div id="no-connection-view" class="view-section hidden">
       <p class="subtitle error-text">No connected workspace found.</p>
       <p class="info-text">
-        To start saving, open your Reading Room dashboard (e.g. <code>localhost:3000</code> or your deployed website) and click this extension icon to connect.
+        To start saving, open your ReadrSpace dashboard (e.g. <code>localhost:3000</code> or your deployed website) and click this extension icon to connect.
       </p>
       <div class="help-link-container">
         <a id="help-link" href="#" class="help-link">View Setup Guide</a>
@@ -141,7 +141,7 @@ body{width:320px;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont
 .help-link:hover {color: var(--fg);}
 `;
 
-// No more direct API calls — opens a tab in the authenticated Reading Room instead.
+// No more direct API calls — opens a tab in the authenticated ReadrSpace instead.
 // This bypasses all SameSite cookie restrictions and CORS issues entirely.
 const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
   const saveView = document.getElementById('save-view');
@@ -175,7 +175,7 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
     console.warn('Could not parse URL origin:', e);
   }
 
-  // Detect if active tab is the Reading Room app
+  // Detect if active tab is the ReadrSpace app
   const isAppUrl = currentOrigin && (
     currentUrl.includes('/home') ||
     currentUrl.includes('/library') ||
@@ -189,7 +189,7 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
   
   const isReadingRoomApp = currentOrigin && (
     isAppUrl || 
-    currentTitle.includes('The Reading Rooms') || 
+    currentTitle.includes('ReadrSpace') || 
     currentOrigin.includes('localhost:3000') ||
     currentOrigin.includes('${displayBaseUrl}')
   );
@@ -266,11 +266,11 @@ const popupJs = `document.addEventListener('DOMContentLoaded', async () => {
             }
           });
 
-          // Open the Reading Room save page — it handles auth and saving internally.
+          // Open the ReadrSpace save page — it handles auth and saving internally.
           const saveUrl = \`\${backendUrl}/save?url=\${encodeURIComponent(currentUrl)}&extId=\${chrome.runtime.id}\`;
           await chrome.tabs.create({ url: saveUrl });
 
-          statusEl.textContent = 'Opening The Reading Room\\\\u2026';
+          statusEl.textContent = 'Opening ReadrSpace\\\\u2026';
           statusEl.className = 'status success';
           statusEl.classList.remove('hidden');
           setTimeout(() => window.close(), 1200);

@@ -1,6 +1,6 @@
 # Git Maintenance & CI/CD Standards
 
-This document establishes development standards, branching strategies, commit conventions, and CI/CD pipeline guidelines for **The Reading Room** repository to maintain code quality and clean delivery.
+This document establishes development standards, branching strategies, commit conventions, and CI/CD pipeline guidelines for **ReadrSpace** repository to maintain code quality and clean delivery.
 
 ---
 

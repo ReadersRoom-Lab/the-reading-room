@@ -14,14 +14,14 @@ export async function GET(req: Request) {
   // --- manifest.json ---
   const manifest = {
     manifest_version: 3,
-    name: "Send to Reading Room",
-    description: "Save web pages directly to your Reading Room.",
+    name: "Send to ReadrSpace",
+    description: "Save web pages directly to your ReadrSpace.",
     version: "1.0",
     permissions: ["activeTab", "scripting"],
     host_permissions: [`${baseUrl}/*`],
     action: {
       default_popup: "popup.html",
-      default_title: "Save to Reading Room",
+      default_title: "Save to ReadrSpace",
     },
   };
 
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 </head>
 <body>
   <div class="container">
-    <h1 class="title">The Reading Room</h1>
+    <h1 class="title">ReadrSpace</h1>
     <p class="subtitle">Save this article to your library.</p>
     <div id="status-container" class="status hidden"></div>
     <button id="save-btn" class="btn">
@@ -115,7 +115,7 @@ body { width: 320px; margin: 0; padding: 0; font-family: -apple-system, BlinkMac
         throw new Error(data.error || 'Failed to save article.');
       }
 
-      statusEl.textContent = 'Successfully saved to The Reading Room!';
+      statusEl.textContent = 'Successfully saved to ReadrSpace!';
       statusEl.className = 'status success';
       saveBtn.innerHTML = 'Saved';
       setTimeout(() => window.close(), 2000);
@@ -124,7 +124,7 @@ body { width: 320px; margin: 0; padding: 0; font-family: -apple-system, BlinkMac
       console.error(error);
       let errorMsg = error.message || 'An unexpected error occurred.';
       if (errorMsg === 'Failed to fetch' || errorMsg.includes('NetworkError')) {
-        errorMsg = 'Could not connect to The Reading Room. Make sure you are logged in.';
+        errorMsg = 'Could not connect to ReadrSpace. Make sure you are logged in.';
       }
       statusEl.textContent = errorMsg;
       statusEl.className = 'status error';
