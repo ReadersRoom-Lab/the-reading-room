@@ -20,27 +20,19 @@ export function ProfileNav() {
 
   return (
     <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-[#E5E5E5] bg-[#F9F7F2] shrink-0 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto md:overflow-x-hidden">
-      {/* Back link */}
-      <div className="hidden md:block border-b border-[#E5E5E5] px-6 py-4">
+      {/* Back link & Brand */}
+      <div className="hidden md:block border-b border-[#E5E5E5] px-6 py-5">
         <Link
           href="/home"
-          className="inline-flex items-center gap-2 font-sans text-xs font-medium text-[#52525B] hover:text-[#1A1A1A] transition-colors"
+          className="inline-flex items-center gap-1 font-heading font-bold text-lg text-[#1A1A1A] tracking-tight hover:opacity-80 transition-opacity"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Home
+          <ArrowLeft className="w-4 h-4 mr-1 text-[#52525B]" />
+          ReadrSpace
         </Link>
       </div>
 
       {/* User identity card */}
       <div className="hidden md:block px-6 py-6 border-b border-[#E5E5E5]">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 rounded bg-[#1A1A1A] flex items-center justify-center font-serif text-white font-bold">
-            R
-          </div>
-          <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
-            ReadrSpace
-          </span>
-        </div>
         <div className="w-12 h-12 bg-[#1A1A1A] flex items-center justify-center mb-4 shrink-0">
           <span className="font-heading text-lg font-bold text-[#F9F7F2]">{initial}</span>
         </div>
