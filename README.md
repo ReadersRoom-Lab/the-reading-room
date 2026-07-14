@@ -1,4 +1,4 @@
-# The Reading Room
+# ReadrSpace
 
 A personal reading and knowledge workspace. Save articles from the web, organise them into rooms, highlight key passages, build a vocabulary vault, and surface insights with AI.
 
@@ -8,7 +8,7 @@ A personal reading and knowledge workspace. Save articles from the web, organise
 
 ## 📖 Core Workflow
 
-The Reading Room is built around a simple, powerful 4-step workflow:
+ReadrSpace is built around a simple, powerful 4-step workflow:
 
 1. **Build Your Library**: Save articles directly from your browser using the Chrome Extension (bypassing paywalls), or manually upload PDFs and paste URLs.
 2. **Read & Annotate**: Experience a minimalist, editorial reader. Highlight important passages, add personal notes, and categorize them.
@@ -17,7 +17,7 @@ The Reading Room is built around a simple, powerful 4-step workflow:
 
 ---
 
-## 🧩 The Reading Room Chrome Extension
+## 🧩 ReadrSpace Chrome Extension
 
 The absolute best way to save articles to your library is using the companion Chrome Extension. It saves exactly what is rendered on your screen, which completely bypasses paywalls and anti-bot protections.
 
@@ -28,7 +28,7 @@ The absolute best way to save articles to your library is using the companion Ch
 3. Click **Load unpacked** in the top left.
 4. Select the `chrome-extension` folder located inside this repository.
 5. Pin the extension to your toolbar.
-6. **Connect your Workspace**: Open your Reading Room application in Chrome (e.g. `http://localhost:3000` or your production domain), click the extension icon, and click **Connect Workspace**.
+6. **Connect your Workspace**: Open your ReadrSpace application in Chrome (e.g. `http://localhost:3000` or your production domain), click the extension icon, and click **Connect Workspace**.
 7. **Start saving**: Navigate to any article on the web, click the extension icon, and click **Save to Library**!
 
 **Publishing to the Chrome Web Store:**

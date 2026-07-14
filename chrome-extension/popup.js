@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.warn("Could not parse URL origin:", e);
   }
 
-  // Detect if active tab is the Reading Room app
+  // Detect if active tab is the ReadrSpace app
   const isAppUrl =
     currentOrigin &&
     (currentUrl.includes("/home") ||
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const isReadingRoomApp =
     currentOrigin &&
     (isAppUrl ||
-      currentTitle.includes("The Reading Rooms") ||
+      currentTitle.includes("ReadrSpace") ||
       currentOrigin.includes("localhost:3000") ||
       currentOrigin.includes("the-reading-room-qwsz.vercel.app"));
 
@@ -125,11 +125,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             },
           });
 
-          // Open the Reading Room save page — it handles auth and saving internally.
+          // Open the ReadrSpace save page — it handles auth and saving internally.
           const saveUrl = `${backendUrl}/save?url=${encodeURIComponent(currentUrl)}&extId=${chrome.runtime.id}`;
           await chrome.tabs.create({ url: saveUrl });
 
-          statusEl.textContent = "Opening The Reading Room\u2026";
+          statusEl.textContent = "Opening ReadrSpace\u2026";
           statusEl.className = "status success";
           statusEl.classList.remove("hidden");
           setTimeout(() => window.close(), 1200);

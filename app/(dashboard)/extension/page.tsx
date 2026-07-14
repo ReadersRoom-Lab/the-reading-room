@@ -56,9 +56,7 @@ export default function ExtensionPage() {
       {/* Download CTA */}
       <div className="border border-[#E5E5E5] bg-white p-6 mb-10 flex items-center justify-between gap-6">
         <div>
-          <p className="font-heading font-bold text-lg text-[#1A1A1A] mb-1">
-            Reading Room Extension
-          </p>
+          <p className="font-heading font-bold text-lg text-[#1A1A1A] mb-1">ReadrSpace Extension</p>
           <p className="text-sm text-[#52525B] font-sans">Chrome · Developer Mode install</p>
         </div>
         <button
@@ -99,14 +97,14 @@ export default function ExtensionPage() {
               icon: Settings,
               title: "Connect your Workspace",
               description:
-                'Click the Reading Room extension icon in your Chrome toolbar while visiting this dashboard. Click "Connect Workspace" to pair them.',
+                'Click the ReadrSpace extension icon in your Chrome toolbar while visiting this dashboard. Click "Connect Workspace" to pair them.',
             },
             {
               number: "04",
               icon: CheckCircle,
               title: "Start saving!",
               description:
-                "Browse any web page, click the Reading Room extension icon, and hit Save. The article will appear in your Library instantly.",
+                "Browse any web page, click the ReadrSpace extension icon, and hit Save. The article will appear in your Library instantly.",
             },
           ].map((step, i, arr) => {
             return (

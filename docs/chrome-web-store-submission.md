@@ -1,6 +1,6 @@
 # Chrome Web Store Publishing Guide
 
-This guide details the step-by-step process of submitting **The Reading Room** Chrome Extension to the Google Chrome Web Store. By publishing the extension, your users will be able to install it with a single click directly from the Web Store.
+This guide details the step-by-step process of submitting **ReadrSpace** Chrome Extension to the Google Chrome Web Store. By publishing the extension, your users will be able to install it with a single click directly from the Web Store.
 
 ---
 
@@ -37,18 +37,18 @@ Once your developer profile is active:
 1. In the **Chrome Developer Dashboard**, click the **Add new item** button in the top right.
 2. Select and upload the `public/extension.zip` file.
 3. Fill out the **Store Listing** fields:
-   - **Name**: `Send to Reading Room`
-   - **Summary**: `Save web pages and articles directly to your Reading Room workspace, bypassing paywalls and firewalls.`
+   - **Name**: `Send to ReadrSpace`
+   - **Summary**: `Save web pages and articles directly to your ReadrSpace workspace, bypassing paywalls and firewalls.`
    - **Description**:
      ```
-     The Send to Reading Room extension is the ultimate companion for your Reading Room workspace.
+     The Send to ReadrSpace extension is the ultimate companion for your ReadrSpace workspace.
 
      Features:
      - Save exactly what is rendered on your active tab directly to your library.
      - Extract clean pre-rendered HTML content, completely bypassing Cloudflare, Vercel firewalls, or paywall blockages.
      - Fast one-click saving directly into your rooms.
 
-     To connect, open your Reading Room dashboard, click the extension icon, and select 'Connect Workspace'.
+     To connect, open your ReadrSpace dashboard, click the extension icon, and select 'Connect Workspace'.
      ```
    - **Category**: `Productivity`
    - **Language**: `English`
@@ -69,7 +69,7 @@ You will need to upload promotional graphics to make the listing look profession
 
 Chrome Web Store reviewers are very strict about user data permissions. In the **Privacy** tab of your listing:
 
-1. **Single Purpose**: State that the extension's sole purpose is to "Allow users to save the current tab's content directly to their Reading Room workspace."
+1. **Single Purpose**: State that the extension's sole purpose is to "Allow users to save the current tab's content directly to their ReadrSpace workspace."
 2. **Permissions Justifications**:
    - `activeTab`: Used to capture the URL and title of the page the user explicitly requests to save.
    - `scripting`: Used to extract the pre-rendered HTML content of the active page to bypass server-side scraping blocks.

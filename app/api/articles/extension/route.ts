@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
     if (!userId) {
       return NextResponse.json(
-        { error: "Unauthorized. Please log in to The Reading Room on localhost:3000 first." },
+        { error: "Unauthorized. Please log in to ReadrSpace on localhost:3000 first." },
         { status: 401, headers: corsHeaders }
       );
     }

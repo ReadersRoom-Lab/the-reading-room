@@ -1,6 +1,6 @@
 @AGENTS.md
 
-# The Reading Room — AI Agent Guide
+# ReadrSpace — AI Agent Guide
 
 ## What this project is
 

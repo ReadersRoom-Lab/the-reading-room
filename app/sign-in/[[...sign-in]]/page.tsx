@@ -48,7 +48,7 @@ export default function SignInPage() {
         {/* Mobile Header */}
         <header className="relative z-10 lg:hidden px-6 py-6 border-b border-gray-200 flex items-center justify-between">
           <Link href="/" className="font-heading text-xl font-bold text-gray-900">
-            The Reading Rooms
+            ReadrSpace
           </Link>
           <Link
             href="/"
