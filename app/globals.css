@@ -260,7 +260,7 @@
   --secondary: var(--ui-grey-light);
   --secondary-foreground: var(--ink-text);
   --muted: var(--ui-grey-light);
-  --muted-foreground: var(--ui-grey-medium);
+  --muted-foreground: #a1a1aa;
   --accent: var(--ui-grey-light);
   --accent-foreground: var(--ink-text);
   --destructive: #ffdad6;
