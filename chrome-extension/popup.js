@@ -97,9 +97,38 @@ document.addEventListener("DOMContentLoaded", async () => {
       const displayDomain = backendUrl.replace(/^https?:\/\//, "");
       connectionInfoEl.textContent = `Connected to: ${displayDomain}`;
 
+      // Populate Page Preview Card
+      const pageFaviconEl = document.getElementById("page-favicon");
+      const pageTitleEl = document.getElementById("page-title");
+      const pageDomainEl = document.getElementById("page-domain");
+
+      if (pageTitleEl && currentTitle) {
+        pageTitleEl.textContent = currentTitle;
+      }
+      if (pageDomainEl && currentUrl) {
+        try {
+          pageDomainEl.textContent = new URL(currentUrl).hostname.replace("www.", "");
+        } catch {
+          pageDomainEl.textContent = currentUrl;
+        }
+      }
+      if (pageFaviconEl && tab.favIconUrl) {
+        pageFaviconEl.src = tab.favIconUrl;
+        pageFaviconEl.style.display = "block";
+        pageFaviconEl.onerror = () => {
+          pageFaviconEl.style.display = "none";
+        };
+      }
+
       saveBtn.addEventListener("click", async () => {
+        const btnIcon = document.getElementById("btn-icon");
+        const btnSpinner = document.getElementById("btn-spinner");
+        const btnText = document.getElementById("btn-text");
+
         saveBtn.disabled = true;
-        saveBtn.innerHTML = "Opening...";
+        if (btnIcon) btnIcon.classList.add("hidden");
+        if (btnSpinner) btnSpinner.classList.remove("hidden");
+        if (btnText) btnText.textContent = "Opening...";
 
         try {
           if (
@@ -137,8 +166,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           statusEl.textContent = err.message || "An unexpected error occurred.";
           statusEl.className = "status error";
           statusEl.classList.remove("hidden");
+
           saveBtn.disabled = false;
-          saveBtn.innerHTML = "Try Again";
+          if (btnIcon) btnIcon.classList.remove("hidden");
+          if (btnSpinner) btnSpinner.classList.add("hidden");
+          if (btnText) btnText.textContent = "Try Again";
         }
       });
     } else {

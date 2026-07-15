@@ -105,8 +105,12 @@ export default function RootLayout({
       <html
         lang="en"
         className={`${inter.variable} ${sourceSerif.variable} ${geistMono.variable} min-h-screen antialiased`}
+        suppressHydrationWarning
       >
-        <body className="min-h-screen flex flex-col text-foreground bg-background">
+        <body
+          className="min-h-screen flex flex-col text-foreground bg-background"
+          suppressHydrationWarning
+        >
           {children}
           <Toaster />
           <SpeedInsights />
