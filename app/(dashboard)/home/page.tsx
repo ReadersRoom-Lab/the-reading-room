@@ -214,62 +214,66 @@ export default async function Home() {
         <h2 className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#52525B] uppercase mb-5">
           Recently Read
         </h2>
-        <div className="flex flex-col gap-0 border border-[#E5E5E5]">
-          {recentArticles.length === 0 ? (
-            <div className="p-12 text-center bg-white">
-              <Bookmark className="w-6 h-6 text-[#BDBDBD] mx-auto mb-3" />
-              <p className="font-sans text-sm text-[#52525B]">No articles in progress.</p>
-              <p className="font-sans text-xs text-[#BDBDBD] mt-1">
-                Start reading from your library!
-              </p>
-            </div>
-          ) : (
-            recentArticles.map(
-              (
-                article: {
-                  id: string;
-                  source_type: string;
-                  title: string;
-                  reading_progress: number;
-                  read_time_minutes: number;
-                },
-                idx: number
-              ) => (
+        {recentArticles.length === 0 ? (
+          <div className="border border-[#E5E5E5] p-12 text-center bg-white">
+            <Bookmark className="w-6 h-6 text-[#BDBDBD] mx-auto mb-3" />
+            <p className="font-sans text-sm text-[#52525B]">No articles in progress.</p>
+            <p className="font-sans text-xs text-[#BDBDBD] mt-1">
+              Start reading from your library!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {recentArticles.map(
+              (article: {
+                id: string;
+                source_type: string;
+                title: string;
+                reading_progress: number;
+                read_time_minutes: number;
+              }) => (
                 <Link
                   key={article.id}
                   href={`/read/${article.id}`}
-                  className={`block bg-white hover:bg-[#F4F3F3] transition-colors p-6 sm:p-8 ${idx > 0 ? "border-t border-[#E5E5E5]" : ""}`}
+                  className="block bg-white border border-[#E5E5E5] hover:bg-[#F4F3F3] transition-colors p-6 flex flex-col justify-between h-44"
                 >
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="font-sans text-[11px] font-medium tracking-[0.1em] text-[#52525B] uppercase">
-                      {article.source_type === "url" ? "Web Article" : "Document"}
-                    </span>
-                    <Bookmark className="w-3.5 h-3.5 text-[#BDBDBD]" />
+                  <div>
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-sans text-[8px] font-semibold px-1.5 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.05em] uppercase">
+                        {article.source_type === "url" ? "Web Article" : "Document"}
+                      </span>
+                      <Bookmark className="w-3.5 h-3.5 text-[#BDBDBD]" />
+                    </div>
+                    <h3 className="font-heading text-lg font-bold text-[#1A1A1A] line-clamp-2 leading-snug">
+                      {article.title}
+                    </h3>
                   </div>
-                  <h3 className="font-heading text-2xl font-semibold text-[#1A1A1A] mb-6 leading-snug">
-                    {article.title}
-                  </h3>
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 h-px bg-[#E5E5E5]">
+                  <div className="mt-4">
+                    <div className="flex justify-between text-[10px] mb-1.5 text-[#52525B] font-sans">
+                      <span>Progress</span>
+                      <span>
+                        {article.reading_progress}% ·{" "}
+                        {Math.max(
+                          1,
+                          Math.ceil(
+                            article.read_time_minutes * (1 - article.reading_progress / 100)
+                          )
+                        )}
+                        m left
+                      </span>
+                    </div>
+                    <div className="w-full h-1 bg-[#E5E5E5] overflow-hidden">
                       <div
                         className="h-full bg-[#1A1A1A]"
                         style={{ width: `${article.reading_progress}%` }}
                       ></div>
                     </div>
-                    <span className="font-sans text-[11px] tracking-[0.03em] text-[#52525B] whitespace-nowrap">
-                      {article.reading_progress}% ·{" "}
-                      {Math.max(
-                        1,
-                        Math.ceil(article.read_time_minutes * (1 - article.reading_progress / 100))
-                      )}
-                      m left
-                    </span>
                   </div>
                 </Link>
               )
-            )
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </section>
     </div>
   );
