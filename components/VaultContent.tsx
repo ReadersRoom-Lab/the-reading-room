@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   BookMarked,
   Search,
@@ -18,7 +18,7 @@ import {
 import { format } from "date-fns";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
 interface Article {
   id: string;
@@ -549,14 +549,14 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
       {/* Dialog for Grid View Detail Overlay */}
       <Dialog
         open={activeGridEntry !== null}
-        onOpenChange={(open) => {
+        onOpenChange={(open: boolean) => {
           if (!open) setActiveGridEntry(null);
         }}
       >
         <DialogContent
           className="sm:max-w-2xl border border-[#E5E5E5] bg-white rounded-none shadow-none max-h-[85vh] overflow-y-auto"
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          onKeyDown={(e: React.KeyboardEvent) => e.stopPropagation()}
         >
           {activeGridEntry && (
             <div className="flex flex-col gap-6 p-2">
