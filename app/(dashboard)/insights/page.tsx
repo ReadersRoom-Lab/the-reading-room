@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, type UIMessage } from "ai";
+
+function getMessageText(m: UIMessage): string {
+  if (!m.parts) return "";
+  return m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
+}
 import {
   Sparkles,
   Send,
@@ -39,7 +45,23 @@ export default function InsightsPage() {
   const [stats, setStats] = useState<StatsType | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [input, setInput] = useState("");
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
+
+  const isLoading = status === "streaming" || status === "submitted";
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendMessage({ text: input });
+    setInput("");
+  };
 
   useEffect(() => {
     fetch("/api/insights/stats")
@@ -403,19 +425,13 @@ export default function InsightsPage() {
                     )}
 
                     <div
-                      className={`px-5 py-3 max-w-[80%] text-sm font-sans leading-relaxed ${
+                      className={`px-5 py-3 max-w-[80%] text-sm font-sans leading-relaxed whitespace-pre-wrap ${
                         m.role === "user"
                           ? "bg-[#1A1A1A] text-[#F9F7F2]"
                           : "bg-white border border-[#E5E5E5] text-[#1A1A1A] prose prose-sm shadow-sm"
                       }`}
                     >
-                      {m.role === "user" ? (
-                        <p className="whitespace-pre-wrap">{m.content}</p>
-                      ) : (
-                        <div
-                          dangerouslySetInnerHTML={{ __html: m.content.replaceAll("\n", "<br/>") }}
-                        />
-                      )}
+                      {getMessageText(m)}
                     </div>
 
                     {m.role === "user" && (
