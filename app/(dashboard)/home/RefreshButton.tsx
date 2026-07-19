@@ -16,6 +16,7 @@ export function RefreshButton() {
 
   return (
     <button
+      type="button"
       onClick={handleRefresh}
       className="font-sans text-[11px] font-medium tracking-[0.15em] text-[#52525B] uppercase mb-5 flex items-center gap-2 hover:text-[#1A1A1A] transition-colors cursor-pointer"
     >

@@ -52,6 +52,7 @@ export default function ProUpgradePage() {
           </span>
           <div className="flex border border-[#1C1C1E] p-0.5 rounded-none bg-[#F4F3F3]">
             <button
+              type="button"
               onClick={() => setCurrency("usd")}
               className={`px-4 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer ${
                 currency === "usd"
@@ -63,6 +64,7 @@ export default function ProUpgradePage() {
               Global (USD)
             </button>
             <button
+              type="button"
               onClick={() => setCurrency("inr")}
               className={`px-4 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer ${
                 currency === "inr"
@@ -83,6 +85,7 @@ export default function ProUpgradePage() {
           </span>
           <div className="flex border border-[#1C1C1E] p-0.5 rounded-none bg-[#F4F3F3]">
             <button
+              type="button"
               onClick={() => setBillingPeriod("monthly")}
               className={`px-4 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer ${
                 billingPeriod === "monthly"
@@ -94,6 +97,7 @@ export default function ProUpgradePage() {
               Monthly
             </button>
             <button
+              type="button"
               onClick={() => setBillingPeriod("annually")}
               className={`px-4 py-1.5 text-xs font-bold transition-all rounded-none cursor-pointer ${
                 billingPeriod === "annually"
@@ -153,6 +157,7 @@ export default function ProUpgradePage() {
                 </div>
               </div>
               <button
+                type="button"
                 className="w-full mt-8 border border-[#E5E5E5] text-[#52525B] bg-[#F4F3F3] py-2.5 text-center text-xs font-bold tracking-widest uppercase rounded-none cursor-not-allowed"
                 disabled
               >
@@ -211,7 +216,10 @@ export default function ProUpgradePage() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer">
+              <button
+                type="button"
+                className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer"
+              >
                 Upgrade Now
               </button>
             </div>
@@ -259,6 +267,7 @@ export default function ProUpgradePage() {
                 </div>
               </div>
               <button
+                type="button"
                 className="w-full mt-8 bg-[#F4F3F3] text-[#52525B] py-2.5 text-center text-xs font-bold tracking-widest uppercase rounded-none cursor-not-allowed animate-pulse"
                 disabled
               >
@@ -311,7 +320,10 @@ export default function ProUpgradePage() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 border border-[#1C1C1E] text-[#1C1C1E] bg-transparent py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#F4F3F3] transition-colors rounded-none cursor-pointer">
+              <button
+                type="button"
+                className="w-full mt-8 border border-[#1C1C1E] text-[#1C1C1E] bg-transparent py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#F4F3F3] transition-colors rounded-none cursor-pointer"
+              >
                 Verify & Upgrade
               </button>
             </div>
@@ -362,7 +374,10 @@ export default function ProUpgradePage() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer">
+              <button
+                type="button"
+                className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer"
+              >
                 Upgrade Now
               </button>
             </div>
@@ -403,7 +418,10 @@ export default function ProUpgradePage() {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer">
+              <button
+                type="button"
+                className="w-full mt-8 bg-[#1C1C1E] text-white py-2.5 text-center text-xs font-bold tracking-widest uppercase hover:bg-[#333] transition-colors rounded-none cursor-pointer"
+              >
                 Buy Lifetime
               </button>
             </div>
