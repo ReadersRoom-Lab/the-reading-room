@@ -31,6 +31,9 @@ export function ConceptSlideOver({
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [isFetching, setIsFetching] = useState(false);
+  const [etymology, setEtymology] = useState("");
+  const [pronunciation, setPronunciation] = useState("");
+  const [exampleSentence, setExampleSentence] = useState("");
 
   useEffect(() => {
     // If no definition is provided, fetch it from Wikipedia
@@ -38,12 +41,17 @@ export function ConceptSlideOver({
       const fetchWikipediaConcept = async () => {
         setIsFetching(true);
         try {
-          const res = await fetch(`/api/vault/lookup/concept?term=${encodeURIComponent(term)}`);
+          const res = await fetch(
+            `/api/vault/lookup/concept?term=${encodeURIComponent(term)}&passage=${encodeURIComponent(contextSnippet)}`
+          );
           if (res.ok) {
             const data = await res.json();
             setDefinitionText(data.definition || "");
             setThumbnailUrl(data.thumbnail || "");
             setSourceUrl(data.sourceUrl || "");
+            setEtymology(data.etymology || "");
+            setPronunciation(data.pronunciation || "");
+            setExampleSentence(data.exampleSentence || "");
           } else {
             setDefinitionText("No Wikipedia article or definition was found for this concept.");
           }
@@ -56,7 +64,7 @@ export function ConceptSlideOver({
       };
       fetchWikipediaConcept();
     }
-  }, [term, definition]);
+  }, [term, definition, contextSnippet]);
 
   const handleSave = async () => {
     setLoading(true);
@@ -72,6 +80,9 @@ export function ConceptSlideOver({
           room_id: roomId,
           type: "concept",
           user_note: note,
+          etymology,
+          pronunciation,
+          example_sentence: exampleSentence,
         }),
       });
       if (res.ok) {
@@ -109,7 +120,12 @@ export function ConceptSlideOver({
           Concept
         </span>
 
-        <h2 className="text-4xl font-heading font-bold text-[#1a1a1a] mb-6">{term}</h2>
+        <div className="flex flex-col gap-1 mb-6">
+          <h2 className="text-4xl font-heading font-bold text-[#1a1a1a]">{term}</h2>
+          {pronunciation && (
+            <span className="text-xs font-mono text-[#8C8C8C]">{pronunciation}</span>
+          )}
+        </div>
 
         {isFetching ? (
           <div className="space-y-4 animate-pulse mb-10">
@@ -132,6 +148,17 @@ export function ConceptSlideOver({
             <p className="text-[#333] font-source-serif text-lg leading-relaxed mb-4">
               {definitionText || "Definition not provided."}
             </p>
+
+            {etymology && (
+              <div className="bg-[#FAF9F5] border border-[#E6C79C]/30 p-4 mb-4 text-xs font-sans text-[#52525B]">
+                <span className="block font-bold text-[#E6C79C] uppercase tracking-wider text-[9px] mb-1 font-sans">
+                  Origin & Etymology
+                </span>
+                <p className="leading-relaxed font-source-serif italic text-xs text-[#333]">
+                  {etymology}
+                </p>
+              </div>
+            )}
 
             {sourceUrl && (
               <div className="mb-10">
