@@ -425,21 +425,13 @@ export default function InsightsPage() {
                     )}
 
                     <div
-                      className={`px-5 py-3 max-w-[80%] text-sm font-sans leading-relaxed ${
+                      className={`px-5 py-3 max-w-[80%] text-sm font-sans leading-relaxed whitespace-pre-wrap ${
                         m.role === "user"
                           ? "bg-[#1A1A1A] text-[#F9F7F2]"
                           : "bg-white border border-[#E5E5E5] text-[#1A1A1A] prose prose-sm shadow-sm"
                       }`}
                     >
-                      {m.role === "user" ? (
-                        getMessageText(m)
-                      ) : (
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: getMessageText(m).replaceAll("\n", "<br/>"),
-                          }}
-                        />
-                      )}
+                      {getMessageText(m)}
                     </div>
 
                     {m.role === "user" && (
