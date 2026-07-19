@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, type UIMessage } from "ai";
+
+function getMessageText(m: UIMessage): string {
+  if (!m.parts) return "";
+  return m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
+}
 import {
   Sparkles,
   Send,
@@ -39,7 +45,23 @@ export default function InsightsPage() {
   const [stats, setStats] = useState<StatsType | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [input, setInput] = useState("");
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
+
+  const isLoading = status === "streaming" || status === "submitted";
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    sendMessage({ text: input });
+    setInput("");
+  };
 
   useEffect(() => {
     fetch("/api/insights/stats")
@@ -410,10 +432,12 @@ export default function InsightsPage() {
                       }`}
                     >
                       {m.role === "user" ? (
-                        <p className="whitespace-pre-wrap">{m.content}</p>
+                        getMessageText(m)
                       ) : (
                         <div
-                          dangerouslySetInnerHTML={{ __html: m.content.replaceAll("\n", "<br/>") }}
+                          dangerouslySetInnerHTML={{
+                            __html: getMessageText(m).replaceAll("\n", "<br/>"),
+                          }}
                         />
                       )}
                     </div>
