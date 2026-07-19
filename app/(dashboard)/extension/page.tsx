@@ -14,6 +14,7 @@ function CopyCode({ code }: Readonly<{ code: string }>) {
     <div className="flex items-center gap-2 mt-2 bg-[#1A1A1A] text-[#F9F7F2] px-3 py-2 font-mono text-xs w-fit max-w-full">
       <span className="truncate">{code}</span>
       <button
+        type="button"
         onClick={copy}
         className="shrink-0 ml-1 hover:opacity-70 transition-opacity"
         aria-label="Copy"
@@ -60,6 +61,7 @@ export default function ExtensionPage() {
           <p className="text-sm text-[#52525B] font-sans">Chrome · Developer Mode install</p>
         </div>
         <button
+          type="button"
           onClick={handleDownload}
           disabled={downloading}
           className="inline-flex items-center gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] px-5 py-2.5 text-sm font-medium font-sans transition-colors shrink-0 disabled:opacity-60"

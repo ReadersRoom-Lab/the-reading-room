@@ -152,6 +152,7 @@ export default function InsightsPage() {
         {/* Tabs Toggle */}
         <div className="flex border border-[#E5E5E5] bg-[#F9F7F2] p-1 gap-1 w-full md:w-auto justify-center">
           <button
+            type="button"
             onClick={() => setActiveTab("analytics")}
             className={`flex-1 md:flex-none text-center px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
               activeTab === "analytics"
@@ -162,6 +163,7 @@ export default function InsightsPage() {
             Analytics
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab("chat")}
             className={`flex-1 md:flex-none text-center px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer ${
               activeTab === "chat"
