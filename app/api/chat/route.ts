@@ -73,13 +73,13 @@ export async function POST(req: Request) {
     Always be concise, academic, and insightful. If they ask about something not in the context, answer generally but remind them you only have partial context injected right now.
     `;
 
-    const result = await streamText({
-      model: google("gemini-1.5-flash"),
+    const result = streamText({
+      model: google("models/gemini-1.5-flash"),
       system: contextContext,
       messages,
     });
 
-    return result.toDataStreamResponse();
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     logger.error("Error in chat route:", error);
     return new Response("Internal Server Error", { status: 500 });
