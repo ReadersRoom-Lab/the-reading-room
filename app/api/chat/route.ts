@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-import { streamText } from "ai";
+import { streamText, createUIMessageStreamResponse, toUIMessageStream } from "ai";
 import { google } from "@ai-sdk/google";
 import { logger } from "@/lib/logger";
 import { generateEmbedding } from "@/lib/embeddings";
@@ -79,7 +79,11 @@ export async function POST(req: Request) {
       messages,
     });
 
-    return result.toUIMessageStreamResponse();
+    return createUIMessageStreamResponse({
+      stream: toUIMessageStream({
+        stream: result.stream,
+      }),
+    });
   } catch (error) {
     logger.error("Error in chat route:", error);
     return new Response("Internal Server Error", { status: 500 });

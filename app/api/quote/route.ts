@@ -1,4 +1,4 @@
-import { streamText } from "ai";
+import { streamText, createTextStreamResponse, toTextStream } from "ai";
 import { google } from "@ai-sdk/google";
 
 export async function POST() {
@@ -10,7 +10,11 @@ export async function POST() {
       temperature: 0.9,
     });
 
-    return result.toTextStreamResponse();
+    return createTextStreamResponse({
+      stream: toTextStream({
+        stream: result.stream,
+      }),
+    });
   } catch (error) {
     console.error("AI Quote Generation Error:", error);
     return new Response("Error generating quote", { status: 500 });
