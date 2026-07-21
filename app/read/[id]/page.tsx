@@ -219,6 +219,52 @@ export default function ReaderPage() {
     };
   }, [handleMouseUp, highlights, editingHighlight]);
 
+  // Keyboard shortcuts in Reader (Cmd+H / Cmd+S)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+      if (!isCmdOrCtrl) return;
+
+      const sel = globalThis.getSelection();
+      const selectedText = sel ? sel.toString().trim() : "";
+
+      if (e.key.toLowerCase() === "h" && selectedText && article) {
+        e.preventDefault();
+        fetch("/api/highlights", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            article_id: article.id,
+            content: selectedText,
+            colour: "ochre",
+          }),
+        })
+          .then((res) => res.json())
+          .then((newHighlight) => {
+            if (newHighlight && newHighlight.id) {
+              setHighlights((prev) => [newHighlight, ...prev]);
+              setActiveSelection(null);
+            }
+          })
+          .catch(console.error);
+      } else if (e.key.toLowerCase() === "s" && selectedText) {
+        e.preventDefault();
+        let snippet = selectedText;
+        if (sel?.anchorNode?.parentElement) {
+          snippet = sel.anchorNode.parentElement.textContent || selectedText;
+        }
+        setConcept({
+          term: selectedText,
+          definition: "Searching term context...",
+          contextSnippet: snippet,
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [article]);
+
   // Handle save concept from dictionary popover
   const handleSaveConcept = (word: string, definition: string) => {
     setShowDictionary(false);
