@@ -1,6 +1,6 @@
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
-import { Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
+import { Home, Library, LayoutGrid, BookMarked, User, Sparkles, GitFork } from "lucide-react";
 import Link from "next/link";
 import { MobileNav } from "@/components/MobileNav";
 import { auth } from "@clerk/nextjs/server";
@@ -78,6 +78,12 @@ export default async function DashboardLayout({
             className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
           >
             <BookMarked className="w-4 h-4 shrink-0" /> Vault
+          </Link>
+          <Link
+            href="/graph"
+            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
+          >
+            <GitFork className="w-4 h-4 shrink-0" /> Connected Ideas
           </Link>
           <Link
             href="/insights"
