@@ -7,10 +7,12 @@ This document covers project setup, database schema architecture, API endpoints,
 ## 🚀 1. Local Setup Instructions
 
 ### Prerequisites
+
 - **Node.js**: v20 or higher
 - **PostgreSQL**: PostgreSQL database with `pgvector` extension enabled.
 
 ### Environment Configuration
+
 Copy `.env.example` to `.env` and fill in the credentials:
 
 ```env
@@ -24,11 +26,13 @@ GOOGLE_GENERATIVE_AI_API_KEY="AIzaSy..."
 ```
 
 ### Installation & Database Migration
+
 ```bash
 npm install
 npx prisma db push
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000).
 
 ---
@@ -36,6 +40,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## 🗄️ 2. Database Schema Architecture (`prisma/schema.prisma`)
 
 Key data models:
+
 - **`User`**: Linked to Clerk authentication (`clerk_id`).
 - **`Room`**: Organizational folder for grouping articles.
 - **`Article`**: Contains scraped web/PDF content, word count, reading progress, and read time.
@@ -48,20 +53,21 @@ Key data models:
 
 ## ⚡ 3. API Endpoints Reference
 
-| Route | Method | Description |
-| :--- | :--- | :--- |
-| `/api/articles/save` | `POST` | Ingest web article URL or text content + background chunking |
-| `/api/articles/upload` | `POST` | Process and save PDF files |
-| `/api/chat` | `POST` | RAG Synthesis AI chat stream (`streamText`) |
-| `/api/rooms/[id]/concepts` | `POST` | AI Concept Generator for room articles |
-| `/api/vault` | `GET`, `POST`, `DELETE` | CRUD operations for Vocabulary Vault entries |
-| `/api/dictionary` | `GET` | Look up definition, pronunciation & etymology |
+| Route                      | Method                  | Description                                                  |
+| :------------------------- | :---------------------- | :----------------------------------------------------------- |
+| `/api/articles/save`       | `POST`                  | Ingest web article URL or text content + background chunking |
+| `/api/articles/upload`     | `POST`                  | Process and save PDF files                                   |
+| `/api/chat`                | `POST`                  | RAG Synthesis AI chat stream (`streamText`)                  |
+| `/api/rooms/[id]/concepts` | `POST`                  | AI Concept Generator for room articles                       |
+| `/api/vault`               | `GET`, `POST`, `DELETE` | CRUD operations for Vocabulary Vault entries                 |
+| `/api/dictionary`          | `GET`                   | Look up definition, pronunciation & etymology                |
 
 ---
 
 ## 🧪 4. Testing & Verification
 
 Run automated test suite:
+
 ```bash
 npm test              # Run 51 Node.js native unit tests
 npm run lint          # Run ESLint check
