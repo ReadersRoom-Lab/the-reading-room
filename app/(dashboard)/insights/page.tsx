@@ -1,12 +1,56 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
+import sanitizeHtml from "sanitize-html";
 
 function getMessageText(m: UIMessage): string {
   if (!m.parts) return "";
   return m.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
+}
+
+/** Convert the subset of markdown Gemini produces into safe HTML */
+function markdownToHtml(text: string): string {
+  let html = text
+    // Escape raw HTML first
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    // Headers
+    .replace(/^### (.+)$/gm, "<h3>$1</h3>")
+    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+    .replace(/^# (.+)$/gm, "<h1>$1</h1>")
+    // Bold + italic
+    .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    // Inline code
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    // Bullet lists (* or -)
+    .replace(/^[*-] (.+)$/gm, "<li>$1</li>")
+    // Numbered lists
+    .replace(/^\d+\. (.+)$/gm, "<li>$1</li>")
+    // Horizontal rule
+    .replace(/^---$/gm, "<hr />")
+    // Double newline → paragraph break
+    .replaceAll("\n\n", "</p><p>")
+    // Single newline → <br>
+    .replaceAll("\n", "<br />");
+
+  // Wrap loose <li> runs in <ul>
+  html = html.replace(/(<li>[\s\S]*?<\/li>(?:<br \/>)?)+/g, (match) => {
+    const items = match.replace(/<br \/>$/g, "");
+    return `<ul>${items}</ul>`;
+  });
+
+  // Wrap in a paragraph
+  html = `<p>${html}</p>`;
+
+  return sanitizeHtml(html, {
+    allowedTags: ["p", "br", "strong", "em", "code", "ul", "ol", "li", "h1", "h2", "h3", "hr"],
+    allowedAttributes: {},
+  });
 }
 import {
   Sparkles,
@@ -46,19 +90,25 @@ export default function InsightsPage() {
   const [statsLoading, setStatsLoading] = useState(true);
 
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({ api: "/api/chat" }),
   });
 
   const isLoading = status === "streaming" || status === "submitted";
 
+  // Auto-scroll to the latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isLoading]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
     sendMessage({ text: input });
     setInput("");
   };
@@ -418,7 +468,7 @@ export default function InsightsPage() {
                 messages.map((m) => (
                   <div
                     key={m.id}
-                    className={`flex gap-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     {m.role === "assistant" && (
                       <div className="w-7 h-7 border border-[#E5E5E5] bg-white flex items-center justify-center shrink-0 mt-1">
@@ -426,15 +476,16 @@ export default function InsightsPage() {
                       </div>
                     )}
 
-                    <div
-                      className={`px-5 py-3 max-w-[80%] text-sm font-sans leading-relaxed whitespace-pre-wrap ${
-                        m.role === "user"
-                          ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                          : "bg-white border border-[#E5E5E5] text-[#1A1A1A] prose prose-sm shadow-sm"
-                      }`}
-                    >
-                      {getMessageText(m)}
-                    </div>
+                    {m.role === "user" ? (
+                      <div className="px-4 py-3 max-w-[75%] text-sm font-sans leading-relaxed bg-[#1A1A1A] text-[#F9F7F2]">
+                        {getMessageText(m)}
+                      </div>
+                    ) : (
+                      <div
+                        className="px-5 py-4 max-w-[80%] text-sm font-sans bg-white border border-[#E5E5E5] text-[#1A1A1A] shadow-sm prose prose-sm prose-headings:font-heading prose-headings:text-[#1A1A1A] prose-p:text-[#333] prose-li:text-[#333] prose-strong:text-[#1A1A1A] prose-code:text-[#1A1A1A] prose-code:bg-[#F4F3F3] prose-code:px-1 prose-code:rounded-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: markdownToHtml(getMessageText(m)) }}
+                      />
+                    )}
 
                     {m.role === "user" && (
                       <div className="w-7 h-7 border border-[#E5E5E5] bg-[#1A1A1A] flex items-center justify-center shrink-0 mt-1">
@@ -445,15 +496,17 @@ export default function InsightsPage() {
                 ))
               )}
               {isLoading && (
-                <div className="flex gap-4 justify-start">
+                <div className="flex gap-3 justify-start">
                   <div className="w-7 h-7 border border-[#E5E5E5] bg-white flex items-center justify-center shrink-0 mt-1">
                     <Sparkles className="w-3.5 h-3.5 text-[#1A1A1A] animate-pulse" />
                   </div>
                   <div className="px-5 py-3 bg-white border border-[#E5E5E5] text-[#52525B] text-sm font-sans">
-                    <span className="animate-pulse">Synthesizing...</span>
+                    <span className="animate-pulse">Synthesizing…</span>
                   </div>
                 </div>
               )}
+              {/* Scroll anchor */}
+              <div ref={messagesEndRef} />
             </div>
           </ScrollArea>
 
@@ -465,7 +518,14 @@ export default function InsightsPage() {
             <Input
               value={input}
               onChange={handleInputChange}
-              placeholder="Ask your library a question..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+              placeholder="Ask your library a question…"
+              aria-label="Ask the Synthesis Engine a question"
               className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-5 h-14 shadow-none font-sans text-sm text-[#1A1A1A] placeholder:text-[#BDBDBD] rounded-none"
             />
             <Button
