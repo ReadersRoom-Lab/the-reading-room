@@ -2,15 +2,45 @@
 
 _Automated summary of git contributions. Updated on every push._
 
+## 📅 July 21, 2026
+
+**Lokeshwaran V R:**
+
+- Style(docs): format wiki markdown files with Prettier
+- Docs(wiki): add GitHub Wiki documentation pages
+- Fix(vault): default to cards layout and remove concepts tabs from vocabulary vault
+- Refactor(sonarcloud): fix cognitive complexity in chat route and explicit button type in FlashcardModal
+- Fix(vault): cleanup VaultPage server component and connect Active Recall Flashcards
+- Feat(vault,insights): add active recall flashcard mode, AI room concepts, and fix library synthesis context
+
+**akash:**
+
+- Feat: implement spaced repetition rediscovery engine, reader shortcuts, PDF dropzone, and PWA offline support
+- Security: add override for brace-expansion to resolve high-severity vulnerability
+- Feat: implement Connected Ideas knowledge graph page and API
+
 ## 📅 July 19, 2026
 
 **Lokeshwaran V R:**
 
+- Docs: manually add akash's July 16 vault redesign contributions missed by git log
+- Docs: update README with latest features and regenerate CONTRIBUTIONS
 - Refactor: add explicit type=button to interactive button elements to fix SonarCloud code smells
 - Refactor(api): replace deprecated streamText helpers with standalone createTextStreamResponse and createUIMessageStreamResponse
 - Security: remove dangerouslySetInnerHTML and use whitespace-pre-wrap in Insights page
 - Chore(deps): downgrade utf-8-validate back to ^5.0.10 to resolve peer conflicts with nested ws packages
 - Chore(deps): consolidate and upgrade all dependencies to resolve dependabot issues
+
+## 📅 July 16, 2026
+
+**akash:**
+
+- Ci: disable JRE provisioning and ignore errors in sonarcloud.yml
+- Ci: make SonarCloud Scan non-blocking on SonarCloud API server 504 outage
+- Ci: explicit host url and pin sonarqube action v8.2.0 to resolve connection timeout
+- Ci: disable SonarScanner JRE provisioning to prevent network timeout
+- Fix: resolve relative import, add explicit event and handler typings
+- Feat: redesign Vault workspace, implement Gemini etymology & pronunciation lookup
 
 ## 📅 July 15, 2026
 
@@ -18,17 +48,6 @@ _Automated summary of git contributions. Updated on every push._
 
 - Style: format extension popup HTML
 - Refactor: improve accessibility contrast, home layout, and extension UX
-
-## 📅 July 16, 2026
-
-**akash:**
-
-- Feat: redesign Vault workspace, implement Gemini etymology & pronunciation lookup
-- Fix: resolve relative import, add explicit event and handler typings
-- Ci: disable SonarScanner JRE provisioning to prevent network timeout
-- Ci: explicit host url and pin sonarqube action v8.2.0 to resolve connection timeout
-- Ci: make SonarCloud Scan non-blocking on SonarCloud API server 504 outage
-- Ci: disable JRE provisioning and ignore errors in sonarcloud.yml
 
 ## 📅 July 14, 2026
 

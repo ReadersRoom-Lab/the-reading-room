@@ -119,6 +119,22 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 
 ---
 
+## 👥 Team & Core Responsibilities
+
+- **Lokeshwaran V R (Loki)** — _Frontend Lead & UX Architect_
+  - Designed & implemented the "Scholarly Minimalism" design system (0px border-radius, parchment typography, flat ink aesthetics).
+  - Built the dual-sided **3D Active Recall Flashcards** practice modal with keyboard controls (`Space`, `1-4`) and recall scoring.
+  - Developed the dictionary popover lookup, memoized text selection hooks, and responsive Vault card grid layout.
+  - Implemented WCAG AA compliance (100/100 Lighthouse score), safe HTML markdown rendering, and mobile viewport optimizations.
+
+- **Akash** — _Backend & Infrastructure Lead_
+  - Architected the database schema with Prisma ORM 7 (`Article`, `VaultEntry`, `ArticleChunk`, `Room`, `Highlight`).
+  - Built the RAG Semantic Search engine powered by PostgreSQL `pgvector` and `text-embedding-004`.
+  - Built the **AI Insights Synthesis Engine** and **AI Room Concepts Generator** using Vercel AI SDK v7 (`streamText`, `Output.object`).
+  - Configured CI/CD pipelines (`.github/workflows/ci.yml`), SonarCloud Quality Gate scanners, and the 51-test Node.js suite.
+
+---
+
 ## ✨ Features Log (Implemented)
 
 1. **Dashboard & Extension Integration**: Clean hero layouts with direct instructions for the companion Chrome extension.
@@ -136,6 +152,10 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 13. **API Deprecation Hardening**: Migrated all streaming endpoints from deprecated `result.toUIMessageStreamResponse()` and `result.toTextStreamResponse()` helpers to standalone `createUIMessageStreamResponse` / `toUIMessageStream` / `createTextStreamResponse` / `toTextStream` functions from the Vercel AI SDK to resolve SonarCloud maintainability warnings.
 14. **Security Hardening**: Eliminated `dangerouslySetInnerHTML` usage in Insights Studio — AI responses are now safe-rendered via `whitespace-pre-wrap` CSS. Resolved SonarCloud security rating blockage.
 15. **Accessibility & Button-Type Hygiene**: Added explicit `type="button"` attributes to all interactive, non-submit buttons across the dashboard (Extension, Home, Insights, Pro pages) to prevent implicit form submission side effects, resolving all remaining SonarCloud reliability code smells.
+16. **Active Recall & 3D Flashcards Studio**: Built a dual-sided 3D card flipping flashcards system with Fisher-Yates deck shuffle using `secureRandom()`, recall rating tiers (`1/Again`, `2/Hard`, `3/Good`, `4/Easy`), keyboard shortcuts (`Space`, `1-4`), and session accuracy scoring.
+17. **RAG-Powered Insights Synthesis Engine**: Built a full-context library assistant feeding user's articles, highlights, and vault terms directly into Gemini 2.5 Flash with streaming markdown rendering and automatic vector chunk backfilling.
+18. **AI Room Concepts Generator**: Migrated room concepts synthesis to Vercel AI SDK v7 (`generateText` + `Output.object`) for structured cross-article concept extractions.
+19. **Comprehensive GitHub Wiki Documentation**: Authoritative wiki hub (`Home`, `Features-Guide`, `Developer-Architecture-Guide`) detailing architecture, setup, testing, and feature guides.
 
 ---
 
