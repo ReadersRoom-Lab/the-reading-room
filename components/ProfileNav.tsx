@@ -51,6 +51,7 @@ export function ProfileNav() {
         </p>
 
         <button
+          type="button"
           onClick={() => navigate("profile")}
           className={`flex items-center justify-center md:justify-start gap-3 px-4 py-2.5 md:px-3 md:py-2.5 text-sm font-sans font-medium transition-colors w-full md:w-full ${
             active === "profile"
@@ -63,6 +64,7 @@ export function ProfileNav() {
         </button>
 
         <button
+          type="button"
           onClick={() => navigate("security")}
           className={`flex items-center justify-center md:justify-start gap-3 px-4 py-2.5 md:px-3 md:py-2.5 text-sm font-sans font-medium transition-colors w-full md:w-full ${
             active === "security"
@@ -101,7 +103,10 @@ export function ProfileNav() {
       {/* Sign Out */}
       <div className="p-3 md:p-4 border-t-0 md:border-t border-[#E5E5E5] shrink-0">
         <SignOutButton>
-          <button className="flex items-center justify-center gap-2 w-full px-4 py-2 md:py-2.5 bg-[#1A1A1A] text-[#F9F7F2] font-sans text-sm font-semibold transition-colors hover:bg-[#333]">
+          <button
+            type="button"
+            className="flex items-center justify-center gap-2 w-full px-4 py-2 md:py-2.5 bg-[#1A1A1A] text-[#F9F7F2] font-sans text-sm font-semibold transition-colors hover:bg-[#333]"
+          >
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline md:inline">Sign Out</span>
           </button>

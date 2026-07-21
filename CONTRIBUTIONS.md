@@ -6,6 +6,7 @@ _Automated summary of git contributions. Updated on every push._
 
 **Lokeshwaran V R:**
 
+- Docs: update README.md with Team responsibilities for Loki and Akash, and update CONTRIBUTIONS.md
 - Style(docs): format wiki markdown files with Prettier
 - Docs(wiki): add GitHub Wiki documentation pages
 - Fix(vault): default to cards layout and remove concepts tabs from vocabulary vault

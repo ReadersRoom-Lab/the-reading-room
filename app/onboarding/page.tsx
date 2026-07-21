@@ -264,6 +264,7 @@ export default function OnboardingPage() {
                 <div className="flex gap-3">
                   {["#D4AF37", "#2DD4BF", "#FB923C", "#818CF8", "#F472B6"].map((color) => (
                     <button
+                      type="button"
                       key={color}
                       className={`w-10 h-10 rounded-full border-2 transition-all hover:scale-110 ${formData.roomColor === color ? "border-zinc-900 scale-110 ring-2 ring-zinc-200 ring-offset-2" : "border-transparent"}`}
                       style={{ backgroundColor: color }}

@@ -25,6 +25,7 @@ export function TextSelectionMenu({
     >
       <div className="flex items-center border-r border-gray-700 pr-1">
         <button
+          type="button"
           onClick={() => onHighlight("ochre")}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
           title="Highlight Ochre"
@@ -32,6 +33,7 @@ export function TextSelectionMenu({
           <div className="w-4 h-4 rounded-full bg-[#FCD116]" />
         </button>
         <button
+          type="button"
           onClick={() => onHighlight("sage")}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
           title="Highlight Sage"
@@ -39,6 +41,7 @@ export function TextSelectionMenu({
           <div className="w-4 h-4 rounded-full bg-[#8DA399]" />
         </button>
         <button
+          type="button"
           onClick={() => onHighlight("crimson")}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
           title="Highlight Crimson"
@@ -46,6 +49,7 @@ export function TextSelectionMenu({
           <div className="w-4 h-4 rounded-full bg-[#9A3B3B]" />
         </button>
         <button
+          type="button"
           onClick={() => onHighlight("indigo")}
           className="p-2 hover:bg-white/20 rounded-sm transition-colors"
           title="Highlight Indigo"
@@ -55,6 +59,7 @@ export function TextSelectionMenu({
       </div>
 
       <button
+        type="button"
         onClick={onDefine}
         className="p-2 hover:bg-white/20 rounded-sm transition-colors flex items-center gap-2 text-xs font-medium"
       >
@@ -62,6 +67,7 @@ export function TextSelectionMenu({
       </button>
 
       <button
+        type="button"
         onClick={onSaveConcept}
         className="p-2 hover:bg-white/20 rounded-sm transition-colors flex items-center gap-2 text-xs font-medium"
       >

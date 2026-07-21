@@ -101,6 +101,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
         </div>
 
         <button
+          type="button"
           onClick={handleShuffle}
           disabled={loading}
           className="flex items-center gap-1.5 text-xs font-semibold text-[#1A1A1A] hover:text-black transition-colors disabled:opacity-50"
@@ -162,12 +163,14 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
             />
             <div className="flex justify-end gap-2">
               <button
+                type="button"
                 onClick={() => setEditingNote(false)}
                 className="px-3 py-1 text-xs font-medium text-[#52525B]"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleSaveNote}
                 disabled={savingNote}
                 className="px-3 py-1 text-xs font-semibold bg-[#1A1A1A] text-white rounded-none"
@@ -183,6 +186,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
                 <MessageSquare className="w-3.5 h-3.5 text-[#E6C79C]" />
                 <span>{item.user_note}</span>
                 <button
+                  type="button"
                   onClick={() => setEditingNote(true)}
                   className="ml-2 text-[10px] text-[#8C8C8C] hover:text-[#1A1A1A]"
                 >
@@ -191,6 +195,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
               </div>
             ) : (
               <button
+                type="button"
                 onClick={() => setEditingNote(true)}
                 className="flex items-center gap-1 text-xs text-[#8C8C8C] hover:text-[#1A1A1A]"
               >
@@ -200,6 +205,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => setIsMastered(!isMastered)}
                 className={`flex items-center gap-1 text-xs font-medium px-2 py-1 transition-colors ${
                   isMastered

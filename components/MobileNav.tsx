@@ -29,7 +29,12 @@ export function MobileNav() {
         <span className="font-heading font-bold text-lg text-[#1A1A1A] tracking-tight">
           ReadrSpace
         </span>
-        <button onClick={toggleMenu} className="p-2 text-[#1A1A1A]" aria-label="Toggle Menu">
+        <button
+          type="button"
+          onClick={toggleMenu}
+          className="p-2 text-[#1A1A1A]"
+          aria-label="Toggle Menu"
+        >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>

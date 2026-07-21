@@ -177,6 +177,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
 
                   <div className="flex items-center gap-1.5">
                     <button
+                      type="button"
                       disabled={isDeleting === entry.id}
                       onClick={(e) => handleDelete(entry.id, e)}
                       className="opacity-0 group-hover:opacity-100 hover:text-red-600 p-1 transition-opacity text-[#BDBDBD] hover:bg-[#F4F4F5] rounded-none"
@@ -201,6 +202,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
           {/* Mobile back button */}
           <div className="p-4 border-b border-[#E5E5E5] bg-white flex items-center md:hidden shrink-0">
             <button
+              type="button"
               onClick={() => setMobileView("list")}
               className="flex items-center gap-2 text-xs font-medium text-[#52525B]"
             >
@@ -236,6 +238,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                     )}
                   </div>
                   <button
+                    type="button"
                     disabled={isDeleting === selectedEntry.id}
                     onClick={(e) => handleDelete(selectedEntry.id, e)}
                     className="text-xs flex items-center gap-1 text-[#8C8C8C] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"
@@ -545,6 +548,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                     )}
                   </div>
                   <button
+                    type="button"
                     disabled={isDeleting === activeGridEntry.id}
                     onClick={(e) => handleDelete(activeGridEntry.id, e)}
                     className="text-xs flex items-center gap-1 text-[#8C8C8C] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"

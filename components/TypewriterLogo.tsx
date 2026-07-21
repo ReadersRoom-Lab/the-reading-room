@@ -19,7 +19,7 @@ export function TypewriterLogo() {
         {fullText.split("").map((char, index) => {
           const isVisible = index < typedChars;
           return (
-            <span key={index} className={isVisible ? "opacity-100" : "opacity-0"}>
+            <span key={`${char}-${index}`} className={isVisible ? "opacity-100" : "opacity-0"}>
               {char}
             </span>
           );
