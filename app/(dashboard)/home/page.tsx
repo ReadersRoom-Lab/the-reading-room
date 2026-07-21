@@ -3,8 +3,7 @@ import prisma from "@/lib/prisma";
 import { secureRandom } from "@/lib/utils";
 import Link from "next/link";
 import { Bookmark, BookOpen, Highlighter, Library, Layout } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { RefreshButton } from "./RefreshButton";
+import { TodaysRediscoveryCard } from "@/components/TodaysRediscoveryCard";
 
 export default async function Home() {
   const { userId } = await auth();
@@ -147,63 +146,24 @@ export default async function Home() {
 
       {/* Today's Rediscovery */}
       <section>
-        <RefreshButton />
-        {randomEntries.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {randomEntries.map((entry) => (
-              <div key={entry.id} className="group perspective-1000 h-28 w-full cursor-pointer">
-                <div className="relative w-full h-full duration-500 preserve-3d group-hover:rotate-y-180">
-                  {/* Front Side */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden bg-white border border-[#E5E5E5] p-4 flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                      <span className="font-sans text-[8px] font-semibold px-1.5 py-0.5 border border-[#E6C79C] bg-[#E6C79C]/20 text-[#1A1A1A] tracking-[0.05em] uppercase">
-                        {entry.type === "concept" ? "CONCEPT" : "VOCAB"}
-                      </span>
-                      <span className="font-sans text-[9px] text-[#52525B]">
-                        {formatDistanceToNow(new Date(entry.created_at), { addSuffix: true })}
-                      </span>
-                    </div>
-                    <h4 className="font-heading text-lg font-bold text-[#1A1A1A] truncate">
-                      {entry.term}
-                    </h4>
-                    <span className="text-[9px] font-sans text-[#bdbdbd] tracking-wider uppercase">
-                      Hover to reveal
-                    </span>
-                  </div>
-
-                  {/* Back Side */}
-                  <div className="absolute inset-0 w-full h-full rotate-y-180 backface-hidden bg-[#F9F7F2] border border-[#E6C79C] p-4 flex flex-col justify-between overflow-y-auto">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-sans text-[8px] font-semibold text-[#52525B] uppercase tracking-wider block">
-                        Meaning & Explanation
-                      </span>
-                      <p className="font-serif text-[11px] text-[#1A1A1A] leading-relaxed">
-                        {entry.definition}
-                      </p>
-                    </div>
-                    {entry.vaultTrails && entry.vaultTrails.length > 0 && (
-                      <div className="pt-1.5 border-t border-[#E5E5E5] mt-1.5">
-                        <p className="font-sans text-[8px] text-[#52525B] truncate">
-                          {"From: "}
-                          <span className="italic font-serif text-[#1A1A1A]">
-                            &quot;{entry.vaultTrails[0].article.title}&quot;
-                          </span>
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="border border-[#E5E5E5] bg-white p-10 text-center">
-            <p className="font-sans text-sm text-[#52525B] mb-4">Your Vault is currently empty.</p>
-            <p className="font-sans text-xs text-[#BDBDBD]">
-              Highlight and define words while reading to build your vocabulary.
-            </p>
-          </div>
-        )}
+        <TodaysRediscoveryCard
+          initialItem={
+            randomEntries.length > 0
+              ? {
+                  id: randomEntries[0].id,
+                  type: "vault",
+                  termOrText: randomEntries[0].term,
+                  definitionOrNote: randomEntries[0].definition,
+                  pronunciation: randomEntries[0].pronunciation,
+                  etymology: randomEntries[0].etymology,
+                  articleTitle: randomEntries[0].vaultTrails?.[0]?.article?.title,
+                  articleId: randomEntries[0].vaultTrails?.[0]?.article?.id,
+                  created_at: randomEntries[0].created_at,
+                  user_note: randomEntries[0].user_note,
+                }
+              : null
+          }
+        />
       </section>
 
       {/* Divider */}
