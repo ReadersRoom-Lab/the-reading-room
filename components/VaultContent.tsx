@@ -19,6 +19,8 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { FlashcardModal } from "./FlashcardModal";
 
 interface Article {
   id: string;
@@ -63,8 +65,7 @@ interface VaultContentProps {
 export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
   const [entries, setEntries] = useState<VaultEntry[]>(initialEntries);
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"all" | "vocabulary" | "concept">("all");
-  const [viewLayout, setViewLayout] = useState<"split" | "grid">("split");
+  const [viewLayout, setViewLayout] = useState<"grid" | "split">("grid");
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(
     initialEntries.length > 0 ? initialEntries[0].id : null
   );
@@ -72,23 +73,18 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
   const [mobileView, setMobileView] = useState<"list" | "details">("list");
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [activeGridEntry, setActiveGridEntry] = useState<VaultEntry | null>(null);
+  const [practiceOpen, setPracticeOpen] = useState(false);
 
-  // 1. Filter entries based on search term and type
+  // 1. Filter entries based on search term
   const filteredEntries = useMemo(() => {
     return entries.filter((entry) => {
-      const matchesSearch =
+      return (
         entry.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
         entry.definition.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (entry.user_note?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
-
-      const matchesType =
-        typeFilter === "all" ||
-        (typeFilter === "vocabulary" && entry.type === "vocabulary") ||
-        (typeFilter === "concept" && entry.type === "concept");
-
-      return matchesSearch && matchesType;
+        (entry.user_note?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
+      );
     });
-  }, [entries, searchTerm, typeFilter]);
+  }, [entries, searchTerm]);
 
   // 2. Select the currently active entry in split view
   const selectedEntry = useMemo(() => {
@@ -167,15 +163,8 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                 >
                   <div className="flex-1 min-w-0 pr-2">
                     <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`text-[8px] font-bold tracking-wider px-1 text-white ${
-                          entry.type === "concept" ? "bg-indigo-600" : "bg-emerald-600"
-                        }`}
-                      >
-                        {entry.type === "concept" ? "CONCEPT" : "VOCAB"}
-                      </span>
-                      <span className="text-[9px] text-[#8C8C8C]">
-                        {format(new Date(entry.created_at), "MMM d")}
+                      <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-[#BDBDBD]">
+                        {format(new Date(entry.created_at), "MMM d, yyyy")}
                       </span>
                     </div>
                     <h3 className="text-sm font-bold text-[#1A1A1A] truncate group-hover:text-black">
@@ -380,27 +369,19 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                 }}
               >
                 <div>
-                  <div className="flex justify-between items-start mb-2.5">
-                    <span
-                      className={`text-[8px] font-bold tracking-wider px-1.5 py-0.5 text-white ${
-                        entry.type === "concept" ? "bg-indigo-600" : "bg-emerald-600"
-                      }`}
-                    >
-                      {entry.type === "concept" ? "CONCEPT" : "VOCAB"}
+                  <div className="flex justify-between items-center mb-2.5">
+                    <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-[#BDBDBD]">
+                      {format(new Date(entry.created_at), "MMM d, yyyy")}
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[9px] text-[#8C8C8C]">
-                        {format(new Date(entry.created_at), "MMM dd, yyyy")}
-                      </span>
-                      <button
-                        disabled={isDeleting === entry.id}
-                        onClick={(e) => handleDelete(entry.id, e)}
-                        className="opacity-0 group-hover:opacity-100 hover:text-red-600 p-0.5 transition-opacity text-[#BDBDBD] hover:bg-[#F4F4F5] rounded-none"
-                        title="Delete term"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      disabled={isDeleting === entry.id}
+                      onClick={(e) => handleDelete(entry.id, e)}
+                      className="opacity-0 group-hover:opacity-100 hover:text-red-600 p-0.5 transition-opacity text-[#BDBDBD] hover:bg-[#F4F4F5] rounded-none"
+                      title="Delete term"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                   <h3 className="font-heading text-lg font-bold text-[#1A1A1A] mb-2 truncate">
                     {entry.term}
@@ -462,83 +443,61 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               Vocabulary Vault
             </h1>
             <p className="font-sans text-xs text-[#52525B] mt-1">
-              {entries.length} {entries.length === 1 ? "concept" : "concepts"} saved in total
+              {entries.length} word{entries.length === 1 ? "" : "s"} saved in total
             </p>
           </div>
 
-          {/* Search bar */}
-          <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search saved concepts..."
-              className="w-full pl-9 pr-4 py-2 border border-[#E5E5E5] bg-white rounded-none focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm text-[#1A1A1A] placeholder:text-[#BDBDBD]"
-            />
-          </div>
-        </div>
+          {/* Search bar, Practice button & View Layout Toggles */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+            {entries.length > 0 && (
+              <Button
+                onClick={() => setPracticeOpen(true)}
+                className="bg-[#1A1A1A] text-white hover:bg-[#333] rounded-none h-10 px-4 text-xs font-bold uppercase tracking-wider gap-2 shrink-0"
+              >
+                <Sparkles className="w-4 h-4 text-[#E6C79C]" />
+                Practice Flashcards
+              </Button>
+            )}
 
-        {/* Filter controls and layout toggles */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mt-2">
-          {/* Tabs / Pills */}
-          <div className="flex border border-[#E5E5E5] bg-white p-1 gap-1 rounded-none text-xs">
-            <button
-              onClick={() => setTypeFilter("all")}
-              className={`px-3 py-1.5 transition-colors font-medium rounded-none ${
-                typeFilter === "all"
-                  ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                  : "text-[#52525B] hover:bg-[#F4F4F5] hover:text-[#1A1A1A]"
-              }`}
-            >
-              All Types
-            </button>
-            <button
-              onClick={() => setTypeFilter("vocabulary")}
-              className={`px-3 py-1.5 transition-colors font-medium rounded-none ${
-                typeFilter === "vocabulary"
-                  ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                  : "text-[#52525B] hover:bg-[#F4F4F5] hover:text-[#1A1A1A]"
-              }`}
-            >
-              Vocabulary
-            </button>
-            <button
-              onClick={() => setTypeFilter("concept")}
-              className={`px-3 py-1.5 transition-colors font-medium rounded-none ${
-                typeFilter === "concept"
-                  ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                  : "text-[#52525B] hover:bg-[#F4F4F5] hover:text-[#1A1A1A]"
-              }`}
-            >
-              Concepts
-            </button>
-          </div>
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search saved words..."
+                aria-label="Search saved vocabulary words"
+                className="w-full pl-9 pr-4 py-2 border border-[#E5E5E5] bg-white rounded-none focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm text-[#1A1A1A] placeholder:text-[#BDBDBD]"
+              />
+            </div>
 
-          {/* View Toggles */}
-          <div className="flex border border-[#E5E5E5] bg-white p-1 gap-1 rounded-none text-xs">
-            <button
-              onClick={() => setViewLayout("split")}
-              title="Split View"
-              className={`p-1.5 transition-colors rounded-none ${
-                viewLayout === "split"
-                  ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                  : "text-[#52525B] hover:bg-[#F4F4F5]"
-              }`}
-            >
-              <Columns className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewLayout("grid")}
-              title="Grid View"
-              className={`p-1.5 transition-colors rounded-none ${
-                viewLayout === "grid"
-                  ? "bg-[#1A1A1A] text-[#F9F7F2]"
-                  : "text-[#52525B] hover:bg-[#F4F4F5]"
-              }`}
-            >
-              <Grid3X3 className="w-4 h-4" />
-            </button>
+            {/* View Layout Toggles */}
+            <div className="flex border border-[#E5E5E5] bg-white p-1 gap-1 rounded-none text-xs shrink-0">
+              <button
+                type="button"
+                onClick={() => setViewLayout("grid")}
+                title="Grid Cards View"
+                className={`p-1.5 transition-colors rounded-none ${
+                  viewLayout === "grid"
+                    ? "bg-[#1A1A1A] text-[#F9F7F2]"
+                    : "text-[#52525B] hover:bg-[#F4F4F5]"
+                }`}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewLayout("split")}
+                title="Split List View"
+                className={`p-1.5 transition-colors rounded-none ${
+                  viewLayout === "split"
+                    ? "bg-[#1A1A1A] text-[#F9F7F2]"
+                    : "text-[#52525B] hover:bg-[#F4F4F5]"
+                }`}
+              >
+                <Columns className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -694,6 +653,13 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Flashcard Practice Overlay */}
+      <FlashcardModal
+        isOpen={practiceOpen}
+        onClose={() => setPracticeOpen(false)}
+        entries={filteredEntries.length > 0 ? filteredEntries : entries}
+      />
     </div>
   );
 }
