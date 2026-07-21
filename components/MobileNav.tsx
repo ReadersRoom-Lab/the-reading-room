@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Home, Library, LayoutGrid, BookMarked, User, Sparkles } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  Library,
+  LayoutGrid,
+  BookMarked,
+  User,
+  Sparkles,
+  GitFork,
+} from "lucide-react";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 
@@ -66,6 +76,13 @@ export function MobileNav() {
               className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
             >
               <BookMarked className="w-5 h-5 shrink-0" /> Vault
+            </Link>
+            <Link
+              href="/graph"
+              onClick={closeMenu}
+              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
+            >
+              <GitFork className="w-5 h-5 shrink-0" /> Connected Ideas
             </Link>
             <Link
               href="/insights"

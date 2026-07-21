@@ -26,6 +26,7 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@vercel/speed-insights": "^2.0.0",
+    "@xyflow/react": "^12.11.2",
     "ai": "^7.0.31",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -72,6 +73,9 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
     "utf-8-validate": "^5.0.10"
+  },
+  "overrides": {
+    "brace-expansion": "^1.1.16"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
