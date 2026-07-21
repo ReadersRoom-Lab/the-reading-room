@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, RotateCw, Shuffle, BookOpen, Sparkles, Award, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { secureRandom } from "@/lib/utils";
 
 interface VaultTrail {
   article_id: string;
@@ -18,7 +19,7 @@ interface VaultEntry {
   pronunciation: string | null;
   etymology: string | null;
   example_sentence: string | null;
-  created_at: string;
+  created_at: string | Date;
   vaultTrails: VaultTrail[];
 }
 
@@ -40,7 +41,7 @@ interface ReviewResult {
 function shuffleDeck<T>(items: T[]): T[] {
   const list = [...items];
   for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(secureRandom() * (i + 1));
     const temp = list[i];
     list[i] = list[j];
     list[j] = temp;
@@ -386,6 +387,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
               </Button>
             )}
             <button
+              type="button"
               onClick={onClose}
               className="p-1 text-[#52525B] hover:text-[#1A1A1A] transition-colors rounded-none"
               aria-label="Close practice mode"
