@@ -34,8 +34,9 @@ model Room {
   mode         String       @default("reading")
   created_at   DateTime     @default(now())
   updated_at   DateTime     @updatedAt
-  articles     Article[]
-  vaultTrails  VaultTrail[]
+  articles      Article[]
+  vaultTrails   VaultTrail[]
+  roomConcepts  RoomConcept[]
 
   @@index([user_id])
 }
@@ -126,5 +127,18 @@ model VaultTrail {
 
   @@index([vault_entry_id])
   @@index([article_id])
+  @@index([room_id])
+}
+
+model RoomConcept {
+  id          String   @id @default(uuid())
+  room_id     String
+  room        Room     @relation(fields: [room_id], references: [id], onDelete: Cascade)
+  title       String
+  summary     String
+  explanation String   @db.Text
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
   @@index([room_id])
 }

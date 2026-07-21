@@ -13,20 +13,22 @@ export default async function VaultPage() {
     where: { clerk_id: userId },
   });
 
-  const vaultEntries = user
-    ? await prisma.vaultEntry.findMany({
-        where: { user_id: user.id },
-        orderBy: { created_at: "desc" },
+  if (!user) {
+    return null;
+  }
+
+  const vaultEntries = await prisma.vaultEntry.findMany({
+    where: { user_id: user.id },
+    include: {
+      vaultTrails: {
         include: {
-          vaultTrails: {
-            include: {
-              article: true,
-              room: true,
-            },
-          },
+          article: true,
+          room: true,
         },
-      })
-    : [];
+      },
+    },
+    orderBy: { created_at: "desc" },
+  });
 
   return (
     <div className="flex flex-col w-full font-sans">
