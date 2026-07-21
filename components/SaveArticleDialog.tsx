@@ -212,10 +212,21 @@ export function SaveArticleDialog({
                   variant="outline"
                   disabled={loading}
                   onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const droppedFile = e.dataTransfer.files?.[0];
+                    if (droppedFile && droppedFile.type === "application/pdf") {
+                      setFile(droppedFile);
+                      setUrl("");
+                    } else if (droppedFile) {
+                      toast.error("Please drop a valid PDF document");
+                    }
+                  }}
                   className={`w-full flex gap-2 ${file ? "border-primary text-primary bg-primary/10" : ""}`}
                 >
                   <Upload className="w-4 h-4" />
-                  {file ? "PDF Selected" : "Upload PDF"}
+                  {file ? "PDF Selected" : "Upload / Drop PDF"}
                 </Button>
               </div>
             </div>
