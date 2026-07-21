@@ -87,7 +87,11 @@ export function EditHighlightPopover({
     >
       <div className="flex items-center justify-between mb-3">
         <h4 className="font-semibold text-sm">Edit Highlight</h4>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-muted-foreground hover:text-foreground"
+        >
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -97,6 +101,7 @@ export function EditHighlightPopover({
         <div className="flex gap-2">
           {COLORS.map((c) => (
             <button
+              type="button"
               key={c.id}
               onClick={() => setColor(c.id)}
               className={`w-6 h-6 rounded-full transition-all ${color === c.id ? "ring-2 ring-offset-2 ring-foreground scale-110" : "hover:scale-110"}`}
@@ -131,6 +136,7 @@ export function EditHighlightPopover({
         {/* Define & Save Concept Actions */}
         <div className="flex gap-2 pt-2 border-t border-border">
           <button
+            type="button"
             onClick={() => {
               onDefine?.();
               onClose();
@@ -141,6 +147,7 @@ export function EditHighlightPopover({
           </button>
 
           <button
+            type="button"
             onClick={() => {
               onSaveConcept?.();
               onClose();
@@ -154,6 +161,7 @@ export function EditHighlightPopover({
         {/* Actions */}
         <div className="flex items-center justify-between pt-2">
           <button
+            type="button"
             onClick={() => {
               onDelete(highlight.id);
               onClose();
@@ -164,6 +172,7 @@ export function EditHighlightPopover({
           </button>
 
           <button
+            type="button"
             onClick={handleSave}
             className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors flex items-center gap-2 text-xs font-medium"
           >

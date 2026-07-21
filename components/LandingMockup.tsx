@@ -298,6 +298,7 @@ export function LandingMockup() {
         <div className="mt-8 flex gap-3">
           {[0, 1, 2].map((i) => (
             <button
+              type="button"
               key={i}
               onClick={() => setActiveAd(i)}
               className="relative py-2 px-1 group"

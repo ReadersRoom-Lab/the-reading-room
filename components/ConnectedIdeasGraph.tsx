@@ -139,8 +139,15 @@ export function ConnectedIdeasGraph({
       if (filterType === "articles") matchesFilter = isArticle;
       if (filterType === "concepts") matchesFilter = isConcept;
 
-      const title = String(node.data.title || node.data.term || "");
-      const def = String(node.data.definition || "");
+      const nodeData = node.data as { title?: unknown; term?: unknown; definition?: unknown };
+      let rawTitle = "";
+      if (typeof nodeData.title === "string") {
+        rawTitle = nodeData.title;
+      } else if (typeof nodeData.term === "string") {
+        rawTitle = nodeData.term;
+      }
+      const title = String(rawTitle);
+      const def = typeof nodeData.definition === "string" ? nodeData.definition : "";
       const matchesSearch =
         !searchTerm ||
         title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -189,6 +196,7 @@ export function ConnectedIdeasGraph({
         {/* Filter Pills */}
         <div className="flex items-center gap-2 text-xs">
           <button
+            type="button"
             onClick={() => setFilterType("all")}
             className={`px-3 py-1.5 font-medium rounded-none transition-colors ${
               filterType === "all"
@@ -199,6 +207,7 @@ export function ConnectedIdeasGraph({
             All Nodes ({totals.articles + totals.concepts})
           </button>
           <button
+            type="button"
             onClick={() => setFilterType("articles")}
             className={`px-3 py-1.5 font-medium rounded-none transition-colors ${
               filterType === "articles"
@@ -209,6 +218,7 @@ export function ConnectedIdeasGraph({
             Articles ({totals.articles})
           </button>
           <button
+            type="button"
             onClick={() => setFilterType("concepts")}
             className={`px-3 py-1.5 font-medium rounded-none transition-colors ${
               filterType === "concepts"
@@ -252,6 +262,7 @@ export function ConnectedIdeasGraph({
               {selectedNode.type === "articleNode" ? "ARTICLE CONNECTION" : "CONCEPT CONNECTION"}
             </span>
             <button
+              type="button"
               onClick={() => setSelectedNode(null)}
               className="p-1 text-[#8C8C8C] hover:text-[#1A1A1A]"
             >
@@ -274,7 +285,10 @@ export function ConnectedIdeasGraph({
                     </span>
                     <span className="flex items-center gap-1">
                       <BookOpen className="w-3.5 h-3.5" />
-                      {String(selectedNode.data.read_time_minutes || 5)} min read
+                      {typeof selectedNode.data.read_time_minutes === "number"
+                        ? selectedNode.data.read_time_minutes
+                        : 5}{" "}
+                      min read
                     </span>
                   </div>
                 </div>

@@ -216,7 +216,7 @@ export function SaveArticleDialog({
                   onDrop={(e) => {
                     e.preventDefault();
                     const droppedFile = e.dataTransfer.files?.[0];
-                    if (droppedFile && droppedFile.type === "application/pdf") {
+                    if (droppedFile?.type === "application/pdf") {
                       setFile(droppedFile);
                       setUrl("");
                     } else if (droppedFile) {

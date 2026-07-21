@@ -221,6 +221,27 @@ export default function ReaderPage() {
 
   // Keyboard shortcuts in Reader (Cmd+H / Cmd+S)
   useEffect(() => {
+    const createShortcutHighlight = async (articleId: string, content: string) => {
+      try {
+        const res = await fetch("/api/highlights", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            article_id: articleId,
+            content,
+            colour: "ochre",
+          }),
+        });
+        const newHighlight = await res.json();
+        if (newHighlight?.id) {
+          setHighlights((prev) => [newHighlight, ...prev]);
+          setActiveSelection(null);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const isCmdOrCtrl = e.metaKey || e.ctrlKey;
       if (!isCmdOrCtrl) return;
@@ -230,23 +251,7 @@ export default function ReaderPage() {
 
       if (e.key.toLowerCase() === "h" && selectedText && article) {
         e.preventDefault();
-        fetch("/api/highlights", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            article_id: article.id,
-            content: selectedText,
-            colour: "ochre",
-          }),
-        })
-          .then((res) => res.json())
-          .then((newHighlight) => {
-            if (newHighlight && newHighlight.id) {
-              setHighlights((prev) => [newHighlight, ...prev]);
-              setActiveSelection(null);
-            }
-          })
-          .catch(console.error);
+        createShortcutHighlight(article.id, selectedText);
       } else if (e.key.toLowerCase() === "s" && selectedText) {
         e.preventDefault();
         let snippet = selectedText;

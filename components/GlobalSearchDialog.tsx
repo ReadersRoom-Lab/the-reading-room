@@ -85,6 +85,7 @@ export function GlobalSearchDialog() {
   return (
     <>
       <button
+        type="button"
         onClick={() => setOpen(true)}
         className="hidden md:flex items-center gap-2 px-2 py-1.5 text-sm font-sans text-[#52525B] hover:text-[#1A1A1A] border border-[#E5E5E5] hover:border-[#BDBDBD] bg-white w-full transition-colors"
       >

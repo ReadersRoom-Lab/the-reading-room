@@ -34,7 +34,7 @@ export async function generateEmbeddings(chunks: string[]) {
   if (chunks.length === 0) return [];
 
   const { embeddings } = await embedMany({
-    model: google.textEmbeddingModel("text-embedding-004"),
+    model: google.embedding("text-embedding-004"),
     values: chunks,
   });
 
@@ -46,7 +46,7 @@ export async function generateEmbeddings(chunks: string[]) {
  */
 export async function generateEmbedding(text: string) {
   const { embedding } = await embed({
-    model: google.textEmbeddingModel("text-embedding-004"),
+    model: google.embedding("text-embedding-004"),
     value: text,
   });
 
