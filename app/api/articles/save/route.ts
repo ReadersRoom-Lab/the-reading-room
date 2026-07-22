@@ -259,6 +259,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "URL or PDF text is required" }, { status: 400 });
     }
 
+    const rawFilePayload = file_url || file_data;
+    if (rawFilePayload && typeof rawFilePayload === "string") {
+      if (rawFilePayload.length > 75 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "File exceeds the 50MB maximum size limit" },
+          { status: 400 }
+        );
+      }
+
+      if (source_type === "pdf" && rawFilePayload.startsWith("data:")) {
+        const matches = /^data:[^;]+;base64,(.+)$/.exec(rawFilePayload);
+        if (matches) {
+          const sampleBuffer = Buffer.from(matches[1].substring(0, 32), "base64");
+          const magicHeader = sampleBuffer.toString("ascii", 0, 5);
+          if (!magicHeader.startsWith("%PDF-")) {
+            return NextResponse.json(
+              { error: "Invalid PDF format or corrupted document" },
+              { status: 400 }
+            );
+          }
+        }
+      }
+    }
+
     // Ensure the user exists in our DB
     const user = await prisma.user.findUnique({
       where: { clerk_id: userId },

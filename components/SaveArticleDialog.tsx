@@ -144,11 +144,17 @@ export function SaveArticleDialog({
     }
   };
 
+  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selected = e.target.files[0];
       if (selected.type !== "application/pdf") {
         toast.error("Please select a valid PDF file");
+        return;
+      }
+      if (selected.size > MAX_FILE_SIZE_BYTES) {
+        toast.error("File size exceeds maximum limit of 50MB");
         return;
       }
       setFile(selected);
@@ -229,6 +235,10 @@ export function SaveArticleDialog({
                     e.preventDefault();
                     const droppedFile = e.dataTransfer.files?.[0];
                     if (droppedFile?.type === "application/pdf") {
+                      if (droppedFile.size > MAX_FILE_SIZE_BYTES) {
+                        toast.error("File size exceeds maximum limit of 50MB");
+                        return;
+                      }
                       setFile(droppedFile);
                       setUrl("");
                     } else if (droppedFile) {

@@ -48,6 +48,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
               "Content-Type": mimeType,
               "Content-Disposition": `inline; filename="${encodeURIComponent(article.title)}.pdf"`,
               "Content-Length": buffer.length.toString(),
+              "Content-Security-Policy": "default-src 'none'; plugin-types application/pdf;",
+              "X-Content-Type-Options": "nosniff",
+              "X-Frame-Options": "SAMEORIGIN",
+              "Cache-Control": "private, max-age=86400, immutable",
             },
           });
         }
