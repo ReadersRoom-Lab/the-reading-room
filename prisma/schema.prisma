@@ -53,6 +53,7 @@ model Article {
   source_type       String       @default("url")
   content           String
   cover_image       String?
+  file_url          String?
   reading_progress  Int          @default(0)
   status            String       @default("unread")
   word_count        Int          @default(0)

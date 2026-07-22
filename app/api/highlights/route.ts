@@ -70,6 +70,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const article = await prisma.article.findFirst({
+      where: { id: article_id, user_id: user.id },
+    });
+
+    if (!article) {
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
+    }
+
     const highlight = await prisma.highlight.create({
       data: {
         user_id: user.id,

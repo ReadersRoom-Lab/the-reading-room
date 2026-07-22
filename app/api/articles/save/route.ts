@@ -1,6 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { parseHTML } from "linkedom";
 import { Readability } from "@mozilla/readability";
 import sanitizeHtml from "sanitize-html";
@@ -234,21 +235,87 @@ async function resolveArticleData(
   };
 }
 
+function validateRawFilePayload(rawFilePayload: unknown, sourceType?: string): string | null {
+  if (!rawFilePayload || typeof rawFilePayload !== "string") return null;
+  if (rawFilePayload.length > 75 * 1024 * 1024) {
+    return "File exceeds the 50MB maximum size limit";
+  }
+  if (sourceType === "pdf" && rawFilePayload.startsWith("data:")) {
+    const matches = /^data:[^;]+;base64,(.+)$/.exec(rawFilePayload);
+    if (matches) {
+      const sampleBuffer = Buffer.from(matches[1].substring(0, 32), "base64");
+      const magicHeader = sampleBuffer.toString("ascii", 0, 5);
+      if (!magicHeader.startsWith("%PDF-")) {
+        return "Invalid PDF format or corrupted document";
+      }
+    }
+  }
+  return null;
+}
+
+function processArticleText(rawContent: string) {
+  const cleanContent = sanitizeHtml(rawContent || "", {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+  });
+  const { document } = parseHTML(`<div>${cleanContent}</div>`);
+  const textContent = document.body.textContent || "";
+  const wordCount = textContent.trim().split(/\s+/).length;
+  const readTimeMinutes = Math.ceil(wordCount / 200);
+  return { cleanContent, textContent, wordCount, readTimeMinutes };
+}
+
+async function generateArticleEmbeddings(articleId: string, textContent: string) {
+  try {
+    const textChunks = chunkText(textContent, 1000);
+    if (textChunks.length === 0) return;
+    const embeddings = await generateEmbeddings(textChunks);
+
+    for (let i = 0; i < textChunks.length; i++) {
+      const chunk = textChunks[i];
+      const embedding = embeddings[i];
+
+      if (embedding && embedding.length > 0) {
+        const embeddingString = `[${embedding.join(",")}]`;
+        await prisma.$executeRaw`
+          INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
+          VALUES (gen_random_uuid(), ${articleId}, ${chunk}, ${embeddingString}::vector, NOW())
+        `;
+      }
+    }
+  } catch (embedError) {
+    logger.error("Failed to generate embeddings for article:", embedError);
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const { userId } = await auth();
-
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { url, roomId, title: pdfTitle, source_url, source_type, text, html } = await req.json();
+    const {
+      url,
+      roomId,
+      title: pdfTitle,
+      source_url,
+      source_type,
+      text,
+      html,
+      file_url,
+      file_data,
+    } = await req.json();
 
     if (!url && !text) {
       return NextResponse.json({ error: "URL or PDF text is required" }, { status: 400 });
     }
 
-    // Ensure the user exists in our DB
+    const rawFilePayload = file_url || file_data;
+    const fileError = validateRawFilePayload(rawFilePayload, source_type);
+    if (fileError) {
+      return NextResponse.json({ error: fileError }, { status: 400 });
+    }
+
     const user = await prisma.user.findUnique({
       where: { clerk_id: userId },
     });
@@ -266,20 +333,10 @@ export async function POST(req: Request) {
       html
     );
 
-    // Sanitize the HTML output
-    const cleanContent = sanitizeHtml(articleData.content || "", {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-    });
+    const { cleanContent, textContent, wordCount, readTimeMinutes } = processArticleText(
+      articleData.content || ""
+    );
 
-    // Calculate word count and read time
-    // Create a temporary JSDOM just to extract textContent for word count
-    const { document } = parseHTML(`<div>${cleanContent}</div>`);
-    const textContent = document.body.textContent || "";
-
-    const wordCount = textContent.trim().split(/\s+/).length;
-    const readTimeMinutes = Math.ceil(wordCount / 200); // Assumes ~200 WPM
-
-    // Save to database
     const savedArticle = await prisma.article.create({
       data: {
         user_id: user.id,
@@ -290,47 +347,22 @@ export async function POST(req: Request) {
         source_type: articleData.sourceType,
         content: cleanContent,
         cover_image: coverImage,
+        file_url: rawFilePayload || null,
         word_count: wordCount,
         read_time_minutes: readTimeMinutes,
         date_accessed: new Date(),
         status: "unread",
         reading_progress: 0,
-      },
+      } as Prisma.ArticleUncheckedCreateInput,
     });
 
-    // --- Vector Search & RAG: Generate Embeddings ---
-    after(async () => {
-      try {
-        const textChunks = chunkText(textContent, 1000);
-        if (textChunks.length > 0) {
-          const embeddings = await generateEmbeddings(textChunks);
-
-          for (let i = 0; i < textChunks.length; i++) {
-            const chunk = textChunks[i];
-            const embedding = embeddings[i];
-
-            if (embedding && embedding.length > 0) {
-              const embeddingString = `[${embedding.join(",")}]`;
-              await prisma.$executeRaw`
-                INSERT INTO "ArticleChunk" (id, article_id, content, embedding, created_at)
-                VALUES (gen_random_uuid(), ${savedArticle.id}, ${chunk}, ${embeddingString}::vector, NOW())
-              `;
-            }
-          }
-        }
-      } catch (embedError) {
-        logger.error("Failed to generate embeddings for article:", embedError);
-        // We don't fail the save if embeddings fail, just log it.
-      }
-    });
+    after(() => generateArticleEmbeddings(savedArticle.id, textContent));
 
     revalidatePath("/", "layout");
     return NextResponse.json(savedArticle, { status: 201 });
   } catch (error) {
     logger.error("Error saving article:", error);
     const err = error as Error;
-    // Return the actual error message to the client instead of a generic 500
-    const errorMessage = err.message || "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 });
   }
 }
