@@ -157,6 +157,9 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 18. **AI Room Concepts Generator**: Migrated room concepts synthesis to Vercel AI SDK v7 (`generateText` + `Output.object`) for structured cross-article concept extractions.
 19. **Comprehensive GitHub Wiki Documentation**: Authoritative wiki hub (`Home`, `Features-Guide`, `Developer-Architecture-Guide`) detailing architecture, setup, testing, and feature guides.
 20. **SonarCloud Code Quality & Clean Architecture Pass**: Resolved 55 SonarCloud code smells and warnings across the codebase. Enforced explicit `type="button"` attributes across all UI components, eliminated implicit object stringifications in ConnectedIdeasGraph, upgraded AI SDK embedding models (`google.embedding("text-embedding-004")`), and flattened deeply nested promise handlers in the reader keyboard shortcuts.
+21. **Native Document Format Storage & Enterprise Security Hardening**: Implemented native document format storage and embedded iframe viewing (`/api/articles/[id]/raw`), binary `%PDF-` magic-bytes validation, 50MB file size limits, strict Content-Security-Policy & HSTS response headers, HTTP private caching, and Prisma `select` query projections reducing article list payload sizes by up to 98%.
+
+For a complete timeline of contributor commits, see [CONTRIBUTIONS.md](./CONTRIBUTIONS.md).
 
 ---
 
