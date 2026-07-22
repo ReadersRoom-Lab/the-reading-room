@@ -89,7 +89,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
 
       const matchesTag =
         selectedTag === null ||
-        (entry.tags && entry.tags.includes(selectedTag)) ||
+        Boolean(entry.tags?.includes(selectedTag)) ||
         entry.term.toLowerCase().includes(selectedTag.toLowerCase()) ||
         entry.type.toLowerCase().includes(selectedTag.toLowerCase());
 

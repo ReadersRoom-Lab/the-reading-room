@@ -30,6 +30,7 @@ export function TagFilterBar({
       </div>
 
       <button
+        type="button"
         onClick={() => onSelectTag(null)}
         className={`px-3 py-1 font-medium transition-colors border ${
           activeTag === null
@@ -48,6 +49,7 @@ export function TagFilterBar({
         return (
           <button
             key={tagName}
+            type="button"
             onClick={() => onSelectTag(isSelected ? null : tagName)}
             className={`px-3 py-1 font-medium transition-all border flex items-center gap-1 shrink-0 ${
               isSelected ? "bg-[#1A1A1A] text-white border-[#1A1A1A]" : colorClass

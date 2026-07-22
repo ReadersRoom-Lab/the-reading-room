@@ -88,14 +88,14 @@ export function ExportDrawer({ compact }: { compact?: boolean } = {}) {
       }
 
       // Download file
-      const blob = new Blob([content], {
-        type:
-          format === "json"
-            ? "application/json"
-            : format === "markdown"
-              ? "text/markdown"
-              : "text/plain",
-      });
+      let mimeType = "text/plain";
+      if (format === "json") {
+        mimeType = "application/json";
+      } else if (format === "markdown") {
+        mimeType = "text/markdown";
+      }
+
+      const blob = new Blob([content], { type: mimeType });
 
       const downloadUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -103,7 +103,7 @@ export function ExportDrawer({ compact }: { compact?: boolean } = {}) {
       a.download = filename;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
+      a.remove();
       URL.revokeObjectURL(downloadUrl);
 
       toast.success(`Exported as ${filename}`);
@@ -149,9 +149,9 @@ export function ExportDrawer({ compact }: { compact?: boolean } = {}) {
         <div className="flex flex-col gap-5 py-3">
           {/* Format Selector */}
           <div>
-            <label className="block text-xs font-bold text-[#1A1A1A] uppercase tracking-wider mb-2">
+            <span className="block text-xs font-bold text-[#1A1A1A] uppercase tracking-wider mb-2">
               Export Format
-            </label>
+            </span>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
@@ -199,9 +199,9 @@ export function ExportDrawer({ compact }: { compact?: boolean } = {}) {
 
           {/* Scope Selector */}
           <div>
-            <label className="block text-xs font-bold text-[#1A1A1A] uppercase tracking-wider mb-2">
+            <span className="block text-xs font-bold text-[#1A1A1A] uppercase tracking-wider mb-2">
               Export Scope
-            </label>
+            </span>
             <div className="flex flex-col gap-1.5 text-xs">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input

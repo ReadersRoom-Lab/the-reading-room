@@ -34,9 +34,11 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
   };
 
   return (
-    <div
+    <button
+      type="button"
       onClick={handleToggleFlip}
-      className="w-full h-[280px] cursor-pointer font-sans select-none group [perspective:1000px]"
+      aria-label="Toggle cue card flip"
+      className="w-full h-[280px] cursor-pointer font-sans select-none group [perspective:1000px] border-0 p-0 bg-transparent text-left"
     >
       <div
         className={`relative w-full h-full duration-700 transition-all [transform-style:preserve-3d] ${
@@ -103,6 +105,7 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
             </span>
 
             <button
+              type="button"
               onClick={handleMarkMastered}
               className={`px-3 py-1 font-bold text-[10px] uppercase tracking-wider transition-all border ${
                 mastered
@@ -115,6 +118,6 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
