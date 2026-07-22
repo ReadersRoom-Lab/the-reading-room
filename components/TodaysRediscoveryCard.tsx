@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Sparkles, RefreshCw, CheckCircle2, Edit3, ArrowRight, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { FlashcardCueCard } from "./FlashcardCueCard";
 
 export interface RediscoveryItem {
   id: string;
@@ -87,6 +88,37 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
     );
   }
 
+  if (item.type === "vault") {
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 bg-[#1A1A1A] text-[#F9F7F2]">
+            TODAY&apos;S REDISCOVERY
+          </span>
+          <button
+            type="button"
+            onClick={handleShuffle}
+            disabled={loading}
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#1A1A1A] hover:text-black transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Shuffle
+          </button>
+        </div>
+        <FlashcardCueCard
+          concept={{
+            id: item.id,
+            term: item.termOrText,
+            type: "concept",
+            definition: item.definitionOrNote,
+            pronunciation: item.pronunciation,
+            etymology: item.etymology,
+            user_note: item.user_note,
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] p-6 font-sans relative shadow-md">
       {/* Top Header */}
@@ -96,7 +128,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
             TODAY&apos;S REDISCOVERY
           </span>
           <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 bg-[#E6C79C]/30 text-[#1A1A1A]">
-            {item.type === "vault" ? "VOCABULARY" : "HIGHLIGHT"}
+            HIGHLIGHT
           </span>
         </div>
 

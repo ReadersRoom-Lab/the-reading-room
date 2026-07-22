@@ -21,6 +21,8 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { FlashcardModal } from "./FlashcardModal";
+import { TagFilterBar } from "./TagFilterBar";
+import { FlashcardCueCard } from "./FlashcardCueCard";
 
 interface Article {
   id: string;
@@ -54,6 +56,7 @@ interface VaultEntry {
   etymology: string | null;
   example_sentence: string | null;
   user_note: string | null;
+  tags?: string[];
   created_at: string | Date;
   vaultTrails: VaultTrail[];
 }
@@ -65,6 +68,7 @@ interface VaultContentProps {
 export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
   const [entries, setEntries] = useState<VaultEntry[]>(initialEntries);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [viewLayout, setViewLayout] = useState<"grid" | "split">("grid");
   const [selectedEntryId, setSelectedEntryId] = useState<string | null>(
     initialEntries.length > 0 ? initialEntries[0].id : null
@@ -75,16 +79,23 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
   const [activeGridEntry, setActiveGridEntry] = useState<VaultEntry | null>(null);
   const [practiceOpen, setPracticeOpen] = useState(false);
 
-  // 1. Filter entries based on search term
+  // 1. Filter entries based on search term and tag
   const filteredEntries = useMemo(() => {
     return entries.filter((entry) => {
-      return (
+      const matchesSearch =
         entry.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
         entry.definition.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (entry.user_note?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
-      );
+        (entry.user_note?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+
+      const matchesTag =
+        selectedTag === null ||
+        Boolean(entry.tags?.includes(selectedTag)) ||
+        entry.term.toLowerCase().includes(selectedTag.toLowerCase()) ||
+        entry.type.toLowerCase().includes(selectedTag.toLowerCase());
+
+      return matchesSearch && matchesTag;
     });
-  }, [entries, searchTerm]);
+  }, [entries, searchTerm, selectedTag]);
 
   // 2. Select the currently active entry in split view
   const selectedEntry = useMemo(() => {
@@ -360,51 +371,9 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
     return (
       <div className="flex-1 overflow-y-auto pr-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredEntries.map((entry) => {
-            const firstTrail = entry.vaultTrails[0];
-            return (
-              <button
-                key={entry.id}
-                type="button"
-                className="w-full text-left bg-white border border-[#E5E5E5] p-5 flex flex-col justify-between h-56 transition-all hover:border-[#1A1A1A] group cursor-pointer"
-                onClick={() => {
-                  setActiveGridEntry(entry);
-                }}
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-2.5">
-                    <span className="text-[9px] font-bold tracking-[0.18em] uppercase text-[#BDBDBD]">
-                      {format(new Date(entry.created_at), "MMM d, yyyy")}
-                    </span>
-                    <button
-                      type="button"
-                      disabled={isDeleting === entry.id}
-                      onClick={(e) => handleDelete(entry.id, e)}
-                      className="opacity-0 group-hover:opacity-100 hover:text-red-600 p-0.5 transition-opacity text-[#BDBDBD] hover:bg-[#F4F4F5] rounded-none"
-                      title="Delete term"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                  <h3 className="font-heading text-lg font-bold text-[#1A1A1A] mb-2 truncate">
-                    {entry.term}
-                  </h3>
-                  <p className="font-source-serif text-sm leading-relaxed text-[#333333] line-clamp-3">
-                    {entry.definition}
-                  </p>
-                </div>
-
-                {firstTrail && (
-                  <div className="pt-2 border-t border-[#F0F0F0] mt-3 flex items-center gap-1 text-[10px] text-[#8C8C8C] truncate font-medium">
-                    <BookOpen className="w-3 h-3 text-[#BDBDBD] shrink-0" />
-                    <span className="truncate">
-                      From: <span className="text-[#1A1A1A]">{firstTrail.article.title}</span>
-                    </span>
-                  </div>
-                )}
-              </button>
-            );
-          })}
+          {filteredEntries.map((entry) => (
+            <FlashcardCueCard key={entry.id} concept={entry} />
+          ))}
         </div>
       </div>
     );
@@ -502,6 +471,11 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Tag Filter Bar */}
+        <div className="pt-3 border-t border-[#E5E5E5]/60">
+          <TagFilterBar activeTag={selectedTag} onSelectTag={setSelectedTag} />
         </div>
       </div>
 

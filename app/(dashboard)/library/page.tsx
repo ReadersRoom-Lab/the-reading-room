@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { ArticleCard } from "@/components/ArticleCard";
 import { BookMarked } from "lucide-react";
 
+import { ExportDrawer } from "@/components/ExportDrawer";
+
 export default async function LibraryPage() {
   const { userId } = await auth();
 
@@ -26,9 +28,12 @@ export default async function LibraryPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="border-b border-[#E5E5E5] pb-8">
-        <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Library</h1>
-        <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
+      <div className="border-b border-[#E5E5E5] pb-8 flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Library</h1>
+          <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
+        </div>
+        <ExportDrawer />
       </div>
 
       {articles.length > 0 && (

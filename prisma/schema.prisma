@@ -60,6 +60,7 @@ model Article {
   date_accessed     DateTime     @default(now())
   created_at        DateTime     @default(now())
   updated_at        DateTime     @updatedAt
+  tags              String[]     @default([])
   highlights        Highlight[]
   vaultTrails       VaultTrail[]
   chunks            ArticleChunk[]
@@ -108,6 +109,7 @@ model VaultEntry {
   etymology        String?
   example_sentence String?
   user_note        String?
+  tags             String[]     @default([])
   created_at       DateTime     @default(now())
   vaultTrails      VaultTrail[]
 
