@@ -89,7 +89,7 @@ export async function GET() {
       nodes.push({
         id: nodeId,
         type: "conceptNode",
-        position: { x: 1100 + col * 280, y: row * 180 },
+        position: { x: 480 + col * 280, y: row * 180 },
         data: {
           id: entry.id,
           term: entry.term,
@@ -104,7 +104,7 @@ export async function GET() {
         },
       });
 
-      // Create edges between Concept and Articles where it was highlighted
+      // 1. Explicit vault trail edges
       entry.vaultTrails.forEach((trail) => {
         const edgeId = `edge_${entry.id}_${trail.article_id}`;
         if (!edgeSet.has(edgeId)) {
@@ -114,8 +114,30 @@ export async function GET() {
             source: nodeId,
             target: `article_${trail.article_id}`,
             animated: true,
-            style: { stroke: "#E6C79C", strokeWidth: 1.5 },
+            style: { stroke: "#D17659", strokeWidth: 2 },
           });
+        }
+      });
+
+      // 2. Keyword text match fallback edges
+      articles.forEach((article) => {
+        const termLower = entry.term.toLowerCase().trim();
+        if (termLower.length >= 2) {
+          const titleMatch = article.title.toLowerCase().includes(termLower);
+          const contentMatch = (article.content || "").toLowerCase().includes(termLower);
+          if (titleMatch || contentMatch) {
+            const edgeId = `edge_${entry.id}_${article.id}`;
+            if (!edgeSet.has(edgeId)) {
+              edgeSet.add(edgeId);
+              edges.push({
+                id: edgeId,
+                source: nodeId,
+                target: `article_${article.id}`,
+                animated: true,
+                style: { stroke: "#D17659", strokeWidth: 2 },
+              });
+            }
+          }
         }
       });
     });

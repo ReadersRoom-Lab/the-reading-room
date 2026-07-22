@@ -34,9 +34,9 @@ model Room {
   mode         String       @default("reading")
   created_at   DateTime     @default(now())
   updated_at   DateTime     @updatedAt
-  articles      Article[]
-  vaultTrails   VaultTrail[]
-  roomConcepts  RoomConcept[]
+  articles     Article[]
+  vaultTrails  VaultTrail[]
+  roomConcepts RoomConcept[]
 
   @@index([user_id])
 }

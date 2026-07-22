@@ -8,6 +8,8 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
+  Handle,
+  Position,
   type NodeProps,
   type Node,
 } from "@xyflow/react";
@@ -32,7 +34,24 @@ function ArticleNode({
   >
 >) {
   return (
-    <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] p-4 rounded-none w-64 shadow-md text-left font-sans transition-all hover:scale-105">
+    <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] p-4 rounded-none w-64 shadow-md text-left font-sans transition-all hover:scale-105 relative">
+      <Handle
+        type="target"
+        position={Position.Right}
+        className="!bg-[#1A1A1A] !w-3 !h-3 !-right-1.5"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="src-right"
+        className="!bg-[#1A1A1A] !w-3 !h-3 !-right-1.5"
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="tgt-left"
+        className="!bg-[#1A1A1A] !w-3 !h-3 !-left-1.5"
+      />
       <div className="flex items-center justify-between mb-2">
         <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 bg-[#1A1A1A] text-[#F9F7F2]">
           ARTICLE
@@ -83,6 +102,23 @@ function ConceptNode({
 >) {
   return (
     <div className="bg-[#F9F7F2] border-2 border-[#E6C79C] p-4 rounded-none w-60 shadow-md text-left font-sans transition-all hover:scale-105 relative">
+      <Handle
+        type="source"
+        position={Position.Left}
+        className="!bg-[#D17659] !w-3 !h-3 !-left-1.5"
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="tgt-left"
+        className="!bg-[#D17659] !w-3 !h-3 !-left-1.5"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="src-right"
+        className="!bg-[#D17659] !w-3 !h-3 !-right-1.5"
+      />
       <div className="absolute -top-3 left-4 px-2 py-0.5 bg-[#E6C79C] text-[#1A1A1A] text-[8px] font-bold tracking-widest uppercase">
         {data.type === "concept" ? "CONCEPT" : "VOCABULARY"}
       </div>
