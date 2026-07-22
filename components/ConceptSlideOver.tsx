@@ -108,7 +108,8 @@ export function ConceptSlideOver({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            aria-label="Close concept panel"
+            className="h-8 w-8 text-[#52525B] hover:text-[#1A1A1A]"
           >
             <X className="w-5 h-5" />
           </Button>

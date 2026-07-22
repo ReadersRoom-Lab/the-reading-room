@@ -7,7 +7,7 @@ import { TodaysRediscoveryCard } from "@/components/TodaysRediscoveryCard";
 
 export default async function Home() {
   const { userId } = await auth();
-  const user = await prisma.user.findUnique({ where: { clerk_id: userId! } });
+  const user = userId ? await prisma.user.findUnique({ where: { clerk_id: userId } }) : null;
 
   const recentArticles = user
     ? await prisma.article.findMany({
@@ -158,7 +158,7 @@ export default async function Home() {
                   etymology: randomEntries[0].etymology,
                   articleTitle: randomEntries[0].vaultTrails?.[0]?.article?.title,
                   articleId: randomEntries[0].vaultTrails?.[0]?.article?.id,
-                  created_at: randomEntries[0].created_at,
+                  created_at: randomEntries[0].created_at.toISOString(),
                   user_note: randomEntries[0].user_note,
                 }
               : null

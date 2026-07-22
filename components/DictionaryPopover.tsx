@@ -58,7 +58,7 @@ export function DictionaryPopover({
         <div className="flex flex-col">
           <h4 className="font-heading font-bold text-lg text-[#1a1a1a]">{data?.word || word}</h4>
           {data?.phonetic && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-[#52525B]">
               {data.phonetic} · {data.partOfSpeech}
             </span>
           )}
@@ -66,7 +66,8 @@ export function DictionaryPopover({
         <button
           type="button"
           onClick={onClose}
-          className="text-muted-foreground hover:text-foreground"
+          aria-label="Close definition popover"
+          className="text-[#52525B] hover:text-[#1A1A1A]"
         >
           <X className="w-4 h-4" />
         </button>
@@ -75,28 +76,26 @@ export function DictionaryPopover({
       <div className="p-4 flex flex-col gap-4">
         {loading && (
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+            <Loader2 className="w-5 h-5 animate-spin text-[#52525B]" />
           </div>
         )}
-        {!loading && data?.error && (
-          <p className="text-sm text-muted-foreground italic">{data.error}</p>
-        )}
+        {!loading && data?.error && <p className="text-sm text-[#52525B] italic">{data.error}</p>}
         {!loading && data && !data.error && (
           <>
             <p className="text-sm text-[#333] leading-relaxed font-source-serif">
               {data.definition}
             </p>
             {data.example && (
-              <p className="text-xs text-muted-foreground italic font-source-serif">
+              <p className="text-xs text-[#52525B] italic font-source-serif">
                 &quot;{data.example}&quot;
               </p>
             )}
             {data.etymology && (
               <div className="bg-muted/50 p-2 rounded-sm mt-2">
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
+                <p className="text-[9px] uppercase tracking-wider text-[#52525B] font-semibold mb-1">
                   Etymology
                 </p>
-                <p className="text-xs text-muted-foreground">{data.etymology}</p>
+                <p className="text-xs text-[#52525B]">{data.etymology}</p>
               </div>
             )}
           </>
