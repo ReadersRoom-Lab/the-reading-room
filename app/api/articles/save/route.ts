@@ -1,6 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { parseHTML } from "linkedom";
 import { Readability } from "@mozilla/readability";
 import sanitizeHtml from "sanitize-html";
@@ -242,7 +243,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { url, roomId, title: pdfTitle, source_url, source_type, text, html } = await req.json();
+    const {
+      url,
+      roomId,
+      title: pdfTitle,
+      source_url,
+      source_type,
+      text,
+      html,
+      file_url,
+      file_data,
+    } = await req.json();
 
     if (!url && !text) {
       return NextResponse.json({ error: "URL or PDF text is required" }, { status: 400 });
@@ -279,6 +290,8 @@ export async function POST(req: Request) {
     const wordCount = textContent.trim().split(/\s+/).length;
     const readTimeMinutes = Math.ceil(wordCount / 200); // Assumes ~200 WPM
 
+    const nativeFileUrl = file_url || file_data || null;
+
     // Save to database
     const savedArticle = await prisma.article.create({
       data: {
@@ -290,12 +303,13 @@ export async function POST(req: Request) {
         source_type: articleData.sourceType,
         content: cleanContent,
         cover_image: coverImage,
+        file_url: nativeFileUrl,
         word_count: wordCount,
         read_time_minutes: readTimeMinutes,
         date_accessed: new Date(),
         status: "unread",
         reading_progress: 0,
-      },
+      } as Prisma.ArticleUncheckedCreateInput,
     });
 
     // --- Vector Search & RAG: Generate Embeddings ---

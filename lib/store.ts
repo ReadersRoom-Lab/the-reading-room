@@ -19,6 +19,7 @@ export type Article = {
   sourceType: string;
   content: string;
   coverImage?: string;
+  fileUrl?: string;
   readingProgress: number;
   status: "unread" | "in_progress" | "complete";
   wordCount: number;
@@ -70,6 +71,7 @@ export class InMemoryStore {
       title?: string;
       content?: string;
       author?: string;
+      fileUrl?: string;
     }
   ): Article {
     const article: Article = {
@@ -81,6 +83,7 @@ export class InMemoryStore {
       sourceUrl: payload.url,
       sourceType: "url",
       content: payload.content ?? "",
+      fileUrl: payload.fileUrl,
       readingProgress: 0,
       status: "unread",
       wordCount: payload.content?.split(/\s+/).filter(Boolean).length ?? 0,

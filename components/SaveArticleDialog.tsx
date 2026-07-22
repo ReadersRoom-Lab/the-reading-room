@@ -43,6 +43,16 @@ async function extractTextFromPdf(file: File): Promise<string> {
   return extractedText;
 }
 
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) =>
+      reject(error instanceof Error ? error : new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function SaveArticleDialog({
   defaultRoomId,
   compact,
@@ -69,6 +79,7 @@ export function SaveArticleDialog({
       if (file) {
         // Extract text on the client side using pdfjs-dist
         const extractedText = await extractTextFromPdf(file);
+        const fileDataUrl = await readFileAsDataUrl(file);
 
         if (!extractedText.trim()) {
           throw new Error(
@@ -88,6 +99,7 @@ export function SaveArticleDialog({
             source_url: `upload://${file.name}`,
             source_type: "pdf",
             text: extractedText,
+            file_url: fileDataUrl,
             roomId: defaultRoomId,
           }),
         });
