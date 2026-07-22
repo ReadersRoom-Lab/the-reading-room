@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/build-extension-zip.mjs",
+    "prebuild": "node scripts/build-extension-zip.mjs && node scripts/db-sync.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
