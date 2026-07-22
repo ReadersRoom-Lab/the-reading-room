@@ -43,6 +43,16 @@ async function extractTextFromPdf(file: File): Promise<string> {
   return extractedText;
 }
 
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) =>
+      reject(error instanceof Error ? error : new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function SaveArticleDialog({
   defaultRoomId,
   compact,
@@ -69,6 +79,7 @@ export function SaveArticleDialog({
       if (file) {
         // Extract text on the client side using pdfjs-dist
         const extractedText = await extractTextFromPdf(file);
+        const fileDataUrl = await readFileAsDataUrl(file);
 
         if (!extractedText.trim()) {
           throw new Error(
@@ -88,6 +99,7 @@ export function SaveArticleDialog({
             source_url: `upload://${file.name}`,
             source_type: "pdf",
             text: extractedText,
+            file_url: fileDataUrl,
             roomId: defaultRoomId,
           }),
         });
@@ -132,11 +144,17 @@ export function SaveArticleDialog({
     }
   };
 
+  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const selected = e.target.files[0];
       if (selected.type !== "application/pdf") {
         toast.error("Please select a valid PDF file");
+        return;
+      }
+      if (selected.size > MAX_FILE_SIZE_BYTES) {
+        toast.error("File size exceeds maximum limit of 50MB");
         return;
       }
       setFile(selected);
@@ -217,6 +235,10 @@ export function SaveArticleDialog({
                     e.preventDefault();
                     const droppedFile = e.dataTransfer.files?.[0];
                     if (droppedFile?.type === "application/pdf") {
+                      if (droppedFile.size > MAX_FILE_SIZE_BYTES) {
+                        toast.error("File size exceeds maximum limit of 50MB");
+                        return;
+                      }
                       setFile(droppedFile);
                       setUrl("");
                     } else if (droppedFile) {

@@ -26,7 +26,22 @@ export async function GET() {
       },
       orderBy: { updated_at: "desc" },
       take: 4,
-      include: {
+      select: {
+        id: true,
+        user_id: true,
+        room_id: true,
+        title: true,
+        author: true,
+        source_url: true,
+        source_type: true,
+        cover_image: true,
+        reading_progress: true,
+        status: true,
+        word_count: true,
+        read_time_minutes: true,
+        date_accessed: true,
+        created_at: true,
+        updated_at: true,
         room: true,
       },
     });
