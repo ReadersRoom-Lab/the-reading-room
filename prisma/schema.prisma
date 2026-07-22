@@ -13,8 +13,12 @@ model User {
   clerk_id      String        @unique
   email         String        @unique
   name          String?
-  tier          String        @default("free")
-  created_at    DateTime      @default(now())
+  tier                  String        @default("free")
+  streak_count          Int           @default(0)
+  last_read_date        DateTime?
+  daily_goal_minutes    Int           @default(15)
+  reading_minutes_today Int           @default(0)
+  created_at            DateTime      @default(now())
   updated_at    DateTime      @updatedAt
   rooms         Room[]
   articles      Article[]

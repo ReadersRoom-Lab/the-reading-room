@@ -4,6 +4,7 @@ import { secureRandom } from "@/lib/utils";
 import Link from "next/link";
 import { Bookmark, BookOpen, Highlighter, Library, Layout } from "lucide-react";
 import { TodaysRediscoveryCard } from "@/components/TodaysRediscoveryCard";
+import { DailyStreakWidget } from "@/components/DailyStreakWidget";
 
 export default async function Home() {
   const { userId } = await auth();
@@ -144,8 +145,9 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Today's Rediscovery */}
-      <section>
+      {/* Today's Streak & Rediscovery */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <DailyStreakWidget />
         <TodaysRediscoveryCard
           initialItem={
             randomEntries.length > 0

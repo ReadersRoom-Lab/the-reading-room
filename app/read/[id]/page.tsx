@@ -140,6 +140,51 @@ export default function ReaderPage() {
     });
   };
 
+  // Streak Minute Logger (logs reading time while active on page)
+  useEffect(() => {
+    if (!articleId) return;
+
+    const interval = setInterval(() => {
+      fetch("/api/user/streak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ minutesRead: 1 }),
+      }).catch((err) => logger.error("Failed to log reading streak minute:", err));
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [articleId]);
+
+  // Mobile Touch Swipe Navigation Gestures
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [swipeToast, setSwipeToast] = useState<string | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current || e.changedTouches.length === 0) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    if (Math.abs(deltaX) > 75 && Math.abs(deltaY) < 50) {
+      if (deltaX < 0) {
+        setSwipeToast("Returning to Library →");
+        setTimeout(() => router.push("/library"), 300);
+      } else {
+        setSwipeToast("← Navigating Back");
+        setTimeout(() => router.back(), 300);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-screen bg-background">
@@ -181,8 +226,15 @@ export default function ReaderPage() {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             className={`flex-1 overflow-y-auto px-6 py-12 scroll-smooth ${concept ? "md:mr-[400px]" : ""}`}
           >
+            {swipeToast && (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1A1A1A] text-white text-xs font-bold px-4 py-2 shadow-lg tracking-wider uppercase animate-in fade-in zoom-in-95 pointer-events-none">
+                {swipeToast}
+              </div>
+            )}
             <article
               className={`
                 mx-auto max-w-3xl prose prose-stone dark:prose-invert
