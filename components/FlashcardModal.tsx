@@ -221,136 +221,147 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
     );
   };
 
-  const renderCardFront = () => (
-    <div className="flex flex-col items-center space-y-4 my-auto animate-in fade-in duration-200">
-      <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#BDBDBD]">
-        Vocabulary Word
-      </span>
-      <h2 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A]">
-        {currentCard.term}
-      </h2>
-      {currentCard.pronunciation && (
-        <span className="text-sm font-mono text-[#52525B] bg-[#F4F3F3] px-2.5 py-1 rounded-sm">
-          {currentCard.pronunciation}
-        </span>
-      )}
-      <p className="text-xs text-[#BDBDBD] pt-4 font-sans italic">
-        (Click or press Space to reveal definition)
-      </p>
-    </div>
-  );
-
-  const renderCardBack = () => {
+  const renderPracticeCard = () => {
     const hasEtymology =
       currentCard.etymology &&
       !currentCard.etymology.toLowerCase().startsWith("etymology information not available");
 
     return (
-      <div className="flex flex-col items-center space-y-4 my-auto animate-in fade-in duration-200 w-full max-w-lg">
-        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#BDBDBD]">
-          Definition & Context
-        </span>
+      <div className="flex flex-col items-center justify-center flex-1 space-y-6">
+        <div className="text-[11px] font-semibold uppercase tracking-widest text-[#BDBDBD]">
+          Card {currentIndex + 1} of {totalCards}
+        </div>
 
-        <h3 className="font-heading text-2xl font-bold text-[#1A1A1A]">{currentCard.term}</h3>
+        {/* 3D Flip Card Container */}
+        <button
+          type="button"
+          onClick={handleFlip}
+          className="w-full min-h-[300px] cursor-pointer font-sans select-none group [perspective:1000px] border-0 p-0 bg-transparent text-left relative"
+          aria-label={isFlipped ? "Flip to front" : "Flip to reveal definition"}
+        >
+          <div
+            className={`relative w-full min-h-[300px] duration-700 transition-all [transform-style:preserve-3d] ${
+              isFlipped ? "[transform:rotateY(180deg)]" : ""
+            }`}
+          >
+            {/* FRONT SIDE */}
+            <div className="absolute inset-0 w-full h-full bg-white border-2 border-[#E6C79C] p-8 shadow-md flex flex-col justify-between items-center text-center [backface-visibility:hidden]">
+              <div className="w-full flex justify-between items-center">
+                <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#BDBDBD]">
+                  Vocabulary Word
+                </span>
+                <span className="text-[10px] uppercase font-semibold tracking-wider text-[#D17659] flex items-center gap-1">
+                  <RotateCw className="w-3.5 h-3.5" /> Flip
+                </span>
+              </div>
 
-        <p className="font-source-serif text-lg text-[#333] leading-relaxed">
-          {currentCard.definition}
-        </p>
+              <div className="my-auto">
+                <h2 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A]">
+                  {currentCard.term}
+                </h2>
+                {currentCard.pronunciation && (
+                  <span className="text-sm font-mono text-[#52525B] bg-[#F4F3F3] px-2.5 py-1 rounded-sm block mt-2">
+                    {currentCard.pronunciation}
+                  </span>
+                )}
+              </div>
 
-        {currentCard.example_sentence && (
-          <p className="font-source-serif italic text-sm text-[#52525B] border-l-2 border-[#E5E5E5] pl-3 py-0.5 text-left">
-            &ldquo;{currentCard.example_sentence}&rdquo;
-          </p>
-        )}
+              <p className="text-xs text-[#BDBDBD] font-sans italic">
+                (Click or press Space to reveal definition)
+              </p>
+            </div>
 
-        {hasEtymology && (
-          <div className="text-xs text-[#52525B] bg-[#FCFBF8] border border-[#E5E5E5] p-2.5 text-left w-full">
-            <span className="font-bold uppercase tracking-wider text-[9px] text-[#BDBDBD] block mb-0.5">
-              Etymology
-            </span>
-            {currentCard.etymology}
+            {/* BACK SIDE */}
+            <div className="absolute inset-0 w-full h-full bg-[#1A1A1A] text-[#F9F7F2] border-2 border-[#1A1A1A] p-8 shadow-lg flex flex-col justify-between items-center text-center [transform:rotateY(180deg)] [backface-visibility:hidden]">
+              <div className="w-full flex justify-between items-center border-b border-white/10 pb-2">
+                <h4 className="font-heading font-bold text-base text-[#E6C79C] truncate">
+                  {currentCard.term}
+                </h4>
+                <span className="text-[10px] uppercase font-semibold tracking-wider text-[#E6C79C] flex items-center gap-1">
+                  <RotateCw className="w-3.5 h-3.5" /> Flip Back
+                </span>
+              </div>
+
+              <div className="my-auto overflow-y-auto max-h-[180px] w-full px-2 scrollbar-thin">
+                <p className="font-source-serif text-lg leading-relaxed text-[#F9F7F2] mb-3">
+                  {currentCard.definition}
+                </p>
+
+                {currentCard.example_sentence && (
+                  <p className="font-source-serif italic text-xs text-[#D4D4D8] border-l-2 border-[#E6C79C] pl-3 py-1 text-left my-2 bg-white/5">
+                    &ldquo;{currentCard.example_sentence}&rdquo;
+                  </p>
+                )}
+
+                {hasEtymology && (
+                  <div className="text-xs text-[#D4D4D8] bg-white/5 border border-white/10 p-2.5 text-left w-full mt-2">
+                    <span className="font-bold uppercase tracking-wider text-[9px] text-[#E6C79C] block mb-0.5">
+                      Etymology Origin
+                    </span>
+                    {currentCard.etymology}
+                  </div>
+                )}
+              </div>
+
+              {currentCard.vaultTrails?.[0]?.article && (
+                <div className="flex items-center gap-1.5 text-xs text-white/60 border-t border-white/10 pt-2 w-full justify-center">
+                  <BookOpen className="w-3.5 h-3.5 text-[#E6C79C]" />
+                  <span className="truncate">From: {currentCard.vaultTrails[0].article.title}</span>
+                </div>
+              )}
+            </div>
           </div>
-        )}
+        </button>
 
-        {currentCard.vaultTrails?.[0]?.article && (
-          <div className="flex items-center gap-1.5 text-xs text-[#52525B] pt-1">
-            <BookOpen className="w-3.5 h-3.5 text-[#BDBDBD]" />
-            <span>Source: {currentCard.vaultTrails[0].article.title}</span>
+        {/* Rating Controls */}
+        {isFlipped ? (
+          <div className="flex flex-col items-center gap-2 w-full animate-in fade-in duration-200">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-[#BDBDBD]">
+              How well did you recall this term? (Keys 1 - 4)
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full">
+              <Button
+                onClick={() => handleRate("again")}
+                className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
+              >
+                <span>1. Again</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">Review again</span>
+              </Button>
+              <Button
+                onClick={() => handleRate("hard")}
+                className="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
+              >
+                <span>2. Hard</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">Struggled</span>
+              </Button>
+              <Button
+                onClick={() => handleRate("good")}
+                className="bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
+              >
+                <span>3. Good</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">Recalled</span>
+              </Button>
+              <Button
+                onClick={() => handleRate("easy")}
+                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
+              >
+                <span>4. Easy</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">Instant</span>
+              </Button>
+            </div>
           </div>
+        ) : (
+          <Button
+            onClick={handleFlip}
+            className="bg-[#1A1A1A] text-white hover:bg-[#333] rounded-none h-11 px-8 text-xs font-bold uppercase tracking-wider gap-2 shadow-sm"
+          >
+            Reveal Definition <ChevronRight className="w-4 h-4" />
+          </Button>
         )}
       </div>
     );
   };
-
-  const renderPracticeCard = () => (
-    <div className="flex flex-col items-center justify-center flex-1 space-y-6">
-      <div className="text-[11px] font-semibold uppercase tracking-widest text-[#BDBDBD]">
-        Card {currentIndex + 1} of {totalCards}
-      </div>
-
-      {/* Card Container */}
-      <button
-        type="button"
-        onClick={handleFlip}
-        className="w-full min-h-[260px] bg-white border border-[#E5E5E5] p-8 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer relative group text-left"
-        aria-label={isFlipped ? "Flip to front" : "Flip to reveal definition"}
-      >
-        <div className="absolute top-4 right-4 text-[#BDBDBD] group-hover:text-[#1A1A1A] transition-colors flex items-center gap-1 text-[10px] uppercase font-semibold tracking-wider">
-          <RotateCw className="w-3.5 h-3.5" />
-          <span>{isFlipped ? "Show Term" : "Flip"}</span>
-        </div>
-
-        {isFlipped ? renderCardBack() : renderCardFront()}
-      </button>
-
-      {/* Rating Controls */}
-      {isFlipped ? (
-        <div className="flex flex-col items-center gap-2 w-full animate-in fade-in duration-200">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-[#BDBDBD]">
-            How well did you recall this term? (Keys 1 - 4)
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full">
-            <Button
-              onClick={() => handleRate("again")}
-              className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
-            >
-              <span>1. Again</span>
-              <span className="text-[9px] font-normal opacity-80 lowercase">Review again</span>
-            </Button>
-            <Button
-              onClick={() => handleRate("hard")}
-              className="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
-            >
-              <span>2. Hard</span>
-              <span className="text-[9px] font-normal opacity-80 lowercase">Struggled</span>
-            </Button>
-            <Button
-              onClick={() => handleRate("good")}
-              className="bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
-            >
-              <span>3. Good</span>
-              <span className="text-[9px] font-normal opacity-80 lowercase">Recalled</span>
-            </Button>
-            <Button
-              onClick={() => handleRate("easy")}
-              className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
-            >
-              <span>4. Easy</span>
-              <span className="text-[9px] font-normal opacity-80 lowercase">Instant</span>
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <Button
-          onClick={handleFlip}
-          className="bg-[#1A1A1A] text-white hover:bg-[#333] rounded-none h-11 px-8 text-xs font-bold uppercase tracking-wider gap-2 shadow-sm"
-        >
-          Reveal Definition <ChevronRight className="w-4 h-4" />
-        </Button>
-      )}
-    </div>
-  );
 
   const renderMainContent = () => {
     if (isCompleted) {
