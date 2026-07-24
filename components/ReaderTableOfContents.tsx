@@ -10,6 +10,18 @@ export interface TocItem {
   level: number;
 }
 
+function stripTags(htmlStr: string): string {
+  return htmlStr
+    .split("<")
+    .map((chunk) => {
+      const idx = chunk.indexOf(">");
+      return idx >= 0 ? chunk.substring(idx + 1) : chunk;
+    })
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Parses headings (h1, h2, h3) from HTML string */
 export function extractHeadings(htmlContent: string): {
   headings: TocItem[];
@@ -50,16 +62,16 @@ export function extractHeadings(htmlContent: string): {
     }
   }
 
-  // Fallback regex parsing for non-browser / unit-test environments
+  // Fallback parsing for non-browser / unit-test environments
   const headings: TocItem[] = [];
-  const regex = /<h([1-3])([^>]*)>(.*?)<\/h[1-3]>/gi;
+  const regex = /<h([1-3])\b([^>]*)>([\s\S]*?)<\/h[1-3]>/gi;
   let match: RegExpExecArray | null;
   let index = 0;
 
   while ((match = regex.exec(htmlContent)) !== null) {
     const level = Number.parseInt(match[1], 10);
     const attrs = match[2];
-    const rawText = match[3].replace(/<[^>]*>/g, "").trim();
+    const rawText = stripTags(match[3]);
     if (!rawText) continue;
 
     const idMatch = /id=["']([^"']+)["']/i.exec(attrs);
