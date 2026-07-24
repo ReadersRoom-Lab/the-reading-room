@@ -65,5 +65,5 @@ test("Share token generation and lookup resolution for articles and rooms", asyn
 
   assert.strictEqual(rooms[0].id, room.id);
   assert.strictEqual(resolvedArticle?.id, article.id);
-  assert.ok(shareToken);
+  assert.match(shareToken, /^[a-z0-9-]+$/);
 });
