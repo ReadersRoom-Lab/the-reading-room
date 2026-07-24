@@ -14,6 +14,7 @@ import {
   BookA,
   Sparkles,
   ArrowLeft,
+  Volume2,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -239,9 +240,26 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                 </div>
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex flex-col gap-0.5">
-                    <h2 className="font-heading text-3xl font-bold text-[#1A1A1A]">
-                      {selectedEntry.term}
-                    </h2>
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-heading text-3xl font-bold text-[#1A1A1A]">
+                        {selectedEntry.term}
+                      </h2>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                            window.speechSynthesis.cancel();
+                            const u = new SpeechSynthesisUtterance(selectedEntry.term);
+                            u.rate = 0.9;
+                            window.speechSynthesis.speak(u);
+                          }
+                        }}
+                        className="p-1.5 text-[#52525B] hover:text-[#D17659] transition-colors rounded-full hover:bg-[#E5E5E5]/50 cursor-pointer"
+                        title="Listen to pronunciation"
+                      >
+                        <Volume2 className="w-5 h-5" />
+                      </button>
+                    </div>
                     {selectedEntry.pronunciation && (
                       <span className="text-xs font-mono text-[#8C8C8C]">
                         {selectedEntry.pronunciation}

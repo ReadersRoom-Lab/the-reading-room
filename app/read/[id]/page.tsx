@@ -19,6 +19,7 @@ import { ConceptSlideOver } from "@/components/ConceptSlideOver";
 import { TextSelectionMenu } from "@/components/TextSelectionMenu";
 import { EditHighlightPopover } from "@/components/EditHighlightPopover";
 import { ExportArticleButton } from "@/components/ExportArticleButton";
+import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
 import { logger } from "@/lib/logger";
 
 type HighlightType = {
@@ -62,10 +63,11 @@ function generateHighlightedHtml(
     // Check if it has a note or tag
     const hasMetadata = Boolean(h.note || h.annotation_type);
     const borderClass = hasMetadata ? "border-b-2 border-foreground/30" : "";
+    const noteTitle = h.note ? `title="Note: ${h.note.replaceAll('"', "&quot;")}"` : "";
 
     html = html.replace(
       regex,
-      `<mark data-highlight-id="${h.id}" class="${colorClass} ${borderClass} rounded-sm px-0.5 cursor-pointer hover:opacity-80 transition-opacity">$1</mark>`
+      `<mark data-highlight-id="${h.id}" ${noteTitle} class="${colorClass} ${borderClass} rounded-sm px-0.5 cursor-pointer hover:opacity-80 transition-opacity">$1</mark>`
     );
   });
 
@@ -214,6 +216,10 @@ export default function ReaderPage() {
         fontSize={fontSize}
         setFontSize={setFontSize}
         articleId={article.id}
+        progress={progress}
+        readTimeMinutes={article.read_time_minutes ? Number(article.read_time_minutes) : undefined}
+        htmlContent={article.content || ""}
+        scrollRef={scrollRef}
         onBack={() => router.push("/library")}
       />
 
@@ -658,6 +664,10 @@ function ReaderHeader({
   fontSize,
   setFontSize,
   articleId,
+  progress,
+  readTimeMinutes,
+  htmlContent,
+  scrollRef,
   onBack,
 }: Readonly<{
   title: string;
@@ -669,8 +679,14 @@ function ReaderHeader({
   fontSize: FontSize;
   setFontSize: (s: FontSize) => void;
   articleId: string;
+  progress: number;
+  readTimeMinutes?: number;
+  htmlContent: string;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   onBack: () => void;
 }>) {
+  const minutesLeft = Math.max(1, Math.ceil(((readTimeMinutes || 5) * (100 - progress)) / 100));
+
   return (
     <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-background/95 backdrop-blur z-10 shrink-0">
       <div className="flex items-center gap-4">
@@ -681,15 +697,24 @@ function ReaderHeader({
           <h1 className="font-heading font-semibold text-sm sm:text-base md:text-lg line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-md">
             {title}
           </h1>
-          {author && (
-            <span className="text-xs text-muted-foreground line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm">
-              {author}
+          <div className="flex items-center gap-2">
+            {author && (
+              <span className="text-xs text-muted-foreground line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm">
+                {author}
+              </span>
+            )}
+            <span className="text-[10px] font-semibold text-[#D17659] bg-[#D17659]/10 px-1.5 py-0.5 rounded-sm">
+              {progress >= 100 ? "Finished" : `${minutesLeft} min left`}
             </span>
-          )}
+          </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
+        {viewMode === "reader" && (
+          <ReaderTableOfContents htmlContent={htmlContent} scrollRef={scrollRef} />
+        )}
+
         <div className="flex items-center bg-muted/60 p-1 rounded-lg border border-border">
           <button
             type="button"

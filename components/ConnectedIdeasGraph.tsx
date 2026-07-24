@@ -165,8 +165,19 @@ export function ConnectedIdeasGraph({
   const [filterType, setFilterType] = useState<"all" | "articles" | "concepts">("all");
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
-  // Filter nodes based on search and type filter
-  const filteredNodes = useMemo(() => {
+  // Calculate connected nodes when a node is selected for focus mode
+  const connectedNodeIds = useMemo(() => {
+    if (!selectedNode) return null;
+    const connected = new Set<string>([selectedNode.id]);
+    edges.forEach((edge) => {
+      if (edge.source === selectedNode.id) connected.add(edge.target);
+      if (edge.target === selectedNode.id) connected.add(edge.source);
+    });
+    return connected;
+  }, [selectedNode, edges]);
+
+  // Apply focus dimming and search filter
+  const focusStyledNodes = useMemo(() => {
     return nodes.map((node) => {
       const isArticle = node.type === "articleNode";
       const isConcept = node.type === "conceptNode";
@@ -190,13 +201,23 @@ export function ConnectedIdeasGraph({
         def.toLowerCase().includes(searchTerm.toLowerCase());
 
       const isHidden = !matchesFilter || !matchesSearch;
+      const opacity = connectedNodeIds && !connectedNodeIds.has(node.id) ? 0.25 : 1;
 
       return {
         ...node,
         hidden: isHidden,
+        style: {
+          ...node.style,
+          opacity,
+          transition: "opacity 0.3s ease",
+        },
       };
     });
-  }, [nodes, filterType, searchTerm]);
+  }, [nodes, filterType, searchTerm, connectedNodeIds]);
+
+  const visibleMatchCount = useMemo(() => {
+    return focusStyledNodes.filter((n) => !n.hidden).length;
+  }, [focusStyledNodes]);
 
   // Handle node selection
   const handleNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -216,16 +237,30 @@ export function ConnectedIdeasGraph({
             </p>
           </div>
 
-          {/* Search bar */}
-          <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search graph nodes..."
-              className="w-full pl-9 pr-4 py-2 border border-[#E5E5E5] bg-white rounded-none focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm text-[#1A1A1A] placeholder:text-[#BDBDBD]"
-            />
+          {/* Search bar & Focus reset */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            {selectedNode && (
+              <button
+                type="button"
+                onClick={() => setSelectedNode(null)}
+                className="px-3 py-1.5 bg-[#D17659] text-white text-xs font-bold uppercase tracking-wider rounded-none hover:bg-[#b85c40] transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" /> Reset Focus
+              </button>
+            )}
+            <div className="relative w-full md:w-80">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#BDBDBD]" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search graph nodes..."
+                className="w-full pl-9 pr-24 py-2 border border-[#E5E5E5] bg-white rounded-none focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm text-[#1A1A1A] placeholder:text-[#BDBDBD]"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-[#8C8C8C] uppercase tracking-wider">
+                {visibleMatchCount} {visibleMatchCount === 1 ? "node" : "nodes"}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -270,7 +305,7 @@ export function ConnectedIdeasGraph({
       {/* Main Canvas Area */}
       <div className="flex-1 w-full border border-[#E5E5E5] bg-[#FAF9F5] relative overflow-hidden">
         <ReactFlow
-          nodes={filteredNodes}
+          nodes={focusStyledNodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}

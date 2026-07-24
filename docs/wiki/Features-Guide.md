@@ -19,35 +19,46 @@ This guide details all key features of ReadrSpace and how to use them to elevate
 ### Highlight & Note Annotation
 
 - Select text in any article to highlight in custom colors.
-- Add personal notes to highlights, which are saved in context.
+- Add personal notes to highlights, which are saved in context. Hovering over any highlighted text snippet displays your saved personal note in a popup tooltip.
+
+### Interactive Table of Contents (TOC) & Real-Time Reading Progress
+
+- Open the **Outline** side drawer in the Reader header to view automatically extracted `h1`, `h2`, `h3` section headings.
+- Click any outline heading to smoothly scroll directly to that section.
+- View real-time dynamic time remaining (`"X min left"`) computed live as you scroll.
+
+### Compact Table View & Multi-Select Bulk Actions
+
+- Toggle between **Grid View** (Editorial Cards) and **Compact Table View** in your Library.
+- Multi-select articles using checkboxes to perform **Bulk Assign to Room** or **Bulk Delete**.
 
 ---
 
 ## 2. 🎴 Vocabulary Vault & Active Recall Flashcards
 
-### Word Lookups
+### Word Lookups & Native Audio Pronunciation
 
 - Click or tap any word while reading to open the **Dictionary Popover**.
 - Fetches definitions, phonetic pronunciation, and etymology. Save terms to your **Vocabulary Vault** with 1 click.
+- Click the speaker icon button (`<Volume2 />`) next to any Vault term or flashcard to listen to clear, native Web Speech TTS audio pronunciation.
 
-### Active Recall 3D Flashcards
+### SuperMemo SM-2 Active Recall Flashcards
 
 - Launch **Practice Flashcards** from the top of the Vocabulary Vault.
 - **Card Controls**:
   - `Space` or Click to flip between term (Front) and definition/etymology/context (Back).
-  - Rate recall: `1. Again` (Red), `2. Hard` (Amber), `3. Good` (Blue), `4. Easy` (Green).
+  - Rate recall with SuperMemo SM-2 memory intervals: `1. Again (<1m)`, `2. Hard (1d)`, `3. Good (3d)`, `4. Easy (7d)`.
   - `Shuffle` option to randomize deck.
   - End-of-deck summary with accuracy score (%) and one-click retry for failed terms.
 
 ---
 
-## 3. 🤖 Insights & Synthesis Engine
+## 3. 📊 365-Day Reading Heatmap & Analytics Engine
 
-- Accessible from the **Insights** tab.
-- Powered by **Gemini 2.5 Flash** and semantic vector search (`pgvector` with `text-embedding-004`).
-- **Direct Library Access**: The assistant receives your saved articles, highlights, and vault terms in context.
-- **Rich Formatting**: Returns structured markdown with headers, bolding, and bullet points, rendered safely.
-- Cites article titles inline when drawing answers from your saved documents.
+- Accessible from the **Insights** tab (`/insights`).
+- **365-Day Contribution Heatmap**: GitHub-style 52-week activity grid displaying daily reading consistency with 4 intensity levels (`0 min`, `1-10 min`, `11-25 min`, `26+ min`).
+- **Hover Tooltips**: Hover over any heatmap block to view exact date and reading minutes.
+- **Analytics Metrics**: Track total articles read, word count totals, average reading WPM, and top tag breakdown.
 
 ---
 
@@ -64,12 +75,13 @@ This guide details all key features of ReadrSpace and how to use them to elevate
 
 - Visualizes your personal knowledge base as an interactive network graph using `@xyflow/react`.
 - Nodes represent articles and vocabulary concepts; edges display room relationships and context links.
-- Filter by node type (_Articles_, _Concepts_) or search node titles.
+- **Connected Node Focus Mode**: Clicking any node highlights its connected neighbors in deep terracotta while dimming unrelated nodes (`opacity: 0.25`).
+- **Search Match Counters & Reset Focus**: Search bar displays real-time matching node counts with a 1-click **Reset Focus** button.
 
 ---
 
 ## 6. 🧩 Companion Chrome Extension
 
 - Save web pages directly from your browser toolbar.
-- Highlight text on any web page to send directly to your ReadrSpace library.
-- Found in the `chrome-extension/` directory.
+- **Dynamic Room & Tag Selection**: Popup UI fetches your personal Rooms and allows adding custom comma-separated tags (`#ai, #research`) before saving.
+- Found in the `chrome-extension/` directory or download 1-click `public/extension.zip`.

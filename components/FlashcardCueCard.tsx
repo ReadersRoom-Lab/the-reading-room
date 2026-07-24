@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, RotateCw, CheckCircle2 } from "lucide-react";
+import { Sparkles, RotateCw, CheckCircle2, Volume2 } from "lucide-react";
 
 export interface VaultConceptCardData {
   id: string;
@@ -61,9 +61,27 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
           </div>
 
           <div className="my-auto text-center px-2">
-            <h3 className="font-heading font-bold text-2xl text-[#1A1A1A] mb-1 leading-snug">
-              {concept.term}
-            </h3>
+            <div className="flex items-center justify-center gap-1.5 mb-1">
+              <h3 className="font-heading font-bold text-2xl text-[#1A1A1A] leading-snug">
+                {concept.term}
+              </h3>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+                    window.speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(concept.term);
+                    u.rate = 0.9;
+                    window.speechSynthesis.speak(u);
+                  }
+                }}
+                className="p-1 text-[#52525B] hover:text-[#D17659] transition-colors rounded-full hover:bg-black/5 cursor-pointer"
+                title="Listen to pronunciation"
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            </div>
             {concept.pronunciation && (
               <p className="font-mono text-xs text-[#8C8C8C]">{concept.pronunciation}</p>
             )}
