@@ -63,6 +63,14 @@ function SaveHandler() {
     const saveArticle = async () => {
       let htmlContent: string | null = null;
       const extId = searchParams.get("extId");
+      const roomId = searchParams.get("roomId");
+      const rawTags = searchParams.get("tags");
+      const tags = rawTags
+        ? rawTags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
+        : undefined;
 
       if (extId) {
         htmlContent = await getHtmlFromExtension(extId, url);
@@ -72,12 +80,14 @@ function SaveHandler() {
         const res = await fetch("/api/articles/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, html: htmlContent }),
+          body: JSON.stringify({ url, html: htmlContent, roomId, tags }),
         });
 
         if (res.status === 401) {
           // Not signed in — redirect to sign-in, then come back here to complete the save
-          const redirectUrl = `/save?url=${encodeURIComponent(url)}${extId ? "&extId=" + extId : ""}`;
+          let redirectUrl = `/save?url=${encodeURIComponent(url)}${extId ? "&extId=" + extId : ""}`;
+          if (roomId) redirectUrl += `&roomId=${encodeURIComponent(roomId)}`;
+          if (rawTags) redirectUrl += `&tags=${encodeURIComponent(rawTags)}`;
           router.push(`/sign-in?redirect_url=${encodeURIComponent(redirectUrl)}`);
           return;
         }
