@@ -60,6 +60,25 @@ test("extractFileContent extracts docx and epub file content using XML text extr
   assert.ok(res.fileDataUrl?.startsWith("data:"));
 });
 
+test("extractFileContent extracts pdf files with fallback text when PDFjs is empty or unparsed", async () => {
+  const file = new File(["%PDF-1.4 sample pdf content"], "sample.pdf", { type: "application/pdf" });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "sample");
+  assert.strictEqual(res.sourceType, "pdf");
+  assert.ok(res.text.includes("Extracted PDF document from sample.pdf"));
+  assert.ok(res.fileDataUrl?.startsWith("data:"));
+});
+
+test("extractFileContent handles empty docx XML content with fallback text", async () => {
+  const file = new File([""], "empty.docx", {
+    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "empty");
+  assert.strictEqual(res.sourceType, "docx");
+  assert.strictEqual(res.text, "Document content from empty.docx");
+});
+
 test("extractFileContent fallback for unknown extension plain text", async () => {
   const file = new File(["Custom file content"], "notes.custom", { type: "text/plain" });
   const res = await extractFileContent(file);

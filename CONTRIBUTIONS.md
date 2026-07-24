@@ -6,6 +6,9 @@ _Automated summary of git contributions. Updated on every push._
 
 **Lokeshwaran V R:**
 
+- Test(unit): add unit tests for batch save, article duplication, and share token resolution
+- Fix(store): default coverColor in createRoom
+- Test(unit): add unit tests for file extractor formats, batch save, duplicating articles, and share endpoints
 - Docs: update README.md and CONTRIBUTIONS.md with latest features and contributor logs
 - Refactor: simplify ReaderPage typography styling
 - Refactor: reduce cognitive complexity of ReaderPage

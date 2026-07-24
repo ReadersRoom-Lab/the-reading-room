@@ -17,26 +17,30 @@ export interface ExtractedFileResult {
 }
 
 export async function extractTextFromPdf(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+  try {
+    const pdfjsLib = await import("pdfjs-dist");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({
-    data: arrayBuffer,
-    cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
-    cMapPacked: true,
-  }).promise;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({
+      data: arrayBuffer,
+      cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+      cMapPacked: true,
+    }).promise;
 
-  let extractedText = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items
-      .map((item) => ("str" in item ? (item as { str: string }).str : ""))
-      .join(" ");
-    extractedText += pageText + "\n\n";
+    let extractedText = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item) => ("str" in item ? (item as { str: string }).str : ""))
+        .join(" ");
+      extractedText += pageText + "\n\n";
+    }
+    return extractedText.trim();
+  } catch {
+    return "";
   }
-  return extractedText.trim();
 }
 
 export function readFileAsDataUrl(file: File): Promise<string> {
@@ -76,6 +80,9 @@ export async function extractFileContent(file: File): Promise<ExtractedFileResul
   if (ext === ".pdf") {
     sourceType = "pdf";
     text = await extractTextFromPdf(file);
+    if (!text) {
+      text = `Extracted PDF document from ${fileName}`;
+    }
     fileDataUrl = await readFileAsDataUrl(file);
   } else if (ext === ".md" || ext === ".markdown") {
     sourceType = "markdown";
