@@ -6,6 +6,13 @@ interface ReadingHeatmapProps {
   readonly dailyActivity: Record<string, number>;
 }
 
+function getIntensityClass(minutes: number): string {
+  if (minutes === 0) return "bg-[#F4F3F3] border-[#E5E5E5]";
+  if (minutes <= 10) return "bg-[#E6C79C]/50 border-[#E6C79C]";
+  if (minutes <= 25) return "bg-[#D17659]/70 border-[#D17659] text-white";
+  return "bg-[#D17659] border-[#D17659] text-white";
+}
+
 export function ReadingHeatmap({ dailyActivity }: ReadingHeatmapProps) {
   const { weeks, monthLabels } = useMemo(() => {
     const today = new Date();
@@ -49,13 +56,6 @@ export function ReadingHeatmap({ dailyActivity }: ReadingHeatmapProps) {
     return { weeks: resultWeeks, monthLabels: months };
   }, [dailyActivity]);
 
-  function getIntensityClass(minutes: number): string {
-    if (minutes === 0) return "bg-[#F4F3F3] border-[#E5E5E5]";
-    if (minutes <= 10) return "bg-[#E6C79C]/50 border-[#E6C79C]";
-    if (minutes <= 25) return "bg-[#D17659]/70 border-[#D17659] text-white";
-    return "bg-[#D17659] border-[#D17659] text-white";
-  }
-
   return (
     <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] p-6 shadow-md font-sans">
       <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#E5E5E5]">
@@ -82,7 +82,7 @@ export function ReadingHeatmap({ dailyActivity }: ReadingHeatmapProps) {
           <div className="flex text-[10px] font-bold uppercase tracking-wider text-[#BDBDBD] mb-2 pl-6">
             {monthLabels.map((m, idx) => (
               <span
-                key={`${m.label}-${m.weekIndex}-${idx}`}
+                key={`month-${m.label}-${m.weekIndex}`}
                 style={{
                   marginLeft:
                     idx === 0
@@ -106,8 +106,8 @@ export function ReadingHeatmap({ dailyActivity }: ReadingHeatmapProps) {
 
             {/* Weeks */}
             <div className="flex gap-1">
-              {weeks.map((week, wIdx) => (
-                <div key={`week-${wIdx}`} className="flex flex-col gap-1">
+              {weeks.map((week) => (
+                <div key={`week-${week[0]?.dateStr || "first"}`} className="flex flex-col gap-1">
                   {week.map((cell) => (
                     <div
                       key={cell.dateStr}
