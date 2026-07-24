@@ -61,17 +61,19 @@ export function readFileAsDataUrl(file: File): Promise<string> {
 
 function stripTags(htmlStr: string): string {
   return htmlStr
-    .replace(/<[^>]*>/g, " ")
+    .split("<")
+    .map((chunk) => {
+      const closingIdx = chunk.indexOf(">");
+      return closingIdx >= 0 ? chunk.substring(closingIdx + 1) : chunk;
+    })
+    .join(" ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 function extractTextFromXml(xmlString: string): string {
-  return xmlString
-    .replace(/<w:p[^>]*>/gi, "\n\n")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  const formatted = xmlString.replaceAll("<w:p>", "\n\n").replaceAll("</w:p>", "\n\n");
+  return stripTags(formatted);
 }
 
 async function processFileContent(
