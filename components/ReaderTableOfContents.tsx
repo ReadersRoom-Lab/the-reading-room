@@ -15,39 +15,62 @@ export function extractHeadings(htmlContent: string): {
   headings: TocItem[];
   processedHtml: string;
 } {
-  if (!htmlContent || typeof window === "undefined") {
-    return { headings: [], processedHtml: htmlContent || "" };
+  if (!htmlContent) {
+    return { headings: [], processedHtml: "" };
   }
 
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(`<div>${htmlContent}</div>`, "text/html");
-    const headingElements = Array.from(doc.querySelectorAll("h1, h2, h3"));
+  if (typeof DOMParser !== "undefined") {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${htmlContent}</div>`, "text/html");
+      const headingElements = Array.from(doc.querySelectorAll("h1, h2, h3"));
 
-    const headings: TocItem[] = [];
+      const headings: TocItem[] = [];
 
-    headingElements.forEach((el, index) => {
-      const text = el.textContent?.trim() || "";
-      if (!text) return;
+      headingElements.forEach((el, index) => {
+        const text = el.textContent?.trim() || "";
+        if (!text) return;
 
-      let id = el.getAttribute("id");
-      if (!id) {
-        id = `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-        el.setAttribute("id", id);
-      }
+        let id = el.getAttribute("id");
+        if (!id) {
+          id = `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+          el.setAttribute("id", id);
+        }
 
-      const level = Number.parseInt(el.tagName.replace("H", ""), 10) || 2;
-      headings.push({ id, text, level });
-    });
+        const level = Number.parseInt(el.tagName.replace("H", ""), 10) || 2;
+        headings.push({ id, text, level });
+      });
 
-    const processedHtml = doc.body.firstElementChild
-      ? doc.body.firstElementChild.innerHTML
-      : htmlContent;
-    return { headings, processedHtml };
-  } catch (err) {
-    console.warn("Failed to parse Table of Contents headings:", err);
-    return { headings: [], processedHtml: htmlContent };
+      const processedHtml = doc.body.firstElementChild
+        ? doc.body.firstElementChild.innerHTML
+        : htmlContent;
+      return { headings, processedHtml };
+    } catch (err) {
+      console.warn("Failed to parse Table of Contents headings:", err);
+    }
   }
+
+  // Fallback regex parsing for non-browser / unit-test environments
+  const headings: TocItem[] = [];
+  const regex = /<h([1-3])([^>]*)>(.*?)<\/h[1-3]>/gi;
+  let match: RegExpExecArray | null;
+  let index = 0;
+
+  while ((match = regex.exec(htmlContent)) !== null) {
+    const level = Number.parseInt(match[1], 10);
+    const attrs = match[2];
+    const rawText = match[3].replace(/<[^>]+>/g, "").trim();
+    if (!rawText) continue;
+
+    const idMatch = /id=["']([^"']+)["']/i.exec(attrs);
+    const id = idMatch
+      ? idMatch[1]
+      : `heading-${index}-${rawText.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+    headings.push({ id, text: rawText, level });
+    index++;
+  }
+
+  return { headings, processedHtml: htmlContent };
 }
 
 interface ReaderTableOfContentsProps {
