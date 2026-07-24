@@ -20,6 +20,7 @@ import { TextSelectionMenu } from "@/components/TextSelectionMenu";
 import { EditHighlightPopover } from "@/components/EditHighlightPopover";
 import { ExportArticleButton } from "@/components/ExportArticleButton";
 import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
+import { ShareDialog } from "@/components/ShareDialog";
 import { logger } from "@/lib/logger";
 
 type HighlightType = {
@@ -142,50 +143,13 @@ export default function ReaderPage() {
     });
   };
 
-  // Streak Minute Logger (logs reading time while active on page)
-  useEffect(() => {
-    if (!articleId) return;
+  useStreakLogger(articleId);
+  const { swipeToast, handleTouchStart, handleTouchEnd } = useReaderSwipeNavigation(router);
 
-    const interval = setInterval(() => {
-      fetch("/api/user/streak", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ minutesRead: 1 }),
-      }).catch((err) => logger.error("Failed to log reading streak minute:", err));
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [articleId]);
-
-  // Mobile Touch Swipe Navigation Gestures
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const [swipeToast, setSwipeToast] = useState<string | null>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      touchStartRef.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStartRef.current || e.changedTouches.length === 0) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
-    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    if (Math.abs(deltaX) > 75 && Math.abs(deltaY) < 50) {
-      if (deltaX < 0) {
-        setSwipeToast("Returning to Library →");
-        setTimeout(() => router.push("/library"), 300);
-      } else {
-        setSwipeToast("← Navigating Back");
-        setTimeout(() => router.back(), 300);
-      }
-    }
-  };
+  const typographyClass = getProseTypographyClass(fontFamily, fontSize);
+  const readTimeMinutes = article?.read_time_minutes
+    ? Number(article.read_time_minutes)
+    : undefined;
 
   if (loading) {
     return (
@@ -217,7 +181,7 @@ export default function ReaderPage() {
         setFontSize={setFontSize}
         articleId={article.id}
         progress={progress}
-        readTimeMinutes={article.read_time_minutes ? Number(article.read_time_minutes) : undefined}
+        readTimeMinutes={readTimeMinutes}
         htmlContent={article.content || ""}
         scrollRef={scrollRef}
         onBack={() => router.push("/library")}
@@ -241,16 +205,7 @@ export default function ReaderPage() {
                 {swipeToast}
               </div>
             )}
-            <article
-              className={`
-                mx-auto max-w-3xl prose prose-stone dark:prose-invert
-                ${fontFamily === "serif" ? "font-serif" : "font-sans"}
-                ${fontSize === "sm" ? "prose-sm" : ""}
-                ${fontSize === "base" ? "prose-base" : ""}
-                ${fontSize === "lg" ? "prose-lg" : ""}
-                ${fontSize === "xl" ? "prose-xl" : ""}
-              `}
-            >
+            <article className={typographyClass}>
               {article.cover_image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -288,6 +243,17 @@ export default function ReaderPage() {
       </div>
     </div>
   );
+}
+
+function getProseTypographyClass(fontFamily: FontFamily, fontSize: FontSize): string {
+  const fontClass = fontFamily === "serif" ? "font-serif" : "font-sans";
+  const sizeMap: Record<FontSize, string> = {
+    sm: "prose-sm",
+    base: "prose-base",
+    lg: "prose-lg",
+    xl: "prose-xl",
+  };
+  return `mx-auto max-w-3xl prose prose-stone dark:prose-invert ${fontClass} ${sizeMap[fontSize] || "prose-base"}`;
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
@@ -751,6 +717,7 @@ function ReaderHeader({
           />
         )}
 
+        <ShareDialog type="article" id={articleId} title={title} compact />
         <ExportArticleButton articleId={articleId} articleTitle={title} />
       </div>
     </header>
@@ -843,4 +810,53 @@ function ReaderPopovers({
       )}
     </>
   );
+}
+
+function useStreakLogger(articleId: string) {
+  useEffect(() => {
+    if (!articleId) return;
+
+    const interval = setInterval(() => {
+      fetch("/api/user/streak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ minutesRead: 1 }),
+      }).catch((err) => logger.error("Failed to log reading streak minute:", err));
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [articleId]);
+}
+
+function useReaderSwipeNavigation(router: ReturnType<typeof useRouter>) {
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [swipeToast, setSwipeToast] = useState<string | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current || e.changedTouches.length === 0) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    if (Math.abs(deltaX) > 75 && Math.abs(deltaY) < 50) {
+      if (deltaX < 0) {
+        setSwipeToast("Returning to Library →");
+        setTimeout(() => router.push("/library"), 300);
+      } else {
+        setSwipeToast("← Navigating Back");
+        setTimeout(() => router.back(), 300);
+      }
+    }
+  };
+
+  return { swipeToast, handleTouchStart, handleTouchEnd };
 }

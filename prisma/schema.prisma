@@ -18,6 +18,7 @@ model User {
   last_read_date        DateTime?
   daily_goal_minutes    Int           @default(15)
   reading_minutes_today Int           @default(0)
+  library_share_token   String?       @unique
   created_at            DateTime      @default(now())
   updated_at    DateTime      @updatedAt
   rooms         Room[]
@@ -36,6 +37,7 @@ model Room {
   description  String?
   cover_color  String
   mode         String       @default("reading")
+  share_token  String?      @unique
   created_at   DateTime     @default(now())
   updated_at   DateTime     @updatedAt
   articles     Article[]
@@ -62,6 +64,8 @@ model Article {
   status            String       @default("unread")
   word_count        Int          @default(0)
   read_time_minutes Int          @default(0)
+  share_token       String?      @unique
+  default_share_mode String       @default("reader")
   date_accessed     DateTime     @default(now())
   created_at        DateTime     @default(now())
   updated_at        DateTime     @updatedAt

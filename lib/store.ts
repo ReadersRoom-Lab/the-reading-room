@@ -45,7 +45,12 @@ export class InMemoryStore {
   private readonly articles: Article[] = [];
   private readonly highlights: Highlight[] = [];
 
-  createRoom(userId: string, name: string, coverColor: string, description?: string): Room {
+  createRoom(
+    userId: string,
+    name: string,
+    coverColor: string = "#8b5cf6",
+    description?: string
+  ): Room {
     const room: Room = {
       id: crypto.randomUUID(),
       userId,

@@ -2,21 +2,52 @@
 
 _Automated summary of git contributions. Updated on every push._
 
-## 📅 July 22, 2026
+## 📅 July 24, 2026
 
 **Lokeshwaran V R:**
 
-- Security: add global HSTS/CSP headers and enforce article ownership scoping on highlight/vault creation
-- Refactor: extract validation and text processing helpers in save route to reduce cognitive complexity
-- Feat: enhance native document system security, magic bytes validation, and query projections
-- Feat: add native document format storage and reader view
+- Test(unit): add unit tests for batch save, article duplication, and share token resolution
+- Fix(store): default coverColor in createRoom
+- Test(unit): add unit tests for file extractor formats, batch save, duplicating articles, and share endpoints
+- Docs: update README.md and CONTRIBUTIONS.md with latest features and contributor logs
+- Refactor: simplify ReaderPage typography styling
+- Refactor: reduce cognitive complexity of ReaderPage
+- Fix merge conflict in reader page
+- Feat: multi-format batch upload, flexible downloads, and library copy/link sharing with Reader vs Native view options
 
 **akash:**
 
+- Test(unit): add tests for TOC, SM-2, Heatmap & update Features-Guide wiki docs
+- Feat(library): add Multi-Select Bulk Actions and Compact Table List view
+- Feat(graph): add connected node focus dimming and live search match counters
+- Feat(vault): add SuperMemo SM-2 interval scheduling labels and Web Speech TTS audio pronunciation
+- Feat(reader): add Table of Contents outline drawer, dynamic time remaining & note hover tooltips
+- Fix(security): resolve all npm audit vulnerabilities via dependency updates and overrides
+- Style: format popup.html with Prettier for CI format:check compliance
+- Fix(quality): resolve SonarCloud warnings in ReadingHeatmap, sw.js, and db-sync.mjs
+- Feat: add 365-day Reading Heatmap, analytics stats, and Chrome extension Room/Tag picker
+
+## 📅 July 22, 2026
+
+**akash:**
+
+- Feat: add Daily Reading Streaks, Goals widget, and Mobile Touch Swipe gestures
+- Feat: add 3D flip card animation to Active Recall Practice modal
+- Fix(ci): make db sync environment-aware to prevent CI build failures
+- Fix: add prisma db push to postinstall for automatic production database syncing
 - Fix(sonar): resolve all SonarCloud static analysis warnings and accessibility issues
 - Feat: add 1-click Export drawer, custom color-coded tags, and 3D flip cue cards
 - Security: add overrides for fast-uri and sharp to resolve high-severity audit vulnerabilities
 - Fix: add React Flow handles to custom nodes and keyword text matching for graph edges
+
+**Lokeshwaran V R:**
+
+- Fix(home): prevent 500 error on home page and improve UI contrast accessibility
+- Docs: update README.md and CONTRIBUTIONS.md with latest feature entries and contributor commit history
+- Security: add global HSTS/CSP headers and enforce article ownership scoping on highlight/vault creation
+- Refactor: extract validation and text processing helpers in save route to reduce cognitive complexity
+- Feat: enhance native document system security, magic bytes validation, and query projections
+- Feat: add native document format storage and reader view
 
 ## 📅 July 21, 2026
 

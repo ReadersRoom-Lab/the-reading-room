@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MoreVertical, Library, Check, Loader2, Trash2, FolderOpen, Plus } from "lucide-react";
+import {
+  MoreVertical,
+  Library,
+  Check,
+  Loader2,
+  Trash2,
+  FolderOpen,
+  Plus,
+  Copy,
+  Share2,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -15,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CreateRoomDialog } from "./CreateRoomDialog";
+import { ShareDialog } from "./ShareDialog";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +52,7 @@ export function RoomAssignDropdown({
   const [loading, setLoading] = useState(false);
   const [isCreateRoomOpen, setIsCreateRoomOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/rooms")
@@ -161,6 +173,39 @@ export function RoomAssignDropdown({
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            onClick={async () => {
+              try {
+                setLoading(true);
+                const res = await fetch(`/api/articles/${articleId}/duplicate`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                });
+                if (res.ok) {
+                  toast.success("Created a copy in your library!");
+                  router.refresh();
+                } else {
+                  throw new Error("Failed to copy article");
+                }
+              } catch {
+                toast.error("Failed to copy article");
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            <Copy className="w-4 h-4 text-muted-foreground" />
+            <span>Make a Copy</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => setIsShareOpen(true)}
+            className="cursor-pointer flex items-center gap-2"
+          >
+            <Share2 className="w-4 h-4 text-muted-foreground" />
+            <span>Share Link / Copy</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             onClick={() => {
               setIsDeleteDialogOpen(true);
             }}
@@ -248,6 +293,8 @@ export function RoomAssignDropdown({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ShareDialog type="article" id={articleId} open={isShareOpen} onOpenChange={setIsShareOpen} />
     </>
   );
 }
