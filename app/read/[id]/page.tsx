@@ -146,6 +146,11 @@ export default function ReaderPage() {
   useStreakLogger(articleId);
   const { swipeToast, handleTouchStart, handleTouchEnd } = useReaderSwipeNavigation(router);
 
+  const typographyClass = getProseTypographyClass(fontFamily, fontSize);
+  const readTimeMinutes = article?.read_time_minutes
+    ? Number(article.read_time_minutes)
+    : undefined;
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-screen bg-background">
@@ -176,7 +181,7 @@ export default function ReaderPage() {
         setFontSize={setFontSize}
         articleId={article.id}
         progress={progress}
-        readTimeMinutes={article.read_time_minutes ? Number(article.read_time_minutes) : undefined}
+        readTimeMinutes={readTimeMinutes}
         htmlContent={article.content || ""}
         scrollRef={scrollRef}
         onBack={() => router.push("/library")}
@@ -200,16 +205,7 @@ export default function ReaderPage() {
                 {swipeToast}
               </div>
             )}
-            <article
-              className={`
-                mx-auto max-w-3xl prose prose-stone dark:prose-invert
-                ${fontFamily === "serif" ? "font-serif" : "font-sans"}
-                ${fontSize === "sm" ? "prose-sm" : ""}
-                ${fontSize === "base" ? "prose-base" : ""}
-                ${fontSize === "lg" ? "prose-lg" : ""}
-                ${fontSize === "xl" ? "prose-xl" : ""}
-              `}
-            >
+            <article className={typographyClass}>
               {article.cover_image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -247,6 +243,17 @@ export default function ReaderPage() {
       </div>
     </div>
   );
+}
+
+function getProseTypographyClass(fontFamily: FontFamily, fontSize: FontSize): string {
+  const fontClass = fontFamily === "serif" ? "font-serif" : "font-sans";
+  const sizeMap: Record<FontSize, string> = {
+    sm: "prose-sm",
+    base: "prose-base",
+    lg: "prose-lg",
+    xl: "prose-xl",
+  };
+  return `mx-auto max-w-3xl prose prose-stone dark:prose-invert ${fontClass} ${sizeMap[fontSize] || "prose-base"}`;
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
