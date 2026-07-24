@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, RotateCw, Shuffle, BookOpen, Sparkles, Award, ChevronRight } from "lucide-react";
+import {
+  X,
+  RotateCw,
+  Shuffle,
+  BookOpen,
+  Sparkles,
+  Award,
+  ChevronRight,
+  Volume2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { secureRandom } from "@/lib/utils";
 
@@ -47,6 +56,16 @@ function shuffleDeck<T>(items: T[]): T[] {
     list[j] = temp;
   }
   return list;
+}
+
+/** Speech Synthesis TTS helper */
+function playSpeech(text: string) {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.9;
+  utterance.pitch = 1.0;
+  window.speechSynthesis.speak(utterance);
 }
 
 export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps) {
@@ -256,9 +275,22 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
               </div>
 
               <div className="my-auto">
-                <h2 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A]">
-                  {currentCard.term}
-                </h2>
+                <div className="flex items-center justify-center gap-2">
+                  <h2 className="font-heading text-4xl sm:text-5xl font-bold text-[#1A1A1A]">
+                    {currentCard.term}
+                  </h2>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playSpeech(currentCard.term);
+                    }}
+                    className="p-2 text-[#52525B] hover:text-[#D17659] transition-colors rounded-full hover:bg-[#F4F3F3] cursor-pointer"
+                    title="Listen to pronunciation"
+                  >
+                    <Volume2 className="w-6 h-6" />
+                  </button>
+                </div>
                 {currentCard.pronunciation && (
                   <span className="text-sm font-mono text-[#52525B] bg-[#F4F3F3] px-2.5 py-1 rounded-sm block mt-2">
                     {currentCard.pronunciation}
@@ -274,9 +306,22 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
             {/* BACK SIDE */}
             <div className="absolute inset-0 w-full h-full bg-[#1A1A1A] text-[#F9F7F2] border-2 border-[#1A1A1A] p-8 shadow-lg flex flex-col justify-between items-center text-center [transform:rotateY(180deg)] [backface-visibility:hidden]">
               <div className="w-full flex justify-between items-center border-b border-white/10 pb-2">
-                <h4 className="font-heading font-bold text-base text-[#E6C79C] truncate">
-                  {currentCard.term}
-                </h4>
+                <div className="flex items-center gap-2 truncate">
+                  <h4 className="font-heading font-bold text-base text-[#E6C79C] truncate">
+                    {currentCard.term}
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      playSpeech(currentCard.term);
+                    }}
+                    className="p-1 text-[#E6C79C]/80 hover:text-[#E6C79C] transition-colors rounded-full hover:bg-white/10 cursor-pointer"
+                    title="Listen to pronunciation"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                </div>
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-[#E6C79C] flex items-center gap-1">
                   <RotateCw className="w-3.5 h-3.5" /> Flip Back
                 </span>
@@ -317,7 +362,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
         {isFlipped ? (
           <div className="flex flex-col items-center gap-2 w-full animate-in fade-in duration-200">
             <div className="text-[10px] font-bold uppercase tracking-wider text-[#BDBDBD]">
-              How well did you recall this term? (Keys 1 - 4)
+              How well did you recall this term? (SM-2 Interval Scheduling 1-4)
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full">
@@ -326,28 +371,28 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
                 className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
               >
                 <span>1. Again</span>
-                <span className="text-[9px] font-normal opacity-80 lowercase">Review again</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">&lt; 1 min</span>
               </Button>
               <Button
                 onClick={() => handleRate("hard")}
                 className="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
               >
                 <span>2. Hard</span>
-                <span className="text-[9px] font-normal opacity-80 lowercase">Struggled</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">1 day</span>
               </Button>
               <Button
                 onClick={() => handleRate("good")}
                 className="bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
               >
                 <span>3. Good</span>
-                <span className="text-[9px] font-normal opacity-80 lowercase">Recalled</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">3 days</span>
               </Button>
               <Button
                 onClick={() => handleRate("easy")}
                 className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-none h-11 text-xs font-bold uppercase tracking-wider flex flex-col justify-center gap-0.5"
               >
                 <span>4. Easy</span>
-                <span className="text-[9px] font-normal opacity-80 lowercase">Instant</span>
+                <span className="text-[9px] font-normal opacity-80 lowercase">7 days</span>
               </Button>
             </div>
           </div>
