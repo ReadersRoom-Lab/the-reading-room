@@ -11,46 +11,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, FileText, Upload } from "lucide-react";
+import { Plus, FileText, Upload, CheckCircle2, AlertCircle, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-// Remove static import
-// Configure PDF.js worker dynamically inside the function
+import { extractFileContent } from "@/lib/file-extractor";
 
-async function extractTextFromPdf(file: File): Promise<string> {
-  // Dynamically import pdfjs-dist
-  const pdfjsLib = await import("pdfjs-dist");
-
-  // Configure worker
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({
-    data: arrayBuffer,
-    cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
-    cMapPacked: true,
-  }).promise;
-
-  let extractedText = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items
-      .map((item) => ("str" in item ? (item as { str: string }).str : ""))
-      .join(" ");
-    extractedText += pageText + "\n\n";
-  }
-  return extractedText;
-}
-
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) =>
-      reject(error instanceof Error ? error : new Error("Failed to read file"));
-    reader.readAsDataURL(file);
-  });
+interface FileQueueItem {
+  id: string;
+  file: File;
+  status: "pending" | "processing" | "success" | "error";
+  error?: string;
 }
 
 export function SaveArticleDialog({
@@ -59,108 +29,168 @@ export function SaveArticleDialog({
 }: { defaultRoomId?: string; compact?: boolean } = {}) {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [fileQueue, setFileQueue] = useState<FileQueueItem[]>([]);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
+
+  const handleFileSelection = (files: FileList | File[]) => {
+    const validFiles: FileQueueItem[] = [];
+    Array.from(files).forEach((file) => {
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        toast.error(`"${file.name}" exceeds maximum size limit of 50MB`);
+        return;
+      }
+      validFiles.push({
+        id: `${file.name}-${crypto.randomUUID()}`,
+        file,
+        status: "pending",
+      });
+    });
+
+    if (validFiles.length > 0) {
+      setFileQueue((prev) => [...prev, ...validFiles]);
+      setUrl(""); // Clear URL input when files are added
+    }
+  };
+
+  const removeQueueItem = (id: string) => {
+    setFileQueue((prev) => prev.filter((item) => item.id !== id));
+  };
+
   const handleSave = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (!url && !file) {
-      toast.error("Please enter a valid URL, DOI, arXiv ID, or select a PDF");
+    if (!url && fileQueue.length === 0) {
+      toast.error("Please enter a URL, DOI, arXiv ID, or select one or more files.");
       return;
     }
 
     try {
       setLoading(true);
 
-      let res;
-      if (file) {
-        // Extract text on the client side using pdfjs-dist
-        const extractedText = await extractTextFromPdf(file);
-        const fileDataUrl = await readFileAsDataUrl(file);
+      // Single URL processing
+      if (url.trim()) {
+        const res = await fetch("/api/articles/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url.trim(), roomId: defaultRoomId }),
+        });
 
-        if (!extractedText.trim()) {
-          throw new Error(
-            "Could not extract any text from this PDF. It appears to be a scanned document or an image-based PDF, which we cannot read without OCR software."
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Failed to save article (${res.status})`);
+        }
+
+        toast.success("Document saved successfully!");
+        setOpen(false);
+        setUrl("");
+        setFileQueue([]);
+        router.refresh();
+        return;
+      }
+
+      // Multi-file batch processing
+      const extractedBatch: Array<{
+        title: string;
+        text: string;
+        source_type: string;
+        source_url: string;
+        file_url?: string;
+      }> = [];
+
+      // Update status to processing
+      setFileQueue((prev) => prev.map((item) => ({ ...item, status: "processing" })));
+
+      for (const item of fileQueue) {
+        try {
+          const extracted = await extractFileContent(item.file);
+          extractedBatch.push({
+            title: extracted.title,
+            text: extracted.text,
+            source_type: extracted.sourceType,
+            source_url: `upload://${item.file.name}`,
+            file_url: extracted.fileDataUrl,
+          });
+        } catch (extractErr) {
+          setFileQueue((prev) =>
+            prev.map((i) =>
+              i.id === item.id
+                ? {
+                    ...i,
+                    status: "error",
+                    error:
+                      extractErr instanceof Error
+                        ? extractErr.message
+                        : "Failed to extract text content",
+                  }
+                : i
+            )
           );
         }
-
-        const title = file.name || "Untitled PDF";
-
-        res = await fetch("/api/articles/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: title,
-            source_url: `upload://${file.name}`,
-            source_type: "pdf",
-            text: extractedText,
-            file_url: fileDataUrl,
-            roomId: defaultRoomId,
-          }),
-        });
-      } else {
-        res = await fetch("/api/articles/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url, roomId: defaultRoomId }),
-        });
       }
+
+      if (extractedBatch.length === 0) {
+        throw new Error("Could not extract readable text from any of the selected files.");
+      }
+
+      const res = await fetch("/api/articles/batch-save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: extractedBatch,
+          roomId: defaultRoomId,
+        }),
+      });
 
       if (!res.ok) {
-        let errorMessage = "Failed to save article";
-        const contentType = res.headers.get("content-type");
-        if (contentType?.includes("application/json")) {
-          const data = await res.json();
-          errorMessage = data.error || errorMessage;
-        } else if (res.status === 504) {
-          errorMessage = "The request timed out. The page might be too large or slow to respond.";
-        } else if (res.status >= 500) {
-          errorMessage = "An unexpected server error occurred.";
-        } else {
-          errorMessage = `Failed to save article (${res.status})`;
-        }
-        throw new Error(errorMessage);
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Batch upload failed.");
       }
 
-      toast.success("Document saved successfully!");
-      setOpen(false);
-      setUrl("");
-      setFile(null);
+      const { results } = await res.json();
+      const successCount = results.filter((r: { success: boolean }) => r.success).length;
 
-      // Refresh the current route to fetch new data
-      router.refresh();
+      const resultMap = new Map<string, { success: boolean; error?: string }>(
+        results.map((r: { title: string; success: boolean; error?: string }) => [r.title, r])
+      );
+
+      const updatedQueue = fileQueue.map((item) => {
+        const fileTitle = item.file.name.replace(/\.[^/.]+$/, "");
+        const match = resultMap.get(fileTitle);
+        if (match && !match.success) {
+          return { ...item, status: "error" as const, error: match.error || "Failed to save" };
+        }
+        return { ...item, status: "success" as const };
+      });
+
+      setFileQueue(updatedQueue);
+
+      toast.success(`Successfully saved ${successCount} of ${fileQueue.length} document(s)!`);
+
+      setTimeout(() => {
+        setOpen(false);
+        setFileQueue([]);
+        setUrl("");
+        router.refresh();
+      }, 1200);
     } catch (error) {
       const err = error as Error;
-      toast.error(err.message || "An error occurred");
+      toast.error(err.message || "An error occurred during save");
     } finally {
       setLoading(false);
     }
   };
 
-  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const selected = e.target.files[0];
-      if (selected.type !== "application/pdf") {
-        toast.error("Please select a valid PDF file");
-        return;
-      }
-      if (selected.size > MAX_FILE_SIZE_BYTES) {
-        toast.error("File size exceeds maximum limit of 50MB");
-        return;
-      }
-      setFile(selected);
-      setUrl(""); // Clear URL if file is selected
-    }
-  };
+  let submitButtonLabel = "Save Document";
+  if (loading) {
+    submitButtonLabel =
+      fileQueue.length > 0 ? `Processing ${fileQueue.length} file(s)...` : "Processing...";
+  } else if (fileQueue.length > 1) {
+    submitButtonLabel = `Upload & Save ${fileQueue.length} Files`;
+  }
 
   return (
     <Dialog
@@ -168,7 +198,7 @@ export function SaveArticleDialog({
       onOpenChange={(val) => {
         setOpen(val);
         if (!val) {
-          setFile(null);
+          setFileQueue([]);
           setUrl("");
         }
       }}
@@ -178,103 +208,174 @@ export function SaveArticleDialog({
           render={
             <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
               <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Save Document</span>
+              <span className="hidden sm:inline">Save Documents</span>
             </Button>
           }
         />
       ) : (
-        <DialogTrigger className="w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 inline-flex items-center whitespace-nowrap text-sm font-medium font-sans transition-colors">
-          <Plus className="w-4 h-4" />
-          <span>Save Document</span>
-        </DialogTrigger>
+        <DialogTrigger
+          render={
+            <Button className="w-full flex justify-start gap-2 bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] h-10 px-4 py-2 text-sm font-medium font-sans rounded-none transition-colors cursor-pointer">
+              <Plus className="w-4 h-4" />
+              <span>Save Documents</span>
+            </Button>
+          }
+        />
       )}
-      <DialogContent className="sm:max-w-md bg-card border-border">
+      <DialogContent className="sm:max-w-lg bg-card border-border rounded-none">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-foreground">
-            Save a new document
+            Save Documents & Articles
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Paste a URL, DOI, arXiv ID, or upload a PDF to read later.
+            Paste a URL, DOI, arXiv ID, or upload multiple files at once (.pdf, .txt, .md, .epub,
+            .docx, .html, .json).
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSave} className="flex flex-col gap-4 py-4">
+
+        <form onSubmit={handleSave} className="flex flex-col gap-4 py-2">
           <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div className="flex flex-col gap-2 flex-1 mr-4">
-                <Input
-                  id="url"
-                  placeholder="URL, DOI (10.xxx), or arXiv ID"
-                  value={url}
-                  onChange={(e) => {
-                    setUrl(e.target.value);
-                    setFile(null);
-                  }}
-                  disabled={loading || file !== null}
-                  autoComplete="off"
-                  className="bg-background border-border"
-                />
-              </div>
-              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                OR
-              </span>
-              <div className="flex-1 ml-4">
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  className="hidden"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={loading}
-                  onClick={() => fileInputRef.current?.click()}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const droppedFile = e.dataTransfer.files?.[0];
-                    if (droppedFile?.type === "application/pdf") {
-                      if (droppedFile.size > MAX_FILE_SIZE_BYTES) {
-                        toast.error("File size exceeds maximum limit of 50MB");
-                        return;
-                      }
-                      setFile(droppedFile);
-                      setUrl("");
-                    } else if (droppedFile) {
-                      toast.error("Please drop a valid PDF document");
-                    }
-                  }}
-                  className={`w-full flex gap-2 ${file ? "border-primary text-primary bg-primary/10" : ""}`}
-                >
-                  <Upload className="w-4 h-4" />
-                  {file ? "PDF Selected" : "Upload / Drop PDF"}
-                </Button>
-              </div>
+            {/* URL Input */}
+            <div>
+              <label
+                htmlFor="save-url-input"
+                className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1"
+              >
+                Web URL / DOI / arXiv ID
+              </label>
+              <Input
+                id="save-url-input"
+                placeholder="https://example.com/article or DOI (10.xxx)"
+                value={url}
+                onChange={(e) => {
+                  setUrl(e.target.value);
+                  if (e.target.value) setFileQueue([]);
+                }}
+                disabled={loading || fileQueue.length > 0}
+                autoComplete="off"
+                className="bg-background border-border rounded-none"
+              />
             </div>
 
-            {file && (
-              <div className="flex items-center gap-2 p-2 bg-muted rounded text-sm text-muted-foreground">
-                <FileText className="w-4 h-4" />
-                <span className="truncate">{file.name}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 ml-auto hover:bg-transparent"
-                  onClick={() => setFile(null)}
-                >
-                  <Plus className="w-4 h-4 rotate-45" />
-                </Button>
+            <div className="flex items-center gap-2">
+              <div className="flex-1 border-t border-border" />
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+                OR MULTI-FILE UPLOAD
+              </span>
+              <div className="flex-1 border-t border-border" />
+            </div>
+
+            {/* Drag & Drop Multi-file selector */}
+            <button
+              type="button"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                  handleFileSelection(e.dataTransfer.files);
+                }
+              }}
+              onClick={() => fileInputRef.current?.click()}
+              className={`w-full border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${
+                fileQueue.length > 0
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/50 hover:bg-muted/30"
+              }`}
+            >
+              <input
+                type="file"
+                multiple
+                accept=".pdf,.txt,.md,.markdown,.epub,.docx,.html,.htm,.json"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    handleFileSelection(e.target.files);
+                  }
+                }}
+              />
+              <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+              <p className="text-xs font-medium text-foreground">
+                Drop files here or <span className="text-primary underline">browse</span>
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Supports PDF, TXT, Markdown, EPUB, DOCX, HTML, JSON (up to 50MB each)
+              </p>
+            </button>
+
+            {/* Selected File Queue List */}
+            {fileQueue.length > 0 && (
+              <div className="flex flex-col gap-2 max-h-48 overflow-y-auto border border-border p-2 bg-muted/20">
+                <div className="flex justify-between items-center px-1 text-xs font-semibold text-muted-foreground">
+                  <span>
+                    Queue ({fileQueue.length} file{fileQueue.length > 1 ? "s" : ""})
+                  </span>
+                  {!loading && (
+                    <button
+                      type="button"
+                      onClick={() => setFileQueue([])}
+                      className="text-[10px] text-destructive hover:underline cursor-pointer"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                {fileQueue.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between p-2 bg-card border border-border text-xs gap-2"
+                  >
+                    <div className="flex items-center gap-2 overflow-hidden flex-1">
+                      <FileText className="w-4 h-4 text-primary shrink-0" />
+                      <span className="truncate font-medium text-foreground">{item.file.name}</span>
+                      <span className="text-[10px] text-muted-foreground shrink-0">
+                        ({(item.file.size / (1024 * 1024)).toFixed(1)}MB)
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {item.status === "processing" && (
+                        <span className="flex items-center gap-1 text-[10px] text-amber-600 font-medium">
+                          <Loader2 className="w-3 h-3 animate-spin" /> Processing
+                        </span>
+                      )}
+                      {item.status === "success" && (
+                        <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Saved
+                        </span>
+                      )}
+                      {item.status === "error" && (
+                        <span
+                          className="flex items-center gap-1 text-[10px] text-destructive font-medium"
+                          title={item.error}
+                        >
+                          <AlertCircle className="w-3 h-3" /> Failed
+                        </span>
+                      )}
+
+                      {!loading && (
+                        <button
+                          type="button"
+                          onClick={() => removeQueueItem(item.id)}
+                          className="text-muted-foreground hover:text-foreground p-0.5 cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
+
           <Button
             type="submit"
-            disabled={loading || (!url && !file)}
-            className="font-semibold bg-primary text-primary-foreground"
+            disabled={loading || (!url.trim() && fileQueue.length === 0)}
+            className="font-semibold bg-primary text-primary-foreground rounded-none mt-2"
           >
-            {loading ? "Extracting..." : "Save Document"}
+            {submitButtonLabel}
           </Button>
         </form>
       </DialogContent>

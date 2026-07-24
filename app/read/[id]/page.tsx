@@ -19,7 +19,11 @@ import { ConceptSlideOver } from "@/components/ConceptSlideOver";
 import { TextSelectionMenu } from "@/components/TextSelectionMenu";
 import { EditHighlightPopover } from "@/components/EditHighlightPopover";
 import { ExportArticleButton } from "@/components/ExportArticleButton";
+<<<<<<< HEAD
 import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
+=======
+import { ShareDialog } from "@/components/ShareDialog";
+>>>>>>> 7975b55 (feat: multi-format batch upload, flexible downloads, and library copy/link sharing with Reader vs Native view options)
 import { logger } from "@/lib/logger";
 
 type HighlightType = {
@@ -751,6 +755,7 @@ function ReaderHeader({
           />
         )}
 
+        <ShareDialog type="article" id={articleId} title={title} compact />
         <ExportArticleButton articleId={articleId} articleTitle={title} />
       </div>
     </header>

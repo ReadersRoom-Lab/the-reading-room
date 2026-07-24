@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { BookMarked } from "lucide-react";
 import { ExportDrawer } from "@/components/ExportDrawer";
 import { LibraryContent } from "@/components/LibraryContent";
+import { ShareDialog } from "@/components/ShareDialog";
 
 export default async function LibraryPage() {
   const { userId } = await auth();
@@ -38,7 +39,10 @@ export default async function LibraryPage() {
           <h1 className="font-heading text-5xl font-bold text-[#1A1A1A] mb-2">Library</h1>
           <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
         </div>
-        <ExportDrawer />
+        <div className="flex items-center gap-3">
+          <ShareDialog type="library" />
+          <ExportDrawer />
+        </div>
       </div>
 
       {articles.length > 0 ? (
