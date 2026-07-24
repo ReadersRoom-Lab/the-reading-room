@@ -19,7 +19,7 @@ export interface ExtractedFileResult {
 export type PdfLoader = (arrayBuffer: ArrayBuffer) => Promise<{
   numPages: number;
   getPage: (pageNo: number) => Promise<{
-    getTextContent: () => Promise<{ items: Array<{ str?: string }> }>;
+    getTextContent: () => Promise<{ items: Array<unknown> }>;
   }>;
 }>;
 
@@ -29,7 +29,7 @@ export async function extractTextFromPdf(file: File, customLoader?: PdfLoader): 
     let pdf: {
       numPages: number;
       getPage: (pageNo: number) => Promise<{
-        getTextContent: () => Promise<{ items: Array<{ str?: string }> }>;
+        getTextContent: () => Promise<{ items: Array<unknown> }>;
       }>;
     };
 
@@ -50,7 +50,11 @@ export async function extractTextFromPdf(file: File, customLoader?: PdfLoader): 
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map((item) => ("str" in item ? (item as { str: string }).str : ""))
+        .map((item) =>
+          typeof item === "object" && item !== null && "str" in item
+            ? (item as { str: string }).str
+            : ""
+        )
         .join(" ");
       extractedText += pageText + "\n\n";
     }
