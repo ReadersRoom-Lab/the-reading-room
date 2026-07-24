@@ -80,7 +80,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { url, html, roomId } = await req.json();
+    const { url, html, roomId, tags } = await req.json();
 
     if (!url || !html) {
       return NextResponse.json(
@@ -122,10 +122,15 @@ export async function POST(req: Request) {
     const wordCount = textContent.trim().split(/\s+/).length;
     const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 
+    const formattedTags = Array.isArray(tags)
+      ? tags.map((t: string) => (t.startsWith("#") ? t.trim() : `#${t.trim()}`)).filter(Boolean)
+      : [];
+
     const savedArticle = await prisma.article.create({
       data: {
         user_id: user.id,
         room_id: roomId || null,
+        tags: formattedTags,
         title: article.title || "Untitled Article",
         author: article.byline || null,
         source_url: url,

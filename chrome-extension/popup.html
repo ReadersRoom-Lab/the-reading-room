@@ -23,6 +23,20 @@
 
         <div id="status-container" class="status hidden"></div>
 
+        <!-- Room & Tag Options -->
+        <div class="options-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <div>
+            <label for="room-select" style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #52525b; display: block; margin-bottom: 4px;">Assign Room (Optional)</label>
+            <select id="room-select" style="width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid #e5e5e5; background-color: #faf9f5; color: #1a1a1a; outline: none;">
+              <option value="">No Room (Default Library)</option>
+            </select>
+          </div>
+          <div>
+            <label for="tags-input" style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #52525b; display: block; margin-bottom: 4px;">Custom Tags (Comma Separated)</label>
+            <input id="tags-input" type="text" placeholder="#philosophy, #ai, #must-read" style="width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid #e5e5e5; background-color: #ffffff; color: #1a1a1a; outline: none;" />
+          </div>
+        </div>
+
         <button id="save-btn" class="btn">
           <svg
             id="btn-icon"

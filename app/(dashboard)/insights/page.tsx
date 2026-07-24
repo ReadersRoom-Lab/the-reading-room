@@ -60,14 +60,13 @@ import {
   BookOpen,
   Highlighter,
   Library,
-  Calendar,
   TrendingUp,
   FolderOpen,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { format, subDays } from "date-fns";
+import { ReadingHeatmap } from "@/components/ReadingHeatmap";
 
 type StatsType = {
   streaks: {
@@ -75,6 +74,7 @@ type StatsType = {
     longest: number;
   };
   activity: Record<string, number>;
+  dailyActivity?: Record<string, number>;
   knowledgeGrowth: { date: string; count: number }[];
   activeRooms: { name: string; articleCount: number }[];
   totals: {
@@ -122,38 +122,6 @@ export default function InsightsPage() {
       .catch(console.error)
       .finally(() => setStatsLoading(false));
   }, []);
-
-  // Generate 365 days of activity cells
-  const heatmapDays = useMemo(() => {
-    const days = [];
-    const today = new Date();
-    for (let i = 364; i >= 0; i--) {
-      const day = subDays(today, i);
-      const dayStr = format(day, "yyyy-MM-dd");
-      const count = stats?.activity?.[dayStr] || 0;
-      days.push({ day, dayStr, count });
-    }
-    return days;
-  }, [stats]);
-
-  // Group heatmap days into 53 weeks (columns)
-  const heatmapWeeks = useMemo(() => {
-    const weeks: (typeof heatmapDays)[] = [];
-    let currentWeek: typeof heatmapDays = [];
-
-    heatmapDays.forEach((day) => {
-      currentWeek.push(day);
-      if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-    });
-
-    if (currentWeek.length > 0) {
-      weeks.push(currentWeek);
-    }
-    return weeks;
-  }, [heatmapDays]);
 
   // SVG Line Chart coordinates calculation for Knowledge Growth
   const growthChartPoints = useMemo(() => {
@@ -303,48 +271,8 @@ export default function InsightsPage() {
             </div>
           </div>
 
-          {/* Heatmap Section */}
-          <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm flex flex-col">
-            <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
-              <Calendar className="w-5 h-5 text-muted-foreground" />
-              <h3 className="font-heading text-lg font-bold text-[#1A1A1A]">
-                Reading Activity Heatmap
-              </h3>
-            </div>
-
-            <div className="overflow-x-auto w-full pb-2">
-              <div className="flex gap-[3px] min-w-[700px] justify-between">
-                {heatmapWeeks.map((week, wIdx) => (
-                  <div key={week[0]?.dayStr || wIdx} className="flex flex-col gap-[3px]">
-                    {week.map((day) => {
-                      let cellBg = "bg-[#FCFBF8] border border-[#E5E5E5]";
-                      if (day.count === 1) cellBg = "bg-[#E6C79C]/30 border border-[#E6C79C]/40";
-                      else if (day.count === 2)
-                        cellBg = "bg-[#E6C79C]/60 border border-[#E6C79C]/70";
-                      else if (day.count >= 3) cellBg = "bg-[#E6C79C] border border-[#E6C79C]";
-
-                      return (
-                        <div
-                          key={day.dayStr}
-                          className={`w-3.5 h-3.5 cursor-pointer transition-colors ${cellBg}`}
-                          title={`${day.dayStr}: ${day.count} activities`}
-                        />
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex justify-end items-center gap-2 mt-4 text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-              <span>Less</span>
-              <div className="w-3 h-3 bg-[#FCFBF8] border border-[#E5E5E5]" />
-              <div className="w-3 h-3 bg-[#E6C79C]/30 border border-[#E6C79C]/40" />
-              <div className="w-3 h-3 bg-[#E6C79C]/60 border border-[#E6C79C]/70" />
-              <div className="w-3 h-3 bg-[#E6C79C] border border-[#E6C79C]" />
-              <span>More</span>
-            </div>
-          </div>
+          {/* Annual Heatmap Section */}
+          <ReadingHeatmap dailyActivity={stats?.dailyActivity || stats?.activity || {}} />
 
           {/* Charts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
