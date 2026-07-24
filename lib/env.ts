@@ -34,7 +34,7 @@ export function getEnvVars(): Record<string, string | undefined> {
  * - In CI/build environments (CI=true | VERCEL=1 | SKIP_ENV_VALIDATION=true):
  *   warns via console.warn and returns an object with empty-string fallbacks.
  */
-export function createEnv(raw: Record<string, string | undefined>) {
+export function createEnv(raw: Record<string, string | undefined> = getEnvVars()) {
   const result = envSchema.safeParse(raw);
 
   if (!result.success) {
