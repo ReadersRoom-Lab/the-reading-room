@@ -89,7 +89,7 @@ Run these commands locally to verify your code is clean before pushing:
 - **Format Check**: `npm run format:check` (checks codebase formatting using Prettier)
 - **Linting**: `npm run lint` (checks code quality and styling using ESLint)
 - **TypeScript Compilation**: `npx tsc --noEmit` (verifies type safety)
-- **Tests**: `npm test` (runs all 51 unit tests)
+- **Tests**: `npm test` (runs all 75 unit tests)
 - **Full Production Build**: `npm run build` (tests Next.js compilation and extension packaging)
 
 ### 2. Local Pre-Commit Hooks
@@ -131,7 +131,7 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
   - Architected the database schema with Prisma ORM 7 (`Article`, `VaultEntry`, `ArticleChunk`, `Room`, `Highlight`).
   - Built the RAG Semantic Search engine powered by PostgreSQL `pgvector` and `text-embedding-004`.
   - Built the **AI Insights Synthesis Engine** and **AI Room Concepts Generator** using Vercel AI SDK v7 (`streamText`, `Output.object`).
-  - Configured CI/CD pipelines (`.github/workflows/ci.yml`), SonarCloud Quality Gate scanners, and the 51-test Node.js suite.
+  - Configured CI/CD pipelines (`.github/workflows/ci.yml`), SonarCloud Quality Gate scanners, and the 75-test Node.js suite.
 
 ---
 
@@ -161,6 +161,8 @@ The app uses a custom **"Scholarly Minimalism"** (Parchment & Ink) aesthetic:
 22. **Multi-Format Batch File Ingestion**: Ingest multiple files at once (`.pdf`, `.txt`, `.md`, `.epub`, `.docx`, `.html`, `.json`) up to 50MB per file with real-time status queue tracking in `SaveArticleDialog`.
 23. **Flexible Multi-Format Document Exporting**: Export saved articles in `.md`, `.txt`, `.html`, and `.json` formats via `ExportArticleButton`.
 24. **Public Link & Duplicate Library Sharing**: Generate public share tokens or create instant copies of articles, rooms, and libraries with custom **Reader Version** vs. **Native Version** default recipient view choices (`ShareDialog` & `/share/[token]`).
+25. **100% SonarCloud Reliability & Maintainability Resolution**: Resolved all reported SonarCloud issues (regex backtracking, nested ternaries, optional chaining, assertion fixes, `generateText` refactoring) across the entire repository with 0 open issues remaining.
+26. **100% File Extractor & 99.8% Repository Test Coverage**: Expanded unit test suite to 75 tests covering multi-format file extraction, PDFjs page stream parsing, XML decoding fallbacks, and environment variable fallbacks with `c8` LCOV reporting.
 
 For a complete timeline of contributor commits, see [CONTRIBUTIONS.md](./CONTRIBUTIONS.md).
 
