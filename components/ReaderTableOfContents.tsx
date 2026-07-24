@@ -10,6 +10,18 @@ export interface TocItem {
   level: number;
 }
 
+function stripTags(htmlStr: string): string {
+  return htmlStr
+    .split("<")
+    .map((chunk) => {
+      const idx = chunk.indexOf(">");
+      return idx >= 0 ? chunk.substring(idx + 1) : chunk;
+    })
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Parses headings (h1, h2, h3) from HTML string */
 export function extractHeadings(htmlContent: string): {
   headings: TocItem[];
@@ -50,16 +62,16 @@ export function extractHeadings(htmlContent: string): {
     }
   }
 
-  // Fallback regex parsing for non-browser / unit-test environments
+  // Fallback parsing for non-browser / unit-test environments
   const headings: TocItem[] = [];
-  const regex = /<h([1-3])([^>]*)>(.*?)<\/h[1-3]>/gi;
+  const regex = /<h([1-3])\b([^>]*)>([\s\S]*?)<\/h[1-3]>/gi;
   let match: RegExpExecArray | null;
   let index = 0;
 
   while ((match = regex.exec(htmlContent)) !== null) {
     const level = Number.parseInt(match[1], 10);
     const attrs = match[2];
-    const rawText = match[3].replace(/<[^>]+>/g, "").trim();
+    const rawText = stripTags(match[3]);
     if (!rawText) continue;
 
     const idMatch = /id=["']([^"']+)["']/i.exec(attrs);
@@ -76,6 +88,12 @@ export function extractHeadings(htmlContent: string): {
 interface ReaderTableOfContentsProps {
   readonly htmlContent: string;
   readonly scrollRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function getHeadingStyleClass(level: number): string {
+  if (level === 1) return "font-heading font-bold text-sm text-[#1A1A1A]";
+  if (level === 2) return "font-sans text-xs font-medium text-[#333] pl-4";
+  return "font-sans text-[11px] text-[#52525B] pl-7";
 }
 
 export function ReaderTableOfContents({ htmlContent, scrollRef }: ReaderTableOfContentsProps) {
@@ -140,13 +158,9 @@ export function ReaderTableOfContents({ htmlContent, scrollRef }: ReaderTableOfC
                   key={h.id}
                   type="button"
                   onClick={() => scrollToHeading(h.id)}
-                  className={`w-full text-left py-2 px-3 hover:bg-[#E5E5E5]/50 transition-colors flex items-center justify-between group rounded-none cursor-pointer ${
-                    h.level === 1
-                      ? "font-heading font-bold text-sm text-[#1A1A1A]"
-                      : h.level === 2
-                        ? "font-sans text-xs font-medium text-[#333] pl-4"
-                        : "font-sans text-[11px] text-[#52525B] pl-7"
-                  }`}
+                  className={`w-full text-left py-2 px-3 hover:bg-[#E5E5E5]/50 transition-colors flex items-center justify-between group rounded-none cursor-pointer ${getHeadingStyleClass(
+                    h.level
+                  )}`}
                 >
                   <span className="truncate">{h.text}</span>
                   <ChevronRight className="w-3.5 h-3.5 text-[#BDBDBD] group-hover:text-[#1A1A1A] transition-colors opacity-0 group-hover:opacity-100 shrink-0 ml-2" />

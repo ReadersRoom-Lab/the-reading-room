@@ -25,7 +25,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       where: { id },
     });
 
-    if (!sourceArticle || sourceArticle.user_id !== user.id) {
+    if (sourceArticle?.user_id !== user.id) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 

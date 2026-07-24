@@ -28,7 +28,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       where: { id },
     });
 
-    if (!article || article.user_id !== user.id) {
+    if (article?.user_id !== user.id) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
@@ -83,7 +83,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       where: { id },
     });
 
-    if (!article || article.user_id !== user.id) {
+    if (article?.user_id !== user.id) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 

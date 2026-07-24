@@ -140,6 +140,13 @@ export function ShareDialog({
     }
   };
 
+  let buttonText = "Generate & Copy Share Link";
+  if (copied) {
+    buttonText = "Link Copied!";
+  } else if (shareUrl) {
+    buttonText = "Copy Link Again";
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger ? (
@@ -236,11 +243,7 @@ export function ShareDialog({
                 ) : (
                   <Link2 className="w-4 h-4" />
                 )}
-                {copied
-                  ? "Link Copied!"
-                  : shareUrl
-                    ? "Copy Link Again"
-                    : "Generate & Copy Share Link"}
+                {buttonText}
               </Button>
 
               {shareUrl && (
