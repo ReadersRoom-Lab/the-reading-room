@@ -16,24 +16,45 @@ export interface ExtractedFileResult {
   fileDataUrl?: string;
 }
 
-export async function extractTextFromPdf(file: File): Promise<string> {
-  try {
-    const pdfjsLib = await import("pdfjs-dist");
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+export type PdfLoader = (arrayBuffer: ArrayBuffer) => Promise<{
+  numPages: number;
+  getPage: (pageNo: number) => Promise<{
+    getTextContent: () => Promise<{ items: Array<unknown> }>;
+  }>;
+}>;
 
+export async function extractTextFromPdf(file: File, customLoader?: PdfLoader): Promise<string> {
+  try {
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({
-      data: arrayBuffer,
-      cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
-      cMapPacked: true,
-    }).promise;
+    let pdf: {
+      numPages: number;
+      getPage: (pageNo: number) => Promise<{
+        getTextContent: () => Promise<{ items: Array<unknown> }>;
+      }>;
+    };
+
+    if (customLoader) {
+      pdf = await customLoader(arrayBuffer);
+    } else {
+      const pdfjsLib = await import("pdfjs-dist");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      pdf = await pdfjsLib.getDocument({
+        data: arrayBuffer,
+        cMapUrl: `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/cmaps/`,
+        cMapPacked: true,
+      }).promise;
+    }
 
     let extractedText = "";
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-        .map((item) => ("str" in item ? (item as { str: string }).str : ""))
+        .map((item) =>
+          typeof item === "object" && item !== null && "str" in item
+            ? (item as { str: string }).str
+            : ""
+        )
         .join(" ");
       extractedText += pageText + "\n\n";
     }
