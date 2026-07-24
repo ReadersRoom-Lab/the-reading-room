@@ -101,6 +101,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       const pageFaviconEl = document.getElementById("page-favicon");
       const pageTitleEl = document.getElementById("page-title");
       const pageDomainEl = document.getElementById("page-domain");
+      const roomSelectEl = document.getElementById("room-select");
+      const tagsInputEl = document.getElementById("tags-input");
+
+      // Fetch user rooms to populate dropdown
+      if (roomSelectEl) {
+        fetch(`${backendUrl}/api/rooms`, { credentials: "include" })
+          .then((res) => res.json())
+          .then((rooms) => {
+            if (Array.isArray(rooms)) {
+              rooms.forEach((r) => {
+                const opt = document.createElement("option");
+                opt.value = r.id;
+                opt.textContent = r.name;
+                roomSelectEl.appendChild(opt);
+              });
+            }
+          })
+          .catch((err) => console.warn("Failed to fetch rooms for extension:", err));
+      }
 
       if (pageTitleEl && currentTitle) {
         pageTitleEl.textContent = currentTitle;
@@ -124,6 +143,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const btnIcon = document.getElementById("btn-icon");
         const btnSpinner = document.getElementById("btn-spinner");
         const btnText = document.getElementById("btn-text");
+
+        const selectedRoomId = roomSelectEl ? roomSelectEl.value : "";
+        const tagsValue = tagsInputEl ? tagsInputEl.value.trim() : "";
 
         saveBtn.disabled = true;
         if (btnIcon) btnIcon.classList.add("hidden");
@@ -155,7 +177,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           });
 
           // Open the ReadrSpace save page — it handles auth and saving internally.
-          const saveUrl = `${backendUrl}/save?url=${encodeURIComponent(currentUrl)}&extId=${chrome.runtime.id}`;
+          let saveUrl = `${backendUrl}/save?url=${encodeURIComponent(currentUrl)}&extId=${chrome.runtime.id}`;
+          if (selectedRoomId) {
+            saveUrl += `&roomId=${encodeURIComponent(selectedRoomId)}`;
+          }
+          if (tagsValue) {
+            saveUrl += `&tags=${encodeURIComponent(tagsValue)}`;
+          }
+
           await chrome.tabs.create({ url: saveUrl });
 
           statusEl.textContent = "Opening ReadrSpace\u2026";

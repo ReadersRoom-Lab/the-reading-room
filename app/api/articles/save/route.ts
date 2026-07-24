@@ -297,6 +297,7 @@ export async function POST(req: Request) {
     const {
       url,
       roomId,
+      tags,
       title: pdfTitle,
       source_url,
       source_type,
@@ -337,10 +338,15 @@ export async function POST(req: Request) {
       articleData.content || ""
     );
 
+    const formattedTags = Array.isArray(tags)
+      ? tags.map((t: string) => (t.startsWith("#") ? t.trim() : `#${t.trim()}`)).filter(Boolean)
+      : [];
+
     const savedArticle = await prisma.article.create({
       data: {
         user_id: user.id,
         room_id: roomId || null,
+        tags: formattedTags,
         title: articleData.title,
         author: articleData.author,
         source_url: articleData.url,
