@@ -6,6 +6,7 @@ _Automated summary of git contributions. Updated on every push._
 
 **Lokeshwaran V R:**
 
+- Docs: update README.md and CONTRIBUTIONS.md with latest features and contributor logs
 - Refactor: simplify ReaderPage typography styling
 - Refactor: reduce cognitive complexity of ReaderPage
 - Fix merge conflict in reader page

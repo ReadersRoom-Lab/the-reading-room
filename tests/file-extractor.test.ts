@@ -22,6 +22,52 @@ test("extractFileContent extracts json content correctly", async () => {
   assert.ok(res.text.includes('"name": "ReadrSpace"'));
 });
 
+test("extractFileContent extracts plain text files correctly", async () => {
+  const file = new File(["Hello world log file"], "app.log", { type: "text/plain" });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "app");
+  assert.strictEqual(res.sourceType, "txt");
+  assert.strictEqual(res.text, "Hello world log file");
+});
+
+test("extractFileContent extracts html files stripping tags", async () => {
+  const file = new File(["<h1>Title</h1><p>Sample paragraph.</p>"], "index.html", {
+    type: "text/html",
+  });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "index");
+  assert.strictEqual(res.sourceType, "html");
+  assert.strictEqual(res.text, "Title Sample paragraph.");
+});
+
+test("extractFileContent handles malformed json gracefully", async () => {
+  const file = new File(["{ bad json "], "invalid.json", { type: "application/json" });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "invalid");
+  assert.strictEqual(res.sourceType, "json");
+  assert.strictEqual(res.text, "{ bad json ");
+});
+
+test("extractFileContent extracts docx and epub file content using XML text extraction", async () => {
+  const xmlContent = "<w:p>Paragraph 1</w:p><w:p>Paragraph 2</w:p>";
+  const file = new File([xmlContent], "document.docx", {
+    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "document");
+  assert.strictEqual(res.sourceType, "docx");
+  assert.strictEqual(res.text, "Paragraph 1 Paragraph 2");
+  assert.ok(res.fileDataUrl?.startsWith("data:"));
+});
+
+test("extractFileContent fallback for unknown extension plain text", async () => {
+  const file = new File(["Custom file content"], "notes.custom", { type: "text/plain" });
+  const res = await extractFileContent(file);
+  assert.strictEqual(res.title, "notes");
+  assert.strictEqual(res.sourceType, "upload");
+  assert.strictEqual(res.text, "Custom file content");
+});
+
 test("extractFileContent throws error on empty text file", async () => {
   const file = new File(["   "], "empty.txt", { type: "text/plain" });
   await assert.rejects(

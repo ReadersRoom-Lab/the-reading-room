@@ -40,6 +40,12 @@ export async function extractTextFromPdf(file: File): Promise<string> {
 }
 
 export function readFileAsDataUrl(file: File): Promise<string> {
+  if (typeof FileReader === "undefined") {
+    return file.arrayBuffer().then((buf) => {
+      const base64 = Buffer.from(buf).toString("base64");
+      return `data:${file.type || "application/octet-stream"};base64,${base64}`;
+    });
+  }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
