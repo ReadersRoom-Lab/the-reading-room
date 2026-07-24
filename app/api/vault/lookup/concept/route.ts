@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { logger } from "@/lib/logger";
-import { generateObject } from "ai";
+import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
+
+const conceptSchema = z.object({
+  definition: z.string(),
+  pronunciation: z.string(),
+  etymology: z.string(),
+  exampleSentence: z.string(),
+});
 
 export async function GET(req: Request) {
   try {
@@ -20,35 +27,25 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Term is required" }, { status: 400 });
     }
 
-    // Call Gemini to generate structured definition, pronunciation, etymology, and example sentence
-    const result = await generateObject({
+    // Call Gemini to generate structured dictionary details
+    const { text } = await generateText({
       model: google("gemini-1.5-flash"),
-      output: "object",
-      schema: z.object({
-        definition: z
-          .string()
-          .describe(
-            "Accurate, clear definition of the term. If a passage is provided, tailor the definition to match the meaning in that context. Prefix with part of speech in lowercase, like '(noun) ' or '(adverb) '."
-          ),
-        pronunciation: z
-          .string()
-          .describe("Phonetic pronunciation of the word (e.g. /ɪnˈkrɛd.ɪ.bli/)."),
-        etymology: z.string().describe("Comprehensive word origin and etymology."),
-        exampleSentence: z
-          .string()
-          .describe("A clean, descriptive example sentence of the word in action."),
-      }),
+      system:
+        "You are a lexicographer. Return a JSON object with fields: definition (prefixed with part of speech like '(noun) '), pronunciation (e.g. /phonetic/), etymology, and exampleSentence.",
       prompt: `Provide details for the term "${term}"${
         passage ? ` in the context of this passage: "${passage}"` : ""
-      }. Explain the definition, pronunciation, etymology/origin, and a new example sentence.`,
+      }.`,
     });
+
+    const cleanJson = text.replace(/```json\n?|\n?```/g, "").trim();
+    const parsed = conceptSchema.parse(JSON.parse(cleanJson));
 
     return NextResponse.json({
       term,
-      definition: result.object.definition,
-      pronunciation: result.object.pronunciation,
-      etymology: result.object.etymology,
-      exampleSentence: result.object.exampleSentence,
+      definition: parsed.definition,
+      pronunciation: parsed.pronunciation,
+      etymology: parsed.etymology,
+      exampleSentence: parsed.exampleSentence,
       description: "",
       thumbnail: null,
       sourceUrl: `https://en.wiktionary.org/wiki/${encodeURIComponent(term)}`,
