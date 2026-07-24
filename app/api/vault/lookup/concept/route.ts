@@ -23,6 +23,7 @@ export async function GET(req: Request) {
     // Call Gemini to generate structured definition, pronunciation, etymology, and example sentence
     const result = await generateObject({
       model: google("gemini-1.5-flash"),
+      output: "object",
       schema: z.object({
         definition: z
           .string()
