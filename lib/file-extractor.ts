@@ -59,13 +59,80 @@ export function readFileAsDataUrl(file: File): Promise<string> {
   });
 }
 
-function extractTextFromXml(xmlString: string): string {
-  // Simple XML tag stripper for docx document.xml / epub xhtml
-  return xmlString
-    .replace(/<w:p[^>]*>/gi, "\n\n")
-    .replace(/<[^>]+>/g, " ")
+function stripTags(htmlStr: string): string {
+  return htmlStr
+    .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function extractTextFromXml(xmlString: string): string {
+  return xmlString
+    .replace(/<w:p[^>]*>/gi, "\n\n")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function processFileContent(
+  ext: string,
+  file: File,
+  fileName: string
+): Promise<{ text: string; sourceType: string; fileDataUrl?: string }> {
+  switch (ext) {
+    case ".pdf": {
+      const pdfText = await extractTextFromPdf(file);
+      const text = pdfText || `Extracted PDF document from ${fileName}`;
+      const fileDataUrl = await readFileAsDataUrl(file);
+      return { text, sourceType: "pdf", fileDataUrl };
+    }
+    case ".md":
+    case ".markdown":
+      return { text: await file.text(), sourceType: "markdown" };
+
+    case ".txt":
+    case ".log":
+    case ".csv":
+      return { text: await file.text(), sourceType: "txt" };
+
+    case ".html":
+    case ".htm": {
+      const rawHtml = await file.text();
+      return { text: stripTags(rawHtml), sourceType: "html" };
+    }
+
+    case ".json": {
+      const rawJson = await file.text();
+      try {
+        const parsed = JSON.parse(rawJson);
+        return { text: JSON.stringify(parsed, null, 2), sourceType: "json" };
+      } catch {
+        return { text: rawJson, sourceType: "json" };
+      }
+    }
+
+    case ".docx":
+    case ".epub": {
+      const docType = ext.substring(1);
+      let text = "";
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const textDecoder = new TextDecoder("utf-8");
+        const decoded = textDecoder.decode(arrayBuffer);
+        text = extractTextFromXml(decoded);
+        if (!text.trim()) {
+          text = `Document content from ${fileName}`;
+        }
+      } catch {
+        text = `Extracted content from ${fileName}`;
+      }
+      const fileDataUrl = await readFileAsDataUrl(file);
+      return { text, sourceType: docType, fileDataUrl };
+    }
+
+    default:
+      return { text: await file.text(), sourceType: "upload" };
+  }
 }
 
 export async function extractFileContent(file: File): Promise<ExtractedFileResult> {
@@ -73,60 +140,9 @@ export async function extractFileContent(file: File): Promise<ExtractedFileResul
   const ext = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
   const title = fileName.replace(/\.[^/.]+$/, "");
 
-  let text = "";
-  let sourceType = "upload";
-  let fileDataUrl: string | undefined;
+  const { text, sourceType, fileDataUrl } = await processFileContent(ext, file, fileName);
 
-  if (ext === ".pdf") {
-    sourceType = "pdf";
-    text = await extractTextFromPdf(file);
-    if (!text) {
-      text = `Extracted PDF document from ${fileName}`;
-    }
-    fileDataUrl = await readFileAsDataUrl(file);
-  } else if (ext === ".md" || ext === ".markdown") {
-    sourceType = "markdown";
-    text = await file.text();
-  } else if (ext === ".txt" || ext === ".log" || ext === ".csv") {
-    sourceType = "txt";
-    text = await file.text();
-  } else if (ext === ".html" || ext === ".htm") {
-    sourceType = "html";
-    const rawHtml = await file.text();
-    text = rawHtml
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-  } else if (ext === ".json") {
-    sourceType = "json";
-    const rawJson = await file.text();
-    try {
-      const parsed = JSON.parse(rawJson);
-      text = JSON.stringify(parsed, null, 2);
-    } catch {
-      text = rawJson;
-    }
-  } else if (ext === ".docx" || ext === ".epub") {
-    sourceType = ext.substring(1);
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const textDecoder = new TextDecoder("utf-8");
-      const decoded = textDecoder.decode(arrayBuffer);
-      text = extractTextFromXml(decoded);
-      if (!text.trim()) {
-        text = `Document content from ${fileName}`;
-      }
-    } catch {
-      text = `Extracted content from ${fileName}`;
-    }
-    fileDataUrl = await readFileAsDataUrl(file);
-  } else {
-    // Fallback for any other plain text format
-    sourceType = "upload";
-    text = await file.text();
-  }
-
-  if (!text || !text.trim()) {
+  if (!text?.trim()) {
     throw new Error(`Could not extract text content from file "${fileName}".`);
   }
 
