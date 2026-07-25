@@ -6,6 +6,7 @@ import { BookOpen, FileText, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { formatArticleContentHtml } from "@/lib/reader-utils";
 
 interface SharedArticleData {
   id: string;
@@ -223,8 +224,13 @@ function SharedArticleView({
         )}
       </div>
 
-      <article className="prose prose-stone dark:prose-invert max-w-none font-serif">
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
+      <article className="prose prose-stone dark:prose-invert max-w-none font-serif prose-headings:font-heading prose-headings:font-bold prose-p:leading-relaxed prose-p:mb-6 prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-4 prose-blockquote:italic prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1">
+        <div
+          dangerouslySetInnerHTML={formatArticleContentHtml(
+            article.content,
+            article.highlights || []
+          )}
+        />
       </article>
 
       {article.highlights && article.highlights.length > 0 && (

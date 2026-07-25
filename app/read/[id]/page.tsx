@@ -22,6 +22,7 @@ import { ExportArticleButton } from "@/components/ExportArticleButton";
 import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
 import { ShareDialog } from "@/components/ShareDialog";
 import { logger } from "@/lib/logger";
+import { formatArticleContentHtml } from "@/lib/reader-utils";
 
 type HighlightType = {
   id: string;
@@ -40,40 +41,6 @@ type ViewMode = "reader" | "native";
 type SelectionType = { text: string; rect: DOMRect; contextSnippet: string } | null;
 type ConceptType = { term: string; definition: string; contextSnippet: string } | null;
 type EditingHighlightType = { highlight: HighlightType; rect: DOMRect } | null;
-
-function generateHighlightedHtml(
-  article: Record<string, string> | null,
-  highlights: HighlightType[]
-) {
-  if (!article) return { __html: "" };
-  let html = article.content || article.textContent || "";
-
-  const sorted = [...highlights].sort((a, b) => b.content.length - a.content.length);
-
-  sorted.forEach((h) => {
-    let colorClass = "bg-[#FCD116]/40 dark:bg-[#FCD116]/30 text-inherit"; // Default to ochre
-    if (h.colour === "sage") colorClass = "bg-[#8DA399]/50 dark:bg-[#8DA399]/40 text-inherit";
-    else if (h.colour === "crimson")
-      colorClass = "bg-[#9A3B3B]/40 dark:bg-[#9A3B3B]/30 text-inherit";
-    else if (h.colour === "indigo")
-      colorClass = "bg-[#4F709C]/40 dark:bg-[#4F709C]/30 text-inherit";
-
-    const safeContent = h.content.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`);
-    const regex = new RegExp(`(${safeContent})`, "g");
-
-    // Check if it has a note or tag
-    const hasMetadata = Boolean(h.note || h.annotation_type);
-    const borderClass = hasMetadata ? "border-b-2 border-foreground/30" : "";
-    const noteTitle = h.note ? `title="Note: ${h.note.replaceAll('"', "&quot;")}"` : "";
-
-    html = html.replace(
-      regex,
-      `<mark data-highlight-id="${h.id}" ${noteTitle} class="${colorClass} ${borderClass} rounded-sm px-0.5 cursor-pointer hover:opacity-80 transition-opacity">$1</mark>`
-    );
-  });
-
-  return { __html: html };
-}
 
 export default function ReaderPage() {
   const params = useParams();
@@ -102,7 +69,8 @@ export default function ReaderPage() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const highlightedHtml = useMemo(() => {
-    return generateHighlightedHtml(article, highlights);
+    if (!article) return { __html: "" };
+    return formatArticleContentHtml(article.content || article.textContent || "", highlights);
   }, [article, highlights]);
 
   const handleScroll = useArticleScrollProgress(
@@ -253,7 +221,7 @@ function getProseTypographyClass(fontFamily: FontFamily, fontSize: FontSize): st
     lg: "prose-lg",
     xl: "prose-xl",
   };
-  return `mx-auto max-w-3xl prose prose-stone dark:prose-invert ${fontClass} ${sizeMap[fontSize] || "prose-base"}`;
+  return `mx-auto max-w-3xl prose prose-stone dark:prose-invert ${fontClass} ${sizeMap[fontSize] || "prose-base"} prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-p:mb-6 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6 prose-img:rounded-xl prose-img:shadow-md prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/60 prose-pre:rounded-lg prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1 prose-mark:py-0.5`;
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
