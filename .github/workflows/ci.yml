@@ -47,6 +47,7 @@ jobs:
         run: npm run test:coverage
 
       - name: SonarCloud Scan
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         continue-on-error: true
         env:
