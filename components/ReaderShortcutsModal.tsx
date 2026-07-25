@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { X, Keyboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +10,17 @@ interface ReaderShortcutsModalProps {
 }
 
 export function ReaderShortcutsModal({ isOpen, onClose }: ReaderShortcutsModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const shortcuts = [
@@ -22,24 +34,31 @@ export function ReaderShortcutsModal({ isOpen, onClose }: ReaderShortcutsModalPr
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Reader Shortcuts Modal"
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
-      onClick={onClose}
     >
-      <div
-        className="bg-card border border-border shadow-2xl rounded-2xl max-w-md w-full p-6 relative animate-in zoom-in-95"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <button
+        type="button"
+        className="absolute inset-0 w-full h-full cursor-default border-0 p-0 bg-transparent"
+        onClick={onClose}
+        aria-label="Close modal background"
+      />
+
+      <div className="bg-card border border-border shadow-2xl rounded-2xl max-w-md w-full p-6 relative z-10 animate-in zoom-in-95 pointer-events-auto">
         <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
           <div className="flex items-center gap-2">
             <Keyboard className="w-5 h-5 text-primary" />
-            <h3 className="font-heading text-lg font-bold">Reader Hotkeys</h3>
+            <h2 className="font-heading text-lg font-bold">Reader Hotkeys</h2>
           </div>
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full"
+            className="h-8 w-8 rounded-full cursor-pointer"
             onClick={onClose}
+            aria-label="Close shortcuts overlay"
           >
             <X className="w-4 h-4" />
           </Button>
