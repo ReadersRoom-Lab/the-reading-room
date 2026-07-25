@@ -28,12 +28,25 @@ test("cleanArticleContent strips browser print headers, footers, timestamps, URL
   assert.ok(cleaned.includes("contention is that setting the public record straight"));
 });
 
+test("cleanArticleContent formats author bylines", () => {
+  const byline = "by Alfred Archer and Benjamin Matheson, philosophers";
+  const cleaned = cleanArticleContent(byline);
+  assert.ok(
+    cleaned.includes(
+      '<p class="text-base text-muted-foreground font-sans font-medium mb-6 italic">by Alfred Archer and Benjamin Matheson, philosophers</p>'
+    )
+  );
+});
+
 test("formatArticleContentHtml handles empty, null or whitespace content", () => {
   const resultNull = formatArticleContentHtml(null);
   assert.ok(resultNull.__html.includes("No content available for this article."));
 
   const resultEmpty = formatArticleContentHtml("   ");
   assert.ok(resultEmpty.__html.includes("No content available for this article."));
+
+  const resultCleanedEmpty = formatArticleContentHtml("7/3/26, 4:49 PM https://example.com 1/5");
+  assert.ok(resultCleanedEmpty.__html.includes("No content available for this article."));
 });
 
 test("formatArticleContentHtml formats plain text into clean paragraphs", () => {
