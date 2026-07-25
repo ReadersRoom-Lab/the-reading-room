@@ -118,9 +118,13 @@ test("formatArticleContentHtml chunks long paragraphs by sentence boundaries", (
     "Sentence three expands on key cognitive insights and analytical thinking in literature.";
   const sentence4 =
     "Sentence four finishes the thought with actionable conclusions and deep learning outcomes.";
-  const longParagraph = `${sentence1} ${sentence2} ${sentence3} ${sentence4}`;
+  const sentence5 =
+    "Sentence five adds even more context to ensure the overall character count passes the four hundred fifty threshold.";
+  const sentence6 =
+    "Sentence six ensures multiple paragraph chunks are produced during the format pass.";
+  const longParagraph = `${sentence1} ${sentence2} ${sentence3} ${sentence4} ${sentence5} ${sentence6}`;
 
-  assert.ok(longParagraph.length > 300);
+  assert.ok(longParagraph.length > 500);
   const result = formatArticleContentHtml(longParagraph);
   assert.ok(
     result.__html.includes('<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">')
