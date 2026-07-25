@@ -73,16 +73,59 @@ export function cleanArticleContent(content?: string | null, title?: string | nu
 }
 
 /**
+ * Extract source domain from standard or scheme-less URLs.
+ * Returns domain string like "psyche.co" or "arxiv.org".
+ */
+export function getArticleSourceDomain(url?: string | null): string {
+  if (!url) return "the-reading-room";
+  if (url.startsWith("upload://") || url.startsWith("file://")) return "upload";
+
+  let cleanUrl = url.trim();
+  if (!/^https?:\/\//i.test(cleanUrl)) {
+    cleanUrl = `https://${cleanUrl}`;
+  }
+
+  try {
+    const parsed = new URL(cleanUrl);
+    return parsed.hostname.replace(/^www\./i, "");
+  } catch {
+    return "the-reading-room";
+  }
+}
+
+/**
+ * Bionic Reading transformer: highlights the first 40-50% of each word in bold text
+ * to guide the eye across text lines effortlessly.
+ */
+export function applyBionicReading(html: string): string {
+  if (!html) return "";
+
+  // Replace text content outside of HTML tags (<...>)
+  return html.replace(/(>|^)([^<]+)(?=<|$)/g, (_match, prefix, textContent) => {
+    const transformedText = textContent.replace(/\b([A-Za-z0-9]+)\b/g, (word: string) => {
+      if (word.length <= 1) return word;
+      const highlightLength = Math.max(1, Math.ceil(word.length * 0.45));
+      const boldPart = word.slice(0, highlightLength);
+      const restPart = word.slice(highlightLength);
+      return `<strong class="font-bold opacity-100">${boldPart}</strong><span class="opacity-90">${restPart}</span>`;
+    });
+    return `${prefix}${transformedText}`;
+  });
+}
+
+/**
  * Intelligent formatter for article content in Reader Mode.
  * - Formats raw text, Markdown, or HTML into structured, elegant HTML paragraphs and elements.
  * - Cleans print headers, footers, page numbers, and title artifacts.
+ * - Auto-detects subheadings, lists, and footnote references.
  * - Preserves & highlights pre-existing document highlights (HTML <mark>, <span class="highlight">, ==markdown==, [highlight]).
  * - Applies database-backed user highlights with custom colors & metadata.
  */
 export function formatArticleContentHtml(
   articleContent?: string | null,
   highlights: HighlightType[] = [],
-  title?: string | null
+  title?: string | null,
+  isBionic = false
 ): { __html: string } {
   if (!articleContent || articleContent.trim() === "") {
     return {
@@ -160,6 +203,12 @@ export function formatArticleContentHtml(
       '<h1 class="font-heading text-3xl font-bold mt-12 mb-6">$1</h1>'
     );
 
+    // Auto-detect uppercase headings in raw text (e.g. "1. INTRODUCTION", "BACKGROUND", "II. METHODOLOGY")
+    html = html.replace(
+      /^([0-9IVX]+\.\s+[A-Z\s]{4,60}|[A-Z\s]{4,50})$/gm,
+      '<h2 class="font-heading text-2xl font-bold mt-10 mb-4 pb-2 border-b border-border/50">$1</h2>'
+    );
+
     // Convert Markdown blockquotes
     html = html.replace(
       /^>\s?(.*$)/gim,
@@ -184,6 +233,12 @@ export function formatArticleContentHtml(
     html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
     html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
 
+    // Convert bracket citation numbers [1], [2] to superscript badges
+    html = html.replace(
+      /\[(\d{1,3})\]/g,
+      '<sup class="font-mono text-[11px] font-semibold text-primary bg-primary/10 px-1 py-0.5 rounded cursor-pointer select-none">[$1]</sup>'
+    );
+
     // Convert double newlines into clean paragraph tags <p>
     const rawParagraphs = html
       .split(/\n\n+/)
@@ -198,6 +253,35 @@ export function formatArticleContentHtml(
         return;
       }
 
+      // Check if paragraph is a bullet/numbered list
+      const lines = p.split(/\n+/);
+      const isBulletList = lines.every((line) => /^\s*[•*-]\s+/.test(line));
+      const isNumberedList = lines.every((line) => /^\s*\d+\.\s+/.test(line));
+
+      if (isBulletList) {
+        const listItems = lines
+          .map(
+            (line) => `  <li class="mb-2 leading-relaxed">${line.replace(/^\s*[•*-]\s+/, "")}</li>`
+          )
+          .join("\n");
+        formattedParagraphs.push(
+          `<ul class="list-disc pl-6 my-6 space-y-1 text-inherit">\n${listItems}\n</ul>`
+        );
+        return;
+      }
+
+      if (isNumberedList) {
+        const listItems = lines
+          .map(
+            (line) => `  <li class="mb-2 leading-relaxed">${line.replace(/^\s*\d+\.\s+/, "")}</li>`
+          )
+          .join("\n");
+        formattedParagraphs.push(
+          `<ol class="list-decimal pl-6 my-6 space-y-1 text-inherit">\n${listItems}\n</ol>`
+        );
+        return;
+      }
+
       // Break long unformatted text blocks (>450 chars) by sentence endings so text never feels like a giant wall
       if (p.length > 450) {
         const sentences = p.split(/(?<=[.!?])\s+/);
@@ -206,7 +290,7 @@ export function formatArticleContentHtml(
         sentences.forEach((sentence) => {
           if ((currentChunk + " " + sentence).length > 380 && currentChunk.length > 0) {
             formattedParagraphs.push(
-              `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${currentChunk.trim()}</p>`
+              `<p class="leading-relaxed mb-8 font-normal text-inherit [&:first-of-type]:first-letter:text-5xl [&:first-of-type]:first-letter:font-serif [&:first-of-type]:first-letter:font-bold [&:first-of-type]:first-letter:float-left [&:first-of-type]:first-letter:mr-3 [&:first-of-type]:first-letter:leading-none [&:first-of-type]:first-letter:text-primary">${currentChunk.trim()}</p>`
             );
             currentChunk = sentence;
           } else {
@@ -216,13 +300,13 @@ export function formatArticleContentHtml(
 
         if (currentChunk.trim().length > 0) {
           formattedParagraphs.push(
-            `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${currentChunk.trim()}</p>`
+            `<p class="leading-relaxed mb-8 font-normal text-inherit [&:first-of-type]:first-letter:text-5xl [&:first-of-type]:first-letter:font-serif [&:first-of-type]:first-letter:font-bold [&:first-of-type]:first-letter:float-left [&:first-of-type]:first-letter:mr-3 [&:first-of-type]:first-letter:leading-none [&:first-of-type]:first-letter:text-primary">${currentChunk.trim()}</p>`
           );
         }
       } else {
         const formattedPara = p.replace(/\n/g, "<br />");
         formattedParagraphs.push(
-          `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${formattedPara}</p>`
+          `<p class="leading-relaxed mb-8 font-normal text-inherit [&:first-of-type]:first-letter:text-5xl [&:first-of-type]:first-letter:font-serif [&:first-of-type]:first-letter:font-bold [&:first-of-type]:first-letter:float-left [&:first-of-type]:first-letter:mr-3 [&:first-of-type]:first-letter:leading-none [&:first-of-type]:first-letter:text-primary">${formattedPara}</p>`
         );
       }
     });
@@ -258,6 +342,11 @@ export function formatArticleContentHtml(
         `<mark data-highlight-id="${h.id}" ${noteTitle} class="${colorClass} ${borderClass} rounded-sm px-1 py-0.5 cursor-pointer hover:opacity-80 transition-opacity">$1</mark>`
       );
     });
+  }
+
+  // 4. Optionally apply Bionic Reading transformation
+  if (isBionic) {
+    html = applyBionicReading(html);
   }
 
   return { __html: html };
