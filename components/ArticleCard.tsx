@@ -62,11 +62,21 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
                 </Badge>
               )}
             </div>
-            <RoomAssignDropdown
-              articleId={article.id}
-              currentRoomId={article.room_id}
-              onDeleteSuccess={() => setIsDeleted(true)}
-            />
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <RoomAssignDropdown
+                articleId={article.id}
+                currentRoomId={article.room_id}
+                onDeleteSuccess={() => setIsDeleted(true)}
+              />
+            </div>
           </div>
           <CardTitle className="line-clamp-2 leading-tight text-lg font-heading">
             {article.title}

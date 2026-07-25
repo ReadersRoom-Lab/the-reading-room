@@ -176,7 +176,15 @@ export function ShareDialog({
         />
       )}
 
-      <DialogContent className="sm:max-w-md bg-white border border-[#E5E5E5] rounded-none font-sans">
+      <DialogContent
+        className="sm:max-w-md bg-white border border-[#E5E5E5] rounded-none font-sans"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-lg text-[#1A1A1A] flex items-center gap-2">
             <Share2 className="w-4 h-4 text-[#1A1A1A]" /> Share{" "}
