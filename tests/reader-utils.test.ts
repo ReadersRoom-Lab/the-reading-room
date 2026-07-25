@@ -1,6 +1,32 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatArticleContentHtml } from "../lib/reader-utils";
+import {
+  formatArticleContentHtml,
+  cleanArticleTitle,
+  cleanArticleContent,
+} from "../lib/reader-utils";
+
+test("cleanArticleTitle cleans underscores and publication branding suffixes", () => {
+  const input = "Good apologies don't close the book_ they open a new chapter _ Psyche Ideas";
+  const cleaned = cleanArticleTitle(input);
+  assert.equal(cleaned, "Good apologies don't close the book: they open a new chapter");
+
+  const nullTitle = cleanArticleTitle(null);
+  assert.equal(nullTitle, "Untitled article");
+});
+
+test("cleanArticleContent strips browser print headers, footers, timestamps, URLs, and page numbers", () => {
+  const content =
+    "emotional sincerity. 7/3/26, 4:49 PM Good apologies don't close the book: they open a new chapter | Psyche Ideas https://psyche.co/ideas/good-apologies-dont-close-the-book-they-open-a-new-chapter 1/5 But our contention is that setting the public record straight...";
+  const title = "Good apologies don't close the book: they open a new chapter";
+  const cleaned = cleanArticleContent(content, title);
+
+  assert.ok(!cleaned.includes("7/3/26, 4:49 PM"));
+  assert.ok(!cleaned.includes("https://psyche.co"));
+  assert.ok(!cleaned.includes("1/5"));
+  assert.ok(cleaned.includes("emotional sincerity."));
+  assert.ok(cleaned.includes("contention is that setting the public record straight"));
+});
 
 test("formatArticleContentHtml handles empty, null or whitespace content", () => {
   const resultNull = formatArticleContentHtml(null);
@@ -83,7 +109,6 @@ test("formatArticleContentHtml chunks long paragraphs by sentence boundaries", (
 
   assert.ok(longParagraph.length > 300);
   const result = formatArticleContentHtml(longParagraph);
-  // Should produce paragraph tags
   assert.ok(
     result.__html.includes('<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">')
   );

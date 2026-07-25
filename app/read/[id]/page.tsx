@@ -22,7 +22,7 @@ import { ExportArticleButton } from "@/components/ExportArticleButton";
 import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
 import { ShareDialog } from "@/components/ShareDialog";
 import { logger } from "@/lib/logger";
-import { formatArticleContentHtml } from "@/lib/reader-utils";
+import { formatArticleContentHtml, cleanArticleTitle } from "@/lib/reader-utils";
 
 type HighlightType = {
   id: string;
@@ -81,7 +81,11 @@ export default function ReaderPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const highlightedHtml = useMemo(() => {
     if (!article) return { __html: "" };
-    return formatArticleContentHtml(article.content || article.textContent || "", highlights);
+    return formatArticleContentHtml(
+      article.content || article.textContent || "",
+      highlights,
+      article.title
+    );
   }, [article, highlights]);
 
   const handleScroll = useArticleScrollProgress(
@@ -193,7 +197,7 @@ export default function ReaderPage() {
                   className="w-full h-64 object-cover rounded-xl mb-8"
                 />
               )}
-              <h1 className="font-heading mb-8">{article.title}</h1>
+              <h1 className="font-heading mb-8">{cleanArticleTitle(article.title)}</h1>
               <div dangerouslySetInnerHTML={highlightedHtml} />
             </article>
           </div>

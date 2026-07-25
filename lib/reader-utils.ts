@@ -10,14 +10,79 @@ export type HighlightType = {
 };
 
 /**
+ * Cleans ugly underscores and site suffixes from article titles.
+ * e.g. "Good apologies don't close the book_ they open a new chapter _ Psyche Ideas"
+ * => "Good apologies don't close the book: they open a new chapter"
+ */
+export function cleanArticleTitle(title?: string | null): string {
+  if (!title) return "Untitled article";
+  let cleaned = title.trim();
+
+  // Strip trailing site branding suffixes like " _ Psyche Ideas", " | Psyche Ideas", " - Psyche Ideas"
+  cleaned = cleaned.replace(/\s+[_|-]\s+[A-Z0-9.\s]+$/i, "");
+
+  // Replace underscores between title clauses (e.g. "book_ they open") with colons ": "
+  cleaned = cleaned.replace(/(\w+)_(\s+\w+)/g, "$1:$2");
+
+  // Clean remaining lone underscores with spaces
+  cleaned = cleaned.replace(/_/g, " ");
+
+  // Collapse double spaces
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
+  return cleaned;
+}
+
+/**
+ * Removes PDF print headers, timestamps, standalone URLs, and page numbers from document text.
+ */
+export function cleanArticleContent(content?: string | null, title?: string | null): string {
+  if (!content) return "";
+  let text = content;
+
+  // 1. Strip browser print header timestamps (e.g., "7/3/26, 4:49 PM", "7/3/26, 4:49:12 PM")
+  text = text.replace(/\d{1,2}\/\d{1,2}\/\d{2,4},?\s*\d{1,2}:\d{2}(?::\d{2})?\s*(?:AM|PM)?/gi, " ");
+
+  // 2. Remove standalone URLs embedded in body text
+  text = text.replace(/https?:\/\/[^\s<]+/gi, " ");
+
+  // 3. Remove page numbers like "1/5", "2/5", "Page 1 of 5"
+  text = text.replace(/\b\d+\s*\/\s*\d+\b/gi, " ");
+  text = text.replace(/\bPage\s+\d+\s+of\s+\d+\b/gi, " ");
+
+  // 4. Remove standalone vertical bar site suffixes like "| Psyche Ideas"
+  text = text.replace(/\s*\|\s*[A-Za-z0-9\s]{2,30}(?=\s|https?:|$)/g, " ");
+
+  // 5. Remove running page header repetitions of the title
+  if (title && title.length > 8) {
+    const safeTitle = title.trim().replace(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`);
+    text = text.replace(new RegExp(safeTitle, "gi"), " ");
+  }
+
+  // 6. Format author bylines like "by Alfred Archer and Benjamin Matheson, philosophers"
+  text = text.replace(
+    /^(by\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+(?:\s+and\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)?(?:,[^\n]+)?)$/gim,
+    '<p class="text-base text-muted-foreground font-sans font-medium mb-6 italic">$1</p>'
+  );
+
+  // Clean excessive spaces
+  text = text.replace(/[ \t]+/g, " ");
+  text = text.replace(/\n\s*\n\s*\n+/g, "\n\n").trim();
+
+  return text;
+}
+
+/**
  * Intelligent formatter for article content in Reader Mode.
  * - Formats raw text, Markdown, or HTML into structured, elegant HTML paragraphs and elements.
+ * - Cleans print headers, footers, page numbers, and title artifacts.
  * - Preserves & highlights pre-existing document highlights (HTML <mark>, <span class="highlight">, ==markdown==, [highlight]).
  * - Applies database-backed user highlights with custom colors & metadata.
  */
 export function formatArticleContentHtml(
   articleContent?: string | null,
-  highlights: HighlightType[] = []
+  highlights: HighlightType[] = [],
+  title?: string | null
 ): { __html: string } {
   if (!articleContent || articleContent.trim() === "") {
     return {
@@ -25,7 +90,14 @@ export function formatArticleContentHtml(
     };
   }
 
-  let html = articleContent.trim();
+  // Clean content first
+  let html = cleanArticleContent(articleContent, title);
+
+  if (!html || html.trim() === "") {
+    return {
+      __html: "<p class='text-muted-foreground italic'>No content available for this article.</p>",
+    };
+  }
 
   // 1. Process pre-existing highlight syntax in the raw document
   // A) Markdown highlight syntax: ==highlighted text==
