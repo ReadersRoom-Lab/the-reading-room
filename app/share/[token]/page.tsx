@@ -184,18 +184,17 @@ function SharedArticleView({
   viewMode: "reader" | "native";
 }>) {
   if (viewMode === "native") {
-    const iframeSrc =
-      article.source_type === "pdf" || article.file_url
-        ? article.file_url || article.source_url
-        : article.source_url;
+    const isUpload =
+      article.source_url?.startsWith("upload://") || article.source_url?.startsWith("file://");
+    const iframeSrc = article.file_url || (isUpload ? "" : article.source_url);
 
     return (
       <div className="w-full h-[calc(100vh-65px)] flex flex-col bg-muted/20">
-        <div className="flex items-center justify-between px-6 py-2 border-b border-border bg-card text-xs text-muted-foreground">
+        <div className="flex items-center justify-between px-6 py-2 border-b border-border bg-card text-xs text-[#52525B]">
           <span>
             Viewing native version: <strong className="text-foreground">{article.title}</strong>
           </span>
-          {article.source_url && !article.source_url.startsWith("upload://") && (
+          {article.source_url && !isUpload && (
             <a
               href={article.source_url}
               target="_blank"
@@ -206,12 +205,7 @@ function SharedArticleView({
             </a>
           )}
         </div>
-        <iframe
-          src={iframeSrc}
-          title={article.title}
-          className="w-full h-full border-0"
-          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-        />
+        <iframe src={iframeSrc} title={article.title} className="w-full h-full border-0 bg-white" />
       </div>
     );
   }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Clock } from "lucide-react";
+import { Clock, CheckSquare, Square } from "lucide-react";
 import Link from "next/link";
 import { getArticleSourceDomain } from "@/lib/article-utils";
 import { RoomAssignDropdown } from "./RoomAssignDropdown";
@@ -22,9 +22,11 @@ export interface ArticleProps {
     status: string;
     room_id?: string | null;
   };
+  isSelected?: boolean;
+  onSelect?: (e: React.MouseEvent) => void;
 }
 
-export function ArticleCard({ article }: Readonly<ArticleProps>) {
+export function ArticleCard({ article, isSelected = false, onSelect }: Readonly<ArticleProps>) {
   const [isDeleted, setIsDeleted] = useState(false);
 
   if (isDeleted) return null;
@@ -45,7 +47,26 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
       )}
       <CardHeader className="flex-1 pb-4">
         <div className="flex justify-between items-start gap-2 mb-2">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
+            {onSelect && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSelect(e);
+                }}
+                className="cursor-pointer p-0.5 hover:opacity-80 transition-opacity focus-visible:outline-none"
+                title={isSelected ? "Deselect article" : "Select article"}
+                aria-label={isSelected ? "Deselect article" : "Select article"}
+              >
+                {isSelected ? (
+                  <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
+                ) : (
+                  <Square className="w-4 h-4 text-[#BDBDBD]" />
+                )}
+              </button>
+            )}
             <Badge
               variant="secondary"
               className="text-[10px] font-semibold tracking-widest uppercase"
