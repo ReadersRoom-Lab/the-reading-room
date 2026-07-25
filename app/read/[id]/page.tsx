@@ -594,16 +594,51 @@ function AppearanceDropdown({
   );
 }
 
-function useReaderKeyboardShortcuts({
-  article,
-  setHighlights,
-  setActiveSelection,
-  setConcept,
-  setIsBionic,
-  setThemeMode,
-  setViewMode,
-  setShowShortcuts,
-}: Readonly<ReaderShortcutsParams>) {
+function handleSingleHotkeys(
+  key: string,
+  params: {
+    setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+    setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
+    setViewMode: (v: ViewMode) => void;
+  }
+): boolean {
+  if (key === "?") {
+    params.setShowShortcuts((prev) => !prev);
+    return true;
+  }
+
+  if (key === "b") {
+    params.setIsBionic((prev) => !prev);
+    return true;
+  }
+
+  if (key === "t") {
+    const themes: ThemeMode[] = ["paper", "sepia", "dark", "oled"];
+    params.setThemeMode((prev) => themes[(themes.indexOf(prev) + 1) % themes.length]);
+    return true;
+  }
+
+  if (key === "n") {
+    params.setViewMode("native");
+    return true;
+  }
+
+  return false;
+}
+
+function useReaderKeyboardShortcuts(params: Readonly<ReaderShortcutsParams>) {
+  const {
+    article,
+    setHighlights,
+    setActiveSelection,
+    setConcept,
+    setIsBionic,
+    setThemeMode,
+    setViewMode,
+    setShowShortcuts,
+  } = params;
+
   useEffect(() => {
     const createShortcutHighlight = async (articleId: string, content: string) => {
       try {
@@ -632,41 +667,25 @@ function useReaderKeyboardShortcuts({
         return;
       }
 
+      const lowerKey = e.key.toLowerCase();
+      const isPlainKey = !e.ctrlKey && !e.metaKey;
+
+      if (
+        isPlainKey &&
+        handleSingleHotkeys(lowerKey, { setShowShortcuts, setIsBionic, setThemeMode, setViewMode })
+      ) {
+        e.preventDefault();
+        return;
+      }
+
       const sel = globalThis.getSelection();
       const selectedText = sel ? sel.toString().trim() : "";
-
-      if (e.key === "?") {
-        e.preventDefault();
-        setShowShortcuts((prev) => !prev);
-        return;
-      }
-
-      if (e.key.toLowerCase() === "b" && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        setIsBionic((prev) => !prev);
-        return;
-      }
-
-      if (e.key.toLowerCase() === "t" && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        const themes: ThemeMode[] = ["paper", "sepia", "dark", "oled"];
-        setThemeMode((prev) => themes[(themes.indexOf(prev) + 1) % themes.length]);
-        return;
-      }
-
-      if (e.key.toLowerCase() === "n" && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        setViewMode("native");
-        return;
-      }
-
       const isCmdOrCtrl = e.metaKey || e.ctrlKey;
-      if (e.key.toLowerCase() === "h" && (isCmdOrCtrl || selectedText) && article) {
+
+      if (lowerKey === "h" && (isCmdOrCtrl || selectedText) && article && selectedText) {
         e.preventDefault();
-        if (selectedText) {
-          createShortcutHighlight(article.id, selectedText);
-        }
-      } else if (e.key.toLowerCase() === "s" && (isCmdOrCtrl || selectedText) && selectedText) {
+        createShortcutHighlight(article.id, selectedText);
+      } else if (lowerKey === "s" && (isCmdOrCtrl || selectedText) && selectedText) {
         e.preventDefault();
         let snippet = selectedText;
         if (sel?.anchorNode?.parentElement) {

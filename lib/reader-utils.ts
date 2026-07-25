@@ -255,14 +255,13 @@ export function formatArticleContentHtml(
 
       // Check if paragraph is a bullet/numbered list
       const lines = p.split(/\n+/);
-      const isBulletList = lines.every((line) => /^[\s]*[•\-\*]\s+/.test(line));
-      const isNumberedList = lines.every((line) => /^[\s]*\d+\.\s+/.test(line));
+      const isBulletList = lines.every((line) => /^\s*[•*-]\s+/.test(line));
+      const isNumberedList = lines.every((line) => /^\s*\d+\.\s+/.test(line));
 
       if (isBulletList) {
         const listItems = lines
           .map(
-            (line) =>
-              `  <li class="mb-2 leading-relaxed">${line.replace(/^[\s]*[•\-\*]\s+/, "")}</li>`
+            (line) => `  <li class="mb-2 leading-relaxed">${line.replace(/^\s*[•*-]\s+/, "")}</li>`
           )
           .join("\n");
         formattedParagraphs.push(
@@ -274,8 +273,7 @@ export function formatArticleContentHtml(
       if (isNumberedList) {
         const listItems = lines
           .map(
-            (line) =>
-              `  <li class="mb-2 leading-relaxed">${line.replace(/^[\s]*\d+\.\s+/, "")}</li>`
+            (line) => `  <li class="mb-2 leading-relaxed">${line.replace(/^\s*\d+\.\s+/, "")}</li>`
           )
           .join("\n");
         formattedParagraphs.push(
