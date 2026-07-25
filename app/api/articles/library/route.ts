@@ -26,6 +26,7 @@ export async function GET() {
         id: true,
         title: true,
         source_url: true,
+        source_type: true,
         room_id: true,
       },
     });
