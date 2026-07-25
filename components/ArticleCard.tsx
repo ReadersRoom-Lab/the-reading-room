@@ -62,12 +62,13 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
                 </Badge>
               )}
             </div>
-            <div
+            <span
+              role="presentation"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-              onPointerDown={(e) => {
+              onKeyDown={(e) => {
                 e.stopPropagation();
               }}
             >
@@ -76,7 +77,7 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
                 currentRoomId={article.room_id}
                 onDeleteSuccess={() => setIsDeleted(true)}
               />
-            </div>
+            </span>
           </div>
           <CardTitle className="line-clamp-2 leading-tight text-lg font-heading">
             {article.title}
