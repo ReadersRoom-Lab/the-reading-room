@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Clock } from "lucide-react";
 import Link from "next/link";
+import { getArticleSourceDomain } from "@/lib/article-utils";
 import { RoomAssignDropdown } from "./RoomAssignDropdown";
 
 export interface ArticleProps {
@@ -14,6 +15,7 @@ export interface ArticleProps {
     title: string;
     author: string | null;
     source_url: string;
+    source_type?: string;
     cover_image: string | null;
     read_time_minutes: number;
     reading_progress: number;
@@ -27,74 +29,58 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
 
   if (isDeleted) return null;
 
-  let domain = "";
-  try {
-    domain = new URL(article.source_url).hostname.replace("www.", "");
-  } catch {
-    domain = "Unknown";
-  }
+  const domain = getArticleSourceDomain(article.source_url, article.source_type, article.title);
 
   return (
-    <Link href={`/read/${article.id}`} className="block h-full">
-      <Card className="flex flex-col h-full overflow-hidden hover:bg-[#F4F3F3] transition-colors cursor-pointer border border-[#E5E5E5] bg-white rounded-none shadow-none">
-        {article.cover_image && (
-          <div className="h-40 w-full overflow-hidden bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={article.cover_image}
-              alt={article.title}
-              className="w-full h-full object-cover transition-transform hover:scale-105"
-            />
-          </div>
-        )}
-        <CardHeader className="flex-1 pb-4">
-          <div className="flex justify-between items-start gap-2 mb-2">
-            <div className="flex gap-2">
-              <Badge
-                variant="secondary"
-                className="text-[10px] font-semibold tracking-widest uppercase"
-              >
-                {domain}
-              </Badge>
-              {article.status === "finished" && (
-                <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-800 hover:bg-emerald-900 text-white">
-                  Finished
-                </Badge>
-              )}
-            </div>
-            <span
-              role="presentation"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onKeyDown={(e) => {
-                e.stopPropagation();
-              }}
+    <Card className="flex flex-col h-full overflow-hidden hover:bg-[#F4F3F3] transition-colors border border-[#E5E5E5] bg-white rounded-none shadow-none relative group">
+      {article.cover_image && (
+        <Link href={`/read/${article.id}`} className="h-40 w-full overflow-hidden bg-muted block">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={article.cover_image}
+            alt={article.title}
+            className="w-full h-full object-cover transition-transform hover:scale-105"
+          />
+        </Link>
+      )}
+      <CardHeader className="flex-1 pb-4">
+        <div className="flex justify-between items-start gap-2 mb-2">
+          <div className="flex gap-2">
+            <Badge
+              variant="secondary"
+              className="text-[10px] font-semibold tracking-widest uppercase"
             >
-              <RoomAssignDropdown
-                articleId={article.id}
-                currentRoomId={article.room_id}
-                onDeleteSuccess={() => setIsDeleted(true)}
-              />
-            </span>
+              {domain}
+            </Badge>
+            {article.status === "finished" && (
+              <Badge className="text-[10px] font-semibold tracking-widest uppercase bg-emerald-800 hover:bg-emerald-900 text-white">
+                Finished
+              </Badge>
+            )}
           </div>
+          <RoomAssignDropdown
+            articleId={article.id}
+            currentRoomId={article.room_id}
+            onDeleteSuccess={() => setIsDeleted(true)}
+          />
+        </div>
+        <Link href={`/read/${article.id}`} className="block group-hover:underline">
           <CardTitle className="line-clamp-2 leading-tight text-lg font-heading">
             {article.title}
           </CardTitle>
-          {article.author && (
-            <p className="text-sm text-muted-foreground line-clamp-1">{article.author}</p>
-          )}
-        </CardHeader>
-        <CardContent className="mt-auto pt-0">
-          <div className="flex items-center text-xs text-muted-foreground mb-3">
+        </Link>
+        {article.author && <p className="text-sm text-[#52525B] line-clamp-1">{article.author}</p>}
+      </CardHeader>
+      <CardContent className="mt-auto pt-0">
+        <Link href={`/read/${article.id}`} className="block">
+          <div className="flex items-center text-xs text-[#52525B] mb-3">
             <Clock className="w-3 h-3 mr-1" />
             <span>{article.read_time_minutes} min read</span>
           </div>
 
           {article.reading_progress > 0 && article.status !== "finished" && (
             <div className="w-full">
-              <div className="flex justify-between text-xs mb-1 text-muted-foreground">
+              <div className="flex justify-between text-xs mb-1 text-[#52525B]">
                 <span>Progress</span>
                 <span>{article.reading_progress}%</span>
               </div>
@@ -106,8 +92,8 @@ export function ArticleCard({ article }: Readonly<ArticleProps>) {
               />
             </div>
           )}
-        </CardContent>
-      </Card>
-    </Link>
+        </Link>
+      </CardContent>
+    </Card>
   );
 }
