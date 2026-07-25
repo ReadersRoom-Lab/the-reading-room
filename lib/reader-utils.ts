@@ -113,22 +113,49 @@ export function formatArticleContentHtml(
     html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
 
     // Convert double newlines into clean paragraph tags <p>
-    const paragraphs = html
+    const rawParagraphs = html
       .split(/\n\n+/)
       .map((p) => p.trim())
       .filter((p) => p.length > 0);
 
-    html = paragraphs
-      .map((p) => {
-        // If paragraph already starts with a block-level HTML tag (h1-h4, blockquote, pre, ul, ol), don't wrap in <p>
-        if (/^<(h[1-6]|blockquote|pre|ul|ol|p|div)\b/i.test(p)) {
-          return p;
+    const formattedParagraphs: string[] = [];
+
+    rawParagraphs.forEach((p) => {
+      if (/^<(h[1-6]|blockquote|pre|ul|ol|p|div)\b/i.test(p)) {
+        formattedParagraphs.push(p);
+        return;
+      }
+
+      // Break long unformatted text blocks (>450 chars) by sentence endings so text never feels like a giant wall
+      if (p.length > 450) {
+        const sentences = p.split(/(?<=[.!?])\s+/);
+        let currentChunk = "";
+
+        sentences.forEach((sentence) => {
+          if ((currentChunk + " " + sentence).length > 380 && currentChunk.length > 0) {
+            formattedParagraphs.push(
+              `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${currentChunk.trim()}</p>`
+            );
+            currentChunk = sentence;
+          } else {
+            currentChunk = currentChunk ? `${currentChunk} ${sentence}` : sentence;
+          }
+        });
+
+        if (currentChunk.trim().length > 0) {
+          formattedParagraphs.push(
+            `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${currentChunk.trim()}</p>`
+          );
         }
-        // Convert single internal newlines to <br />
+      } else {
         const formattedPara = p.replace(/\n/g, "<br />");
-        return `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${formattedPara}</p>`;
-      })
-      .join("\n\n");
+        formattedParagraphs.push(
+          `<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">${formattedPara}</p>`
+        );
+      }
+    });
+
+    html = formattedParagraphs.join("\n\n");
   }
 
   // 3. Apply DB User Highlights

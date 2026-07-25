@@ -51,9 +51,20 @@ export default function ReaderPage() {
     useFetchArticle(articleId);
 
   // Settings & View Mode
-  const [viewMode, setViewMode] = useState<ViewMode>("reader");
+  const [userViewMode, setUserViewMode] = useState<ViewMode | null>(null);
   const [fontFamily, setFontFamily] = useState<FontFamily>("serif");
   const [fontSize, setFontSize] = useState<FontSize>("base");
+
+  const isPdfOrFile = Boolean(
+    article &&
+    (article.source_type === "pdf" ||
+      Boolean(article.file_url) ||
+      article.source_url?.startsWith("upload://") ||
+      article.default_share_mode === "native")
+  );
+
+  const viewMode: ViewMode = userViewMode ?? (isPdfOrFile ? "native" : "reader");
+  const setViewMode = (mode: ViewMode) => setUserViewMode(mode);
 
   const [showDictionary, setShowDictionary] = useState(false);
   const { activeSelection, setActiveSelection, handleMouseUp } = useTextSelection(showDictionary);
