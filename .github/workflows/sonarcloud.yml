@@ -9,6 +9,7 @@ on:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
   DIRECT_URL: postgresql://postgres:postgres@localhost:5432/postgres
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   sonarcloud:
@@ -33,6 +34,7 @@ jobs:
         continue-on-error: true # don't fail the build if tests fail; Sonar still needs the coverage file
 
       - name: SonarCloud Scan
+        if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         continue-on-error: true
         env:
