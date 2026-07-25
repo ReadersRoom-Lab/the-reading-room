@@ -202,24 +202,12 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
           {articles.map((article) => {
             const isSelected = selectedIds.has(article.id);
             return (
-              <div key={article.id} className="relative group">
-                {/* Selection Checkbox Overlay */}
-                <button
-                  type="button"
-                  onClick={(e) => toggleSelectOne(article.id, e)}
-                  className="absolute top-3 left-3 z-20 bg-white/90 border border-[#E5E5E5] p-1.5 shadow-sm hover:bg-white transition-colors rounded-none cursor-pointer"
-                  title="Select article"
-                >
-                  {isSelected ? (
-                    <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
-                  ) : (
-                    <Square className="w-4 h-4 text-[#BDBDBD]" />
-                  )}
-                </button>
-
-                <div className={isSelected ? "ring-2 ring-[#1A1A1A]" : ""}>
-                  <ArticleCard article={article} />
-                </div>
+              <div key={article.id} className={isSelected ? "ring-2 ring-[#1A1A1A]" : ""}>
+                <ArticleCard
+                  article={article}
+                  isSelected={isSelected}
+                  onSelect={(e) => toggleSelectOne(article.id, e)}
+                />
               </div>
             );
           })}
