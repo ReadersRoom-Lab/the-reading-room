@@ -257,15 +257,13 @@ function getProseTypographyClass(fontFamily: FontFamily, fontSize: FontSize): st
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
-  const isUpload = article.source_url?.startsWith("upload://");
-  const iframeSrc =
-    article.source_type === "pdf" || article.file_url
-      ? `/api/articles/${article.id}/raw`
-      : article.source_url;
+  const isUpload =
+    article.source_url?.startsWith("upload://") || article.source_url?.startsWith("file://");
+  const iframeSrc = `/api/articles/${article.id}/raw`;
 
   return (
     <div className="flex-1 flex flex-col h-full bg-muted/20">
-      <div className="flex items-center justify-between px-6 py-2 border-b border-border bg-card text-xs text-muted-foreground">
+      <div className="flex items-center justify-between px-6 py-2 border-b border-border bg-card text-xs text-[#52525B]">
         <span>
           Viewing in native format:{" "}
           <strong className="text-foreground font-medium">{article.title}</strong>
@@ -283,12 +281,7 @@ function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, st
         )}
       </div>
       <div className="flex-1 w-full h-full relative">
-        <iframe
-          src={iframeSrc}
-          title={article.title}
-          className="w-full h-full border-0"
-          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-        />
+        <iframe src={iframeSrc} title={article.title} className="w-full h-full border-0 bg-white" />
       </div>
     </div>
   );
