@@ -1,6 +1,42 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatArticleContentHtml } from "../lib/reader-utils";
+import {
+  formatArticleContentHtml,
+  cleanArticleTitle,
+  cleanArticleContent,
+} from "../lib/reader-utils";
+
+test("cleanArticleTitle cleans underscores and publication branding suffixes", () => {
+  const input = "Good apologies don't close the book_ they open a new chapter _ Psyche Ideas";
+  const cleaned = cleanArticleTitle(input);
+  assert.equal(cleaned, "Good apologies don't close the book: they open a new chapter");
+
+  const nullTitle = cleanArticleTitle(null);
+  assert.equal(nullTitle, "Untitled article");
+});
+
+test("cleanArticleContent strips browser print headers, footers, timestamps, URLs, and page numbers", () => {
+  const content =
+    "emotional sincerity. 7/3/26, 4:49 PM Good apologies don't close the book: they open a new chapter | Psyche Ideas https://psyche.co/ideas/good-apologies-dont-close-the-book-they-open-a-new-chapter 1/5 But our contention is that setting the public record straight...";
+  const title = "Good apologies don't close the book: they open a new chapter";
+  const cleaned = cleanArticleContent(content, title);
+
+  assert.ok(!cleaned.includes("7/3/26, 4:49 PM"));
+  assert.ok(!cleaned.includes("https://psyche.co"));
+  assert.ok(!cleaned.includes("1/5"));
+  assert.ok(cleaned.includes("emotional sincerity."));
+  assert.ok(cleaned.includes("contention is that setting the public record straight"));
+});
+
+test("cleanArticleContent formats author bylines", () => {
+  const byline = "by Alfred Archer and Benjamin Matheson, philosophers";
+  const cleaned = cleanArticleContent(byline);
+  assert.ok(
+    cleaned.includes(
+      '<p class="text-base text-muted-foreground font-sans font-medium mb-6 italic">by Alfred Archer and Benjamin Matheson, philosophers</p>'
+    )
+  );
+});
 
 test("formatArticleContentHtml handles empty, null or whitespace content", () => {
   const resultNull = formatArticleContentHtml(null);
@@ -8,6 +44,9 @@ test("formatArticleContentHtml handles empty, null or whitespace content", () =>
 
   const resultEmpty = formatArticleContentHtml("   ");
   assert.ok(resultEmpty.__html.includes("No content available for this article."));
+
+  const resultCleanedEmpty = formatArticleContentHtml("7/3/26, 4:49 PM https://example.com 1/5");
+  assert.ok(resultCleanedEmpty.__html.includes("No content available for this article."));
 });
 
 test("formatArticleContentHtml formats plain text into clean paragraphs", () => {
@@ -79,11 +118,14 @@ test("formatArticleContentHtml chunks long paragraphs by sentence boundaries", (
     "Sentence three expands on key cognitive insights and analytical thinking in literature.";
   const sentence4 =
     "Sentence four finishes the thought with actionable conclusions and deep learning outcomes.";
-  const longParagraph = `${sentence1} ${sentence2} ${sentence3} ${sentence4}`;
+  const sentence5 =
+    "Sentence five adds even more context to ensure the overall character count passes the four hundred fifty threshold.";
+  const sentence6 =
+    "Sentence six ensures multiple paragraph chunks are produced during the format pass.";
+  const longParagraph = `${sentence1} ${sentence2} ${sentence3} ${sentence4} ${sentence5} ${sentence6}`;
 
-  assert.ok(longParagraph.length > 300);
+  assert.ok(longParagraph.length > 500);
   const result = formatArticleContentHtml(longParagraph);
-  // Should produce paragraph tags
   assert.ok(
     result.__html.includes('<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">')
   );
