@@ -19,16 +19,16 @@ export function cleanArticleTitle(title?: string | null): string {
   let cleaned = title.trim();
 
   // Strip trailing site branding suffixes like " _ Psyche Ideas", " | Psyche Ideas", " - Psyche Ideas"
-  cleaned = cleaned.replace(/\s+[_|-]\s+[A-Z0-9.\s]+$/i, "");
+  cleaned = cleaned.replace(/\s+[_\-|]\s+[^\n]+$/i, "");
 
   // Replace underscores between title clauses (e.g. "book_ they open") with colons ": "
-  cleaned = cleaned.replace(/(\w+)_(\s+\w+)/g, "$1:$2");
+  cleaned = cleaned.replaceAll("_ ", ": ");
 
   // Clean remaining lone underscores with spaces
-  cleaned = cleaned.replace(/_/g, " ");
+  cleaned = cleaned.replaceAll("_", " ");
 
   // Collapse double spaces
-  cleaned = cleaned.replace(/\s+/g, " ").trim();
+  cleaned = cleaned.replace(/[ \t]+/g, " ").trim();
 
   return cleaned;
 }
@@ -50,19 +50,19 @@ export function cleanArticleContent(content?: string | null, title?: string | nu
   text = text.replace(/\b\d+\s*\/\s*\d+\b/gi, " ");
   text = text.replace(/\bPage\s+\d+\s+of\s+\d+\b/gi, " ");
 
-  // 4. Remove standalone vertical bar site suffixes like "| Psyche Ideas"
-  text = text.replace(/\s*\|\s*[A-Za-z0-9\s]{2,30}(?=\s|https?:|$)/g, " ");
-
-  // 5. Remove running page header repetitions of the title
+  // 4. Remove running page header repetitions of the title
   if (title && title.length > 8) {
     const safeTitle = title.trim().replace(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`);
     text = text.replace(new RegExp(safeTitle, "gi"), " ");
   }
 
+  // 5. Remove standalone vertical bar site suffixes like "| Psyche Ideas"
+  text = text.replace(/\s*\|\s*[A-Za-z0-9]{2,20}(?:\s+[A-Za-z0-9]{2,20})?/g, " ");
+
   // 6. Format author bylines like "by Alfred Archer and Benjamin Matheson, philosophers"
   text = text.replace(
-    /^(by\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+(?:\s+and\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)?(?:,[^\n]+)?)$/gim,
-    '<p class="text-base text-muted-foreground font-sans font-medium mb-6 italic">$1</p>'
+    /^by\s+([A-Za-z \t,]+)$/gm,
+    '<p class="text-base text-muted-foreground font-sans font-medium mb-6 italic">by $1</p>'
   );
 
   // Clean excessive spaces
