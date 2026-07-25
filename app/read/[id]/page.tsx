@@ -2,7 +2,20 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Type, Loader2, BookOpen, FileText, ExternalLink } from "lucide-react";
+import {
+  ChevronLeft,
+  Type,
+  Loader2,
+  BookOpen,
+  FileText,
+  ExternalLink,
+  Volume2,
+  Sparkles,
+  Keyboard,
+  Globe,
+  Clock,
+  BookCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,8 +34,15 @@ import { EditHighlightPopover } from "@/components/EditHighlightPopover";
 import { ExportArticleButton } from "@/components/ExportArticleButton";
 import { ReaderTableOfContents } from "@/components/ReaderTableOfContents";
 import { ShareDialog } from "@/components/ShareDialog";
+import { ReaderAudioPlayer } from "@/components/ReaderAudioPlayer";
+import { ImageLightboxModal } from "@/components/ImageLightboxModal";
+import { ReaderShortcutsModal } from "@/components/ReaderShortcutsModal";
 import { logger } from "@/lib/logger";
-import { formatArticleContentHtml, cleanArticleTitle } from "@/lib/reader-utils";
+import {
+  formatArticleContentHtml,
+  cleanArticleTitle,
+  getArticleSourceDomain,
+} from "@/lib/reader-utils";
 
 type HighlightType = {
   id: string;
@@ -35,8 +55,10 @@ type HighlightType = {
   position_end: number;
 };
 
-type FontFamily = "serif" | "sans";
+type FontFamily = "serif" | "sans" | "mono";
 type FontSize = "sm" | "base" | "lg" | "xl";
+type ThemeMode = "paper" | "sepia" | "dark" | "oled";
+type WidthMode = "compact" | "classic" | "wide";
 type ViewMode = "reader" | "native";
 type SelectionType = { text: string; rect: DOMRect; contextSnippet: string } | null;
 type ConceptType = { term: string; definition: string; contextSnippet: string } | null;
@@ -50,10 +72,18 @@ export default function ReaderPage() {
   const { article, loading, highlights, setHighlights, progress, setProgress } =
     useFetchArticle(articleId);
 
-  // Settings & View Mode
+  // Appearance & Reader Preferences
   const [userViewMode, setUserViewMode] = useState<ViewMode | null>(null);
   const [fontFamily, setFontFamily] = useState<FontFamily>("serif");
   const [fontSize, setFontSize] = useState<FontSize>("base");
+  const [themeMode, setThemeMode] = useState<ThemeMode>("paper");
+  const [widthMode, setWidthMode] = useState<WidthMode>("classic");
+  const [isBionic, setIsBionic] = useState<boolean>(false);
+
+  // Audio & Interactive Modals
+  const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const isPdfOrFile = Boolean(
     article &&
@@ -68,25 +98,20 @@ export default function ReaderPage() {
 
   const [showDictionary, setShowDictionary] = useState(false);
   const { activeSelection, setActiveSelection, handleMouseUp } = useTextSelection(showDictionary);
-  const [concept, setConcept] = useState<{
-    term: string;
-    definition: string;
-    contextSnippet: string;
-  } | null>(null);
-  const [editingHighlight, setEditingHighlight] = useState<{
-    highlight: HighlightType;
-    rect: DOMRect;
-  } | null>(null);
+  const [concept, setConcept] = useState<ConceptType>(null);
+  const [editingHighlight, setEditingHighlight] = useState<EditingHighlightType>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const highlightedHtml = useMemo(() => {
     if (!article) return { __html: "" };
     return formatArticleContentHtml(
       article.content || article.textContent || "",
       highlights,
-      article.title
+      article.title,
+      isBionic
     );
-  }, [article, highlights]);
+  }, [article, highlights, isBionic]);
 
   const handleScroll = useArticleScrollProgress(
     scrollRef,
@@ -102,10 +127,20 @@ export default function ReaderPage() {
     highlights,
     editingHighlight,
     setEditingHighlight,
-    setActiveSelection
+    setActiveSelection,
+    setLightboxSrc
   );
 
-  useReaderKeyboardShortcuts(article, setHighlights, setActiveSelection, setConcept);
+  useReaderKeyboardShortcuts(
+    article,
+    setHighlights,
+    setActiveSelection,
+    setConcept,
+    setIsBionic,
+    setThemeMode,
+    setViewMode,
+    setShowShortcuts
+  );
 
   const { handleCreateHighlight, handleUpdateHighlight, handleDeleteHighlight } =
     useHighlightManager(
@@ -129,7 +164,9 @@ export default function ReaderPage() {
   useStreakLogger(articleId);
   const { swipeToast, handleTouchStart, handleTouchEnd } = useReaderSwipeNavigation(router);
 
-  const typographyClass = getProseTypographyClass(fontFamily, fontSize);
+  const proseClass = getProseTypographyClass(fontFamily, fontSize, widthMode);
+  const themeContainerClass = getThemeContainerClass(themeMode);
+  const sourceDomain = article ? getArticleSourceDomain(article.source_url) : null;
   const readTimeMinutes = article?.read_time_minutes
     ? Number(article.read_time_minutes)
     : undefined;
@@ -152,7 +189,9 @@ export default function ReaderPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+    <div
+      className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${themeContainerClass}`}
+    >
       <ReaderHeader
         title={article.title}
         author={article.author}
@@ -162,6 +201,15 @@ export default function ReaderPage() {
         setFontFamily={setFontFamily}
         fontSize={fontSize}
         setFontSize={setFontSize}
+        themeMode={themeMode}
+        setThemeMode={setThemeMode}
+        widthMode={widthMode}
+        setWidthMode={setWidthMode}
+        isBionic={isBionic}
+        setIsBionic={setIsBionic}
+        showAudioPlayer={showAudioPlayer}
+        setShowAudioPlayer={setShowAudioPlayer}
+        setShowShortcuts={setShowShortcuts}
         articleId={article.id}
         progress={progress}
         readTimeMinutes={readTimeMinutes}
@@ -170,7 +218,7 @@ export default function ReaderPage() {
         onBack={() => router.push("/library")}
       />
 
-      <Progress value={progress} className="h-1 rounded-none bg-muted/50" />
+      <Progress value={progress} className="h-1 rounded-none bg-muted/30" />
 
       <div className="flex flex-1 overflow-hidden relative">
         {viewMode === "native" ? (
@@ -188,16 +236,52 @@ export default function ReaderPage() {
                 {swipeToast}
               </div>
             )}
-            <article className={typographyClass}>
+
+            <article className={proseClass}>
+              {/* Editorial Header Card */}
+              <div className="mb-10 pb-8 border-b border-border/40">
+                <div className="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium">
+                  {sourceDomain && (
+                    <span className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-1 rounded-md">
+                      <Globe className="w-3 h-3" />
+                      {sourceDomain}
+                    </span>
+                  )}
+                  {readTimeMinutes && (
+                    <span className="inline-flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md text-muted-foreground">
+                      <Clock className="w-3 h-3" />
+                      {readTimeMinutes} min read
+                    </span>
+                  )}
+                  {progress > 0 && (
+                    <span className="inline-flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md text-muted-foreground font-mono">
+                      <BookCheck className="w-3 h-3" />
+                      {progress}% complete
+                    </span>
+                  )}
+                </div>
+
+                <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-4 text-inherit">
+                  {cleanArticleTitle(article.title)}
+                </h1>
+
+                {article.author && (
+                  <p className="text-base font-medium italic text-muted-foreground">
+                    By {article.author}
+                  </p>
+                )}
+              </div>
+
               {article.cover_image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={article.cover_image}
                   alt="Cover"
-                  className="w-full h-64 object-cover rounded-xl mb-8"
+                  className="w-full h-72 object-cover rounded-2xl shadow-xl mb-12 cursor-pointer hover:opacity-95 transition-opacity"
+                  onClick={() => setLightboxSrc(article.cover_image)}
                 />
               )}
-              <h1 className="font-heading mb-8">{cleanArticleTitle(article.title)}</h1>
+
               <div dangerouslySetInnerHTML={highlightedHtml} />
             </article>
           </div>
@@ -205,7 +289,6 @@ export default function ReaderPage() {
 
         <ReaderPopovers
           activeSelection={activeSelection}
-          showDictionary={showDictionary}
           concept={concept}
           editingHighlight={editingHighlight}
           articleId={article.id}
@@ -223,20 +306,61 @@ export default function ReaderPage() {
           onDeleteHighlight={handleDeleteHighlight}
           onCloseConcept={() => setConcept(null)}
         />
+
+        {showAudioPlayer && (
+          <ReaderAudioPlayer
+            textContent={article.content || article.textContent || ""}
+            articleTitle={article.title}
+            onClose={() => setShowAudioPlayer(false)}
+          />
+        )}
+
+        {lightboxSrc && (
+          <ImageLightboxModal src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+        )}
+
+        <ReaderShortcutsModal isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
       </div>
     </div>
   );
 }
 
-function getProseTypographyClass(fontFamily: FontFamily, fontSize: FontSize): string {
-  const fontClass = fontFamily === "serif" ? "font-serif" : "font-sans";
-  const sizeMap: Record<FontSize, string> = {
-    sm: "prose-sm",
-    base: "prose-base",
-    lg: "prose-lg",
-    xl: "prose-xl",
+function getThemeContainerClass(theme: ThemeMode): string {
+  switch (theme) {
+    case "sepia":
+      return "bg-[#F4ECD8] text-[#433422]";
+    case "dark":
+      return "bg-[#18181B] text-[#E4E4E7]";
+    case "oled":
+      return "bg-[#09090B] text-[#F1F5F9]";
+    case "paper":
+    default:
+      return "bg-[#FAF9F6] text-[#242424]";
+  }
+}
+
+function getProseTypographyClass(
+  fontFamily: FontFamily,
+  fontSize: FontSize,
+  width: WidthMode
+): string {
+  const fontClass =
+    fontFamily === "serif" ? "font-serif" : fontFamily === "mono" ? "font-mono" : "font-sans";
+
+  const widthMap: Record<WidthMode, string> = {
+    compact: "max-w-xl",
+    classic: "max-w-2xl",
+    wide: "max-w-3xl",
   };
-  return `mx-auto max-w-3xl prose prose-stone dark:prose-invert ${fontClass} ${sizeMap[fontSize] || "prose-base"} prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-p:mb-6 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6 prose-img:rounded-xl prose-img:shadow-md prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/60 prose-pre:rounded-lg prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1 prose-mark:py-0.5`;
+
+  const sizeMap: Record<FontSize, string> = {
+    sm: "prose-sm text-[16px]",
+    base: "prose-base text-[18px]",
+    lg: "prose-lg text-[20px]",
+    xl: "prose-xl text-[22px]",
+  };
+
+  return `mx-auto ${widthMap[width]} prose ${fontClass} ${sizeMap[fontSize]} prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-p:mb-8 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:my-8 prose-img:rounded-2xl prose-img:shadow-lg prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/60 prose-pre:rounded-xl prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1 prose-mark:py-0.5`;
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
@@ -275,46 +399,190 @@ function AppearanceDropdown({
   setFontFamily,
   fontSize,
   setFontSize,
+  themeMode,
+  setThemeMode,
+  widthMode,
+  setWidthMode,
+  isBionic,
+  setIsBionic,
 }: Readonly<{
   fontFamily: FontFamily;
   setFontFamily: (f: FontFamily) => void;
   fontSize: FontSize;
   setFontSize: (s: FontSize) => void;
+  themeMode: ThemeMode;
+  setThemeMode: (t: ThemeMode) => void;
+  widthMode: WidthMode;
+  setWidthMode: (w: WidthMode) => void;
+  isBionic: boolean;
+  setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
 }>) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+      <DropdownMenuTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 cursor-pointer">
         <Type className="w-4 h-4" />
         <span className="hidden sm:inline">Appearance</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-56 p-2">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Font Family</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Theme
+          </DropdownMenuLabel>
+          <div className="grid grid-cols-4 gap-1.5 p-1 mb-2">
+            <button
+              type="button"
+              onClick={() => setThemeMode("paper")}
+              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#FAF9F6] text-[#242424] cursor-pointer ${
+                themeMode === "paper"
+                  ? "border-primary ring-1 ring-primary font-bold"
+                  : "border-border"
+              }`}
+            >
+              Paper
+            </button>
+            <button
+              type="button"
+              onClick={() => setThemeMode("sepia")}
+              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#F4ECD8] text-[#433422] cursor-pointer ${
+                themeMode === "sepia"
+                  ? "border-primary ring-1 ring-primary font-bold"
+                  : "border-border"
+              }`}
+            >
+              Sepia
+            </button>
+            <button
+              type="button"
+              onClick={() => setThemeMode("dark")}
+              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#18181B] text-[#E4E4E7] cursor-pointer ${
+                themeMode === "dark"
+                  ? "border-primary ring-1 ring-primary font-bold"
+                  : "border-border"
+              }`}
+            >
+              Dark
+            </button>
+            <button
+              type="button"
+              onClick={() => setThemeMode("oled")}
+              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#09090B] text-[#F1F5F9] cursor-pointer ${
+                themeMode === "oled"
+                  ? "border-primary ring-1 ring-primary font-bold"
+                  : "border-border"
+              }`}
+            >
+              OLED
+            </button>
+          </div>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Font Family
+          </DropdownMenuLabel>
           <DropdownMenuItem onClick={() => setFontFamily("serif")}>
-            <span className={`font-serif ${fontFamily === "serif" ? "font-bold" : ""}`}>Serif</span>
+            <span
+              className={`font-serif ${fontFamily === "serif" ? "font-bold text-primary" : ""}`}
+            >
+              Serif (Source Serif)
+            </span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setFontFamily("sans")}>
-            <span className={`font-sans ${fontFamily === "sans" ? "font-bold" : ""}`}>
-              Sans-serif
+            <span className={`font-sans ${fontFamily === "sans" ? "font-bold text-primary" : ""}`}>
+              Sans (Inter)
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setFontFamily("mono")}>
+            <span className={`font-mono ${fontFamily === "mono" ? "font-bold text-primary" : ""}`}>
+              Mono (Geist)
             </span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Font Size</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Column Width
+          </DropdownMenuLabel>
+          <div className="grid grid-cols-3 gap-1 p-1 mb-2">
+            <button
+              type="button"
+              onClick={() => setWidthMode("compact")}
+              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
+                widthMode === "compact"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              Compact
+            </button>
+            <button
+              type="button"
+              onClick={() => setWidthMode("classic")}
+              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
+                widthMode === "classic"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              Classic
+            </button>
+            <button
+              type="button"
+              onClick={() => setWidthMode("wide")}
+              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
+                widthMode === "wide"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              Wide
+            </button>
+          </div>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Font Size
+          </DropdownMenuLabel>
           <DropdownMenuItem onClick={() => setFontSize("sm")}>
-            <span className={fontSize === "sm" ? "font-bold" : ""}>Small</span>
+            <span className={fontSize === "sm" ? "font-bold text-primary" : ""}>Small (16px)</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setFontSize("base")}>
-            <span className={fontSize === "base" ? "font-bold" : ""}>Medium</span>
+            <span className={fontSize === "base" ? "font-bold text-primary" : ""}>
+              Medium (18px)
+            </span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setFontSize("lg")}>
-            <span className={fontSize === "lg" ? "font-bold" : ""}>Large</span>
+            <span className={fontSize === "lg" ? "font-bold text-primary" : ""}>Large (20px)</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setFontSize("xl")}>
-            <span className={fontSize === "xl" ? "font-bold" : ""}>Extra Large</span>
+            <span className={fontSize === "xl" ? "font-bold text-primary" : ""}>
+              Extra Large (22px)
+            </span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem onClick={() => setIsBionic((prev) => !prev)}>
+          <div className="flex items-center justify-between w-full">
+            <span className="font-semibold text-xs flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              Bionic Reading Mode
+            </span>
+            <span
+              className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold ${isBionic ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+            >
+              {isBionic ? "ON" : "OFF"}
+            </span>
+          </div>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -324,7 +592,11 @@ function useReaderKeyboardShortcuts(
   article: Record<string, string> | null,
   setHighlights: React.Dispatch<React.SetStateAction<HighlightType[]>>,
   setActiveSelection: (val: SelectionType) => void,
-  setConcept: (val: ConceptType) => void
+  setConcept: (val: ConceptType) => void,
+  setIsBionic: React.Dispatch<React.SetStateAction<boolean>>,
+  setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>,
+  setViewMode: (v: ViewMode) => void,
+  setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   useEffect(() => {
     const createShortcutHighlight = async (articleId: string, content: string) => {
@@ -349,16 +621,47 @@ function useReaderKeyboardShortcuts(
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const isCmdOrCtrl = e.metaKey || e.ctrlKey;
-      if (!isCmdOrCtrl) return;
+      // Don't trigger if user is inside an input/textarea
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
+        return;
+      }
 
       const sel = globalThis.getSelection();
       const selectedText = sel ? sel.toString().trim() : "";
 
-      if (e.key.toLowerCase() === "h" && selectedText && article) {
+      if (e.key === "?") {
         e.preventDefault();
-        createShortcutHighlight(article.id, selectedText);
-      } else if (e.key.toLowerCase() === "s" && selectedText) {
+        setShowShortcuts((prev) => !prev);
+        return;
+      }
+
+      if (e.key.toLowerCase() === "b" && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsBionic((prev) => !prev);
+        return;
+      }
+
+      if (e.key.toLowerCase() === "t" && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        const themes: ThemeMode[] = ["paper", "sepia", "dark", "oled"];
+        setThemeMode((prev) => themes[(themes.indexOf(prev) + 1) % themes.length]);
+        return;
+      }
+
+      if (e.key.toLowerCase() === "n" && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setViewMode("native");
+        return;
+      }
+
+      const isCmdOrCtrl = e.metaKey || e.ctrlKey;
+      if (e.key.toLowerCase() === "h" && (isCmdOrCtrl || selectedText) && article) {
+        e.preventDefault();
+        if (selectedText) {
+          createShortcutHighlight(article.id, selectedText);
+        }
+      } else if (e.key.toLowerCase() === "s" && (isCmdOrCtrl || selectedText) && selectedText) {
         e.preventDefault();
         let snippet = selectedText;
         if (sel?.anchorNode?.parentElement) {
@@ -374,7 +677,16 @@ function useReaderKeyboardShortcuts(
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [article, setHighlights, setActiveSelection, setConcept]);
+  }, [
+    article,
+    setHighlights,
+    setActiveSelection,
+    setConcept,
+    setIsBionic,
+    setThemeMode,
+    setViewMode,
+    setShowShortcuts,
+  ]);
 }
 
 function useContainerEvents(
@@ -383,7 +695,8 @@ function useContainerEvents(
   highlights: HighlightType[],
   editingHighlight: EditingHighlightType,
   setEditingHighlight: (val: EditingHighlightType) => void,
-  setActiveSelection: (val: SelectionType) => void
+  setActiveSelection: (val: SelectionType) => void,
+  setLightboxSrc: (src: string | null) => void
 ) {
   useEffect(() => {
     const container = scrollRef.current;
@@ -394,12 +707,20 @@ function useContainerEvents(
     };
 
     const onClickContainer = (e: MouseEvent) => {
-      const target = (e.target as HTMLElement).closest("mark");
-      if (target?.dataset.highlightId) {
-        const id = target.dataset.highlightId;
+      const target = e.target as HTMLElement;
+
+      // Image Lightbox zoom click
+      if (target.tagName === "IMG" && (target as HTMLImageElement).src) {
+        setLightboxSrc((target as HTMLImageElement).src);
+        return;
+      }
+
+      const markTarget = target.closest("mark");
+      if (markTarget?.dataset.highlightId) {
+        const id = markTarget.dataset.highlightId;
         const highlight = highlights.find((h) => h.id === id);
         if (highlight) {
-          const rect = target.getBoundingClientRect();
+          const rect = markTarget.getBoundingClientRect();
           setEditingHighlight({ highlight, rect });
           setActiveSelection(null);
           globalThis.getSelection()?.removeAllRanges();
@@ -425,6 +746,7 @@ function useContainerEvents(
     editingHighlight,
     setEditingHighlight,
     setActiveSelection,
+    setLightboxSrc,
   ]);
 }
 
@@ -605,6 +927,15 @@ function ReaderHeader({
   setFontFamily,
   fontSize,
   setFontSize,
+  themeMode,
+  setThemeMode,
+  widthMode,
+  setWidthMode,
+  isBionic,
+  setIsBionic,
+  showAudioPlayer,
+  setShowAudioPlayer,
+  setShowShortcuts,
   articleId,
   progress,
   readTimeMinutes,
@@ -620,6 +951,15 @@ function ReaderHeader({
   setFontFamily: (f: FontFamily) => void;
   fontSize: FontSize;
   setFontSize: (s: FontSize) => void;
+  themeMode: ThemeMode;
+  setThemeMode: (t: ThemeMode) => void;
+  widthMode: WidthMode;
+  setWidthMode: (w: WidthMode) => void;
+  isBionic: boolean;
+  setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+  showAudioPlayer: boolean;
+  setShowAudioPlayer: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
   articleId: string;
   progress: number;
   readTimeMinutes?: number;
@@ -630,7 +970,7 @@ function ReaderHeader({
   const minutesLeft = Math.max(1, Math.ceil(((readTimeMinutes || 5) * (100 - progress)) / 100));
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-background/95 backdrop-blur z-10 shrink-0">
+    <header className="flex items-center justify-between px-6 py-4 border-b border-border/40 bg-background/80 backdrop-blur z-10 shrink-0">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={onBack}>
           <ChevronLeft className="w-5 h-5" />
@@ -652,9 +992,33 @@ function ReaderHeader({
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {viewMode === "reader" && (
-          <ReaderTableOfContents htmlContent={htmlContent} scrollRef={scrollRef} />
+          <>
+            <Button
+              type="button"
+              variant={showAudioPlayer ? "default" : "outline"}
+              size="sm"
+              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 cursor-pointer"
+              onClick={() => setShowAudioPlayer((prev) => !prev)}
+            >
+              <Volume2 className="w-4 h-4" />
+              <span>Listen</span>
+            </Button>
+
+            <Button
+              type="button"
+              variant={isBionic ? "default" : "outline"}
+              size="sm"
+              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 cursor-pointer"
+              onClick={() => setIsBionic((prev) => !prev)}
+            >
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Bionic</span>
+            </Button>
+
+            <ReaderTableOfContents htmlContent={htmlContent} scrollRef={scrollRef} />
+          </>
         )}
 
         <div className="flex items-center bg-muted/60 p-1 rounded-lg border border-border">
@@ -690,8 +1054,25 @@ function ReaderHeader({
             setFontFamily={setFontFamily}
             fontSize={fontSize}
             setFontSize={setFontSize}
+            themeMode={themeMode}
+            setThemeMode={setThemeMode}
+            widthMode={widthMode}
+            setWidthMode={setWidthMode}
+            isBionic={isBionic}
+            setIsBionic={setIsBionic}
           />
         )}
+
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="h-9 w-9 rounded-md hidden lg:inline-flex cursor-pointer"
+          onClick={() => setShowShortcuts(true)}
+          title="Reader Shortcuts (?)"
+        >
+          <Keyboard className="w-4 h-4" />
+        </Button>
 
         <ShareDialog type="article" id={articleId} title={title} compact />
         <ExportArticleButton articleId={articleId} articleTitle={title} />
@@ -700,9 +1081,37 @@ function ReaderHeader({
   );
 }
 
+function useStreakLogger(articleId: string) {
+  useEffect(() => {
+    fetch("/api/user/streak", { method: "POST" }).catch(console.error);
+  }, [articleId]);
+}
+
+function useReaderSwipeNavigation(router: ReturnType<typeof useRouter>) {
+  const touchStartX = useRef<number | null>(null);
+  const [swipeToast, setSwipeToast] = useState<string | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchEndX - touchStartX.current;
+
+    if (diff > 120) {
+      setSwipeToast("Returning to Library...");
+      setTimeout(() => router.push("/library"), 400);
+    }
+    touchStartX.current = null;
+  };
+
+  return { swipeToast, handleTouchStart, handleTouchEnd };
+}
+
 function ReaderPopovers({
   activeSelection,
-  showDictionary,
   concept,
   editingHighlight,
   articleId,
@@ -716,15 +1125,14 @@ function ReaderPopovers({
   onDeleteHighlight,
   onCloseConcept,
 }: Readonly<{
-  activeSelection: { text: string; rect: DOMRect; contextSnippet: string } | null;
-  showDictionary: boolean;
-  concept: { term: string; definition: string; contextSnippet: string } | null;
-  editingHighlight: { highlight: HighlightType; rect: DOMRect } | null;
+  activeSelection: SelectionType;
+  concept: ConceptType;
+  editingHighlight: EditingHighlightType;
   articleId: string;
   roomId?: string | null;
   onHighlight: (color: string) => void;
   onDefine: () => void;
-  onSaveConcept: (term: string, snippet: string) => void;
+  onSaveConcept: (word: string, definition: string) => void;
   onCloseDictionary: () => void;
   onCloseEditing: () => void;
   onUpdateHighlight: (id: string, data: Partial<HighlightType>) => void;
@@ -733,28 +1141,33 @@ function ReaderPopovers({
 }>) {
   return (
     <>
-      {activeSelection && !showDictionary && !concept && (
+      {activeSelection && (
         <TextSelectionMenu
           rect={activeSelection.rect}
           onHighlight={onHighlight}
           onDefine={onDefine}
-          onSaveConcept={() => onSaveConcept(activeSelection.text, activeSelection.contextSnippet)}
+          onSaveConcept={() => onSaveConcept(activeSelection.text, "")}
         />
       )}
-
-      {showDictionary && activeSelection && (
+      {activeSelection && (
         <DictionaryPopover
           word={activeSelection.text}
           rect={activeSelection.rect}
           onClose={onCloseDictionary}
-          onSave={(w, d) => onSaveConcept(w, d)}
-          onHighlight={() => {
-            onCloseDictionary();
-            onHighlight("ochre");
-          }}
+          onSave={onSaveConcept}
+          onHighlight={() => onHighlight("ochre")}
         />
       )}
-
+      {concept && (
+        <ConceptSlideOver
+          term={concept.term}
+          definition={concept.definition}
+          contextSnippet={concept.contextSnippet}
+          onClose={onCloseConcept}
+          articleId={articleId}
+          roomId={roomId ?? null}
+        />
+      )}
       {editingHighlight && (
         <EditHighlightPopover
           highlight={editingHighlight.highlight}
@@ -762,77 +1175,8 @@ function ReaderPopovers({
           onClose={onCloseEditing}
           onUpdate={onUpdateHighlight}
           onDelete={onDeleteHighlight}
-          onDefine={() => {
-            onDefine();
-          }}
-          onSaveConcept={() => {
-            onSaveConcept(
-              editingHighlight.highlight.content,
-              editingHighlight.highlight.note || ""
-            );
-          }}
-        />
-      )}
-
-      {concept && (
-        <ConceptSlideOver
-          term={concept.term}
-          definition={concept.definition}
-          contextSnippet={concept.contextSnippet}
-          articleId={articleId}
-          roomId={roomId ?? null}
-          onClose={onCloseConcept}
         />
       )}
     </>
   );
-}
-
-function useStreakLogger(articleId: string) {
-  useEffect(() => {
-    if (!articleId) return;
-
-    const interval = setInterval(() => {
-      fetch("/api/user/streak", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ minutesRead: 1 }),
-      }).catch((err) => logger.error("Failed to log reading streak minute:", err));
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [articleId]);
-}
-
-function useReaderSwipeNavigation(router: ReturnType<typeof useRouter>) {
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const [swipeToast, setSwipeToast] = useState<string | null>(null);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      touchStartRef.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStartRef.current || e.changedTouches.length === 0) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
-    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    if (Math.abs(deltaX) > 75 && Math.abs(deltaY) < 50) {
-      if (deltaX < 0) {
-        setSwipeToast("Returning to Library →");
-        setTimeout(() => router.push("/library"), 300);
-      } else {
-        setSwipeToast("← Navigating Back");
-        setTimeout(() => router.back(), 300);
-      }
-    }
-  };
-
-  return { swipeToast, handleTouchStart, handleTouchEnd };
 }

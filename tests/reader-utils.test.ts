@@ -4,6 +4,8 @@ import {
   formatArticleContentHtml,
   cleanArticleTitle,
   cleanArticleContent,
+  applyBionicReading,
+  getArticleSourceDomain,
 } from "../lib/reader-utils";
 
 test("cleanArticleTitle cleans underscores and publication branding suffixes", () => {
@@ -38,6 +40,16 @@ test("cleanArticleContent formats author bylines", () => {
   );
 });
 
+test("applyBionicReading highlights first letters of words outside HTML tags and handles empty string", () => {
+  const emptyResult = applyBionicReading("");
+  assert.equal(emptyResult, "");
+
+  const htmlInput = "<p>Reading books builds wisdom.</p>";
+  const bionic = applyBionicReading(htmlInput);
+  assert.ok(bionic.includes('<strong class="font-bold opacity-100">Read</strong>'));
+  assert.ok(bionic.includes('<strong class="font-bold opacity-100">boo</strong>'));
+});
+
 test("formatArticleContentHtml handles empty, null or whitespace content", () => {
   const resultNull = formatArticleContentHtml(null);
   assert.ok(resultNull.__html.includes("No content available for this article."));
@@ -49,19 +61,29 @@ test("formatArticleContentHtml handles empty, null or whitespace content", () =>
   assert.ok(resultCleanedEmpty.__html.includes("No content available for this article."));
 });
 
-test("formatArticleContentHtml formats plain text into clean paragraphs", () => {
+test("formatArticleContentHtml formats plain text into clean paragraphs with bionic option", () => {
   const input = "First paragraph text here.\n\nSecond paragraph text here.";
-  const result = formatArticleContentHtml(input);
+  const result = formatArticleContentHtml(input, [], null, false);
+  assert.ok(result.__html.includes("First paragraph text here."));
+
+  const resultBionic = formatArticleContentHtml(input, [], null, true);
+  assert.ok(resultBionic.__html.includes('<strong class="font-bold opacity-100">Fir</strong>'));
+});
+
+test("formatArticleContentHtml parses bullet and numbered lists", () => {
+  const bulletInput = "• First bullet point\n• Second bullet point";
+  const bulletResult = formatArticleContentHtml(bulletInput);
   assert.ok(
-    result.__html.includes(
-      '<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">First paragraph text here.</p>'
-    )
+    bulletResult.__html.includes('<ul class="list-disc pl-6 my-6 space-y-1 text-inherit">')
   );
+  assert.ok(bulletResult.__html.includes("First bullet point"));
+
+  const numberedInput = "1. First step\n2. Second step";
+  const numberedResult = formatArticleContentHtml(numberedInput);
   assert.ok(
-    result.__html.includes(
-      '<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">Second paragraph text here.</p>'
-    )
+    numberedResult.__html.includes('<ol class="list-decimal pl-6 my-6 space-y-1 text-inherit">')
   );
+  assert.ok(numberedResult.__html.includes("First step"));
 });
 
 test("formatArticleContentHtml converts Markdown headers, quotes, and bolding", () => {
@@ -126,9 +148,7 @@ test("formatArticleContentHtml chunks long paragraphs by sentence boundaries", (
 
   assert.ok(longParagraph.length > 500);
   const result = formatArticleContentHtml(longParagraph);
-  assert.ok(
-    result.__html.includes('<p class="leading-relaxed mb-6 text-[#1A1A1A] dark:text-foreground">')
-  );
+  assert.ok(result.__html.includes('<p class="leading-relaxed mb-8 font-normal text-inherit'));
 });
 
 test("formatArticleContentHtml formats pre-existing markdown, bracket, and HTML highlights", () => {
