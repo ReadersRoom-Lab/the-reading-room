@@ -28,7 +28,7 @@ export function ReaderAudioPlayer({ textContent, articleTitle, onClose }: Reader
 
     // Strip HTML tags for smooth audio narration
     const rawText = textContent
-      .replace(/<[^>]*>/g, " ")
+      .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim();
     cleanTextRef.current = rawText;

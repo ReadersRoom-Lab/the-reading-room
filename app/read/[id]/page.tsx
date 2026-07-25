@@ -64,6 +64,17 @@ type SelectionType = { text: string; rect: DOMRect; contextSnippet: string } | n
 type ConceptType = { term: string; definition: string; contextSnippet: string } | null;
 type EditingHighlightType = { highlight: HighlightType; rect: DOMRect } | null;
 
+interface ReaderShortcutsParams {
+  article: Record<string, string> | null;
+  setHighlights: React.Dispatch<React.SetStateAction<HighlightType[]>>;
+  setActiveSelection: (val: SelectionType) => void;
+  setConcept: (val: ConceptType) => void;
+  setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+  setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
+  setViewMode: (v: ViewMode) => void;
+  setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export default function ReaderPage() {
   const params = useParams();
   const router = useRouter();
@@ -93,7 +104,11 @@ export default function ReaderPage() {
       article.default_share_mode === "native")
   );
 
-  const viewMode: ViewMode = userViewMode ?? (isPdfOrFile ? "native" : "reader");
+  let defaultViewMode: ViewMode = "reader";
+  if (isPdfOrFile) {
+    defaultViewMode = "native";
+  }
+  const viewMode: ViewMode = userViewMode ?? defaultViewMode;
   const setViewMode = (mode: ViewMode) => setUserViewMode(mode);
 
   const [showDictionary, setShowDictionary] = useState(false);
@@ -131,7 +146,7 @@ export default function ReaderPage() {
     setLightboxSrc
   );
 
-  useReaderKeyboardShortcuts(
+  useReaderKeyboardShortcuts({
     article,
     setHighlights,
     setActiveSelection,
@@ -139,8 +154,8 @@ export default function ReaderPage() {
     setIsBionic,
     setThemeMode,
     setViewMode,
-    setShowShortcuts
-  );
+    setShowShortcuts,
+  });
 
   const { handleCreateHighlight, handleUpdateHighlight, handleDeleteHighlight } =
     useHighlightManager(
@@ -273,13 +288,18 @@ export default function ReaderPage() {
               </div>
 
               {article.cover_image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={article.cover_image}
-                  alt="Cover"
-                  className="w-full h-72 object-cover rounded-2xl shadow-xl mb-12 cursor-pointer hover:opacity-95 transition-opacity"
+                <button
+                  type="button"
                   onClick={() => setLightboxSrc(article.cover_image)}
-                />
+                  className="w-full mb-12 rounded-2xl overflow-hidden shadow-xl cursor-pointer hover:opacity-95 transition-opacity border-0 p-0 text-left bg-transparent block"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={article.cover_image}
+                    alt="Cover graphic"
+                    className="w-full h-72 object-cover rounded-2xl"
+                  />
+                </button>
               )}
 
               <div dangerouslySetInnerHTML={highlightedHtml} />
@@ -394,6 +414,71 @@ function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, st
   );
 }
 
+function ThemeButtons({
+  themeMode,
+  setThemeMode,
+}: Readonly<{
+  themeMode: ThemeMode;
+  setThemeMode: (t: ThemeMode) => void;
+}>) {
+  const themes: { id: ThemeMode; label: string; bg: string; text: string }[] = [
+    { id: "paper", label: "Paper", bg: "bg-[#FAF9F6]", text: "text-[#242424]" },
+    { id: "sepia", label: "Sepia", bg: "bg-[#F4ECD8]", text: "text-[#433422]" },
+    { id: "dark", label: "Dark", bg: "bg-[#18181B]", text: "text-[#E4E4E7]" },
+    { id: "oled", label: "OLED", bg: "bg-[#09090B]", text: "text-[#F1F5F9]" },
+  ];
+
+  return (
+    <div className="grid grid-cols-4 gap-1.5 p-1 mb-2">
+      {themes.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          onClick={() => setThemeMode(t.id)}
+          className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center ${t.bg} ${t.text} cursor-pointer ${
+            themeMode === t.id ? "border-primary ring-1 ring-primary font-bold" : "border-border"
+          }`}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function WidthButtons({
+  widthMode,
+  setWidthMode,
+}: Readonly<{
+  widthMode: WidthMode;
+  setWidthMode: (w: WidthMode) => void;
+}>) {
+  const widths: { id: WidthMode; label: string }[] = [
+    { id: "compact", label: "Compact" },
+    { id: "classic", label: "Classic" },
+    { id: "wide", label: "Wide" },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-1 p-1 mb-2">
+      {widths.map((w) => (
+        <button
+          key={w.id}
+          type="button"
+          onClick={() => setWidthMode(w.id)}
+          className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
+            widthMode === w.id
+              ? "bg-primary text-primary-foreground font-bold"
+              : "bg-muted text-muted-foreground"
+          }`}
+        >
+          {w.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function AppearanceDropdown({
   fontFamily,
   setFontFamily,
@@ -428,52 +513,7 @@ function AppearanceDropdown({
           <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
             Theme
           </DropdownMenuLabel>
-          <div className="grid grid-cols-4 gap-1.5 p-1 mb-2">
-            <button
-              type="button"
-              onClick={() => setThemeMode("paper")}
-              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#FAF9F6] text-[#242424] cursor-pointer ${
-                themeMode === "paper"
-                  ? "border-primary ring-1 ring-primary font-bold"
-                  : "border-border"
-              }`}
-            >
-              Paper
-            </button>
-            <button
-              type="button"
-              onClick={() => setThemeMode("sepia")}
-              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#F4ECD8] text-[#433422] cursor-pointer ${
-                themeMode === "sepia"
-                  ? "border-primary ring-1 ring-primary font-bold"
-                  : "border-border"
-              }`}
-            >
-              Sepia
-            </button>
-            <button
-              type="button"
-              onClick={() => setThemeMode("dark")}
-              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#18181B] text-[#E4E4E7] cursor-pointer ${
-                themeMode === "dark"
-                  ? "border-primary ring-1 ring-primary font-bold"
-                  : "border-border"
-              }`}
-            >
-              Dark
-            </button>
-            <button
-              type="button"
-              onClick={() => setThemeMode("oled")}
-              className={`h-7 rounded-md border text-[11px] font-medium flex items-center justify-center bg-[#09090B] text-[#F1F5F9] cursor-pointer ${
-                themeMode === "oled"
-                  ? "border-primary ring-1 ring-primary font-bold"
-                  : "border-border"
-              }`}
-            >
-              OLED
-            </button>
-          </div>
+          <ThemeButtons themeMode={themeMode} setThemeMode={setThemeMode} />
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
@@ -507,41 +547,7 @@ function AppearanceDropdown({
           <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
             Column Width
           </DropdownMenuLabel>
-          <div className="grid grid-cols-3 gap-1 p-1 mb-2">
-            <button
-              type="button"
-              onClick={() => setWidthMode("compact")}
-              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
-                widthMode === "compact"
-                  ? "bg-primary text-primary-foreground font-bold"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              Compact
-            </button>
-            <button
-              type="button"
-              onClick={() => setWidthMode("classic")}
-              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
-                widthMode === "classic"
-                  ? "bg-primary text-primary-foreground font-bold"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              Classic
-            </button>
-            <button
-              type="button"
-              onClick={() => setWidthMode("wide")}
-              className={`h-7 rounded text-[11px] font-medium border cursor-pointer ${
-                widthMode === "wide"
-                  ? "bg-primary text-primary-foreground font-bold"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              Wide
-            </button>
-          </div>
+          <WidthButtons widthMode={widthMode} setWidthMode={setWidthMode} />
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
@@ -588,16 +594,16 @@ function AppearanceDropdown({
   );
 }
 
-function useReaderKeyboardShortcuts(
-  article: Record<string, string> | null,
-  setHighlights: React.Dispatch<React.SetStateAction<HighlightType[]>>,
-  setActiveSelection: (val: SelectionType) => void,
-  setConcept: (val: ConceptType) => void,
-  setIsBionic: React.Dispatch<React.SetStateAction<boolean>>,
-  setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>,
-  setViewMode: (v: ViewMode) => void,
-  setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>
-) {
+function useReaderKeyboardShortcuts({
+  article,
+  setHighlights,
+  setActiveSelection,
+  setConcept,
+  setIsBionic,
+  setThemeMode,
+  setViewMode,
+  setShowShortcuts,
+}: Readonly<ReaderShortcutsParams>) {
   useEffect(() => {
     const createShortcutHighlight = async (articleId: string, content: string) => {
       try {
@@ -621,7 +627,6 @@ function useReaderKeyboardShortcuts(
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is inside an input/textarea
       const target = e.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
         return;
@@ -689,6 +694,39 @@ function useReaderKeyboardShortcuts(
   ]);
 }
 
+function processContainerClick(
+  e: MouseEvent,
+  highlights: HighlightType[],
+  editingHighlight: EditingHighlightType,
+  setEditingHighlight: (val: EditingHighlightType) => void,
+  setActiveSelection: (val: SelectionType) => void,
+  setLightboxSrc: (src: string | null) => void
+) {
+  const target = e.target as HTMLElement;
+
+  if (target.tagName === "IMG" && (target as HTMLImageElement).src) {
+    setLightboxSrc((target as HTMLImageElement).src);
+    return;
+  }
+
+  const markTarget = target.closest("mark");
+  if (markTarget?.dataset.highlightId) {
+    const id = markTarget.dataset.highlightId;
+    const highlight = highlights.find((h) => h.id === id);
+    if (highlight) {
+      const rect = markTarget.getBoundingClientRect();
+      setEditingHighlight({ highlight, rect });
+      setActiveSelection(null);
+      globalThis.getSelection()?.removeAllRanges();
+      return;
+    }
+  }
+
+  if (editingHighlight) {
+    setEditingHighlight(null);
+  }
+}
+
 function useContainerEvents(
   scrollRef: React.RefObject<HTMLDivElement | null>,
   handleMouseUp: () => void,
@@ -702,35 +740,16 @@ function useContainerEvents(
     const container = scrollRef.current;
     if (!container) return;
 
-    const onMouseUpContainer = () => {
-      handleMouseUp();
-    };
-
+    const onMouseUpContainer = () => handleMouseUp();
     const onClickContainer = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-
-      // Image Lightbox zoom click
-      if (target.tagName === "IMG" && (target as HTMLImageElement).src) {
-        setLightboxSrc((target as HTMLImageElement).src);
-        return;
-      }
-
-      const markTarget = target.closest("mark");
-      if (markTarget?.dataset.highlightId) {
-        const id = markTarget.dataset.highlightId;
-        const highlight = highlights.find((h) => h.id === id);
-        if (highlight) {
-          const rect = markTarget.getBoundingClientRect();
-          setEditingHighlight({ highlight, rect });
-          setActiveSelection(null);
-          globalThis.getSelection()?.removeAllRanges();
-          return;
-        }
-      }
-
-      if (editingHighlight) {
-        setEditingHighlight(null);
-      }
+      processContainerClick(
+        e,
+        highlights,
+        editingHighlight,
+        setEditingHighlight,
+        setActiveSelection,
+        setLightboxSrc
+      );
     };
 
     container.addEventListener("mouseup", onMouseUpContainer);
