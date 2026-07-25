@@ -23,6 +23,60 @@ interface FileQueueItem {
   error?: string;
 }
 
+const MAX_BASE64_URL_LENGTH = 2.5 * 1024 * 1024; // 2.5 MB base64 size threshold
+
+async function saveUrlArticle(url: string, roomId?: string) {
+  const res = await fetch("/api/articles/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: url.trim(), roomId }),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || `Failed to save article (${res.status})`);
+  }
+}
+
+async function processQueueItem(item: FileQueueItem, roomId?: string) {
+  const extracted = await extractFileContent(item.file);
+  const safeFileDataUrl =
+    extracted.fileDataUrl && extracted.fileDataUrl.length <= MAX_BASE64_URL_LENGTH
+      ? extracted.fileDataUrl
+      : undefined;
+
+  const payload = {
+    items: [
+      {
+        title: extracted.title,
+        text: extracted.text,
+        source_type: extracted.sourceType,
+        source_url: `upload://${item.file.name}`,
+        file_url: safeFileDataUrl,
+      },
+    ],
+    roomId,
+  };
+
+  const res = await fetch("/api/articles/batch-save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || `Failed to save file (${res.status})`);
+  }
+
+  const { results } = await res.json();
+  const itemResult = results?.[0];
+
+  if (itemResult && !itemResult.success) {
+    throw new Error(itemResult.error || "Failed to save file");
+  }
+}
+
 export function SaveArticleDialog({
   defaultRoomId,
   compact,
@@ -60,6 +114,52 @@ export function SaveArticleDialog({
     setFileQueue((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const processBatchQueue = async () => {
+    let successCount = 0;
+    for (const item of fileQueue) {
+      if (item.status === "success") {
+        successCount++;
+        continue;
+      }
+
+      setFileQueue((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, status: "processing" as const } : i))
+      );
+
+      try {
+        await processQueueItem(item, defaultRoomId);
+        successCount++;
+        setFileQueue((prev) =>
+          prev.map((i) => (i.id === item.id ? { ...i, status: "success" as const } : i))
+        );
+      } catch (itemErr) {
+        const errorMessage =
+          itemErr instanceof Error ? itemErr.message : "Failed to process document";
+        setFileQueue((prev) =>
+          prev.map((i) =>
+            i.id === item.id ? { ...i, status: "error" as const, error: errorMessage } : i
+          )
+        );
+      }
+    }
+
+    if (successCount > 0) {
+      toast.success(`Successfully saved ${successCount} of ${fileQueue.length} document(s)!`);
+      if (successCount === fileQueue.length) {
+        setTimeout(() => {
+          setOpen(false);
+          setFileQueue([]);
+          setUrl("");
+          router.refresh();
+        }, 1200);
+      } else {
+        router.refresh();
+      }
+    } else {
+      toast.error("Failed to save selected files.");
+    }
+  };
+
   const handleSave = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -71,19 +171,8 @@ export function SaveArticleDialog({
     try {
       setLoading(true);
 
-      // Single URL processing
       if (url.trim()) {
-        const res = await fetch("/api/articles/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: url.trim(), roomId: defaultRoomId }),
-        });
-
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || `Failed to save article (${res.status})`);
-        }
-
+        await saveUrlArticle(url, defaultRoomId);
         toast.success("Document saved successfully!");
         setOpen(false);
         setUrl("");
@@ -92,90 +181,7 @@ export function SaveArticleDialog({
         return;
       }
 
-      // Multi-file batch processing
-      const extractedBatch: Array<{
-        title: string;
-        text: string;
-        source_type: string;
-        source_url: string;
-        file_url?: string;
-      }> = [];
-
-      // Update status to processing
-      setFileQueue((prev) => prev.map((item) => ({ ...item, status: "processing" })));
-
-      for (const item of fileQueue) {
-        try {
-          const extracted = await extractFileContent(item.file);
-          extractedBatch.push({
-            title: extracted.title,
-            text: extracted.text,
-            source_type: extracted.sourceType,
-            source_url: `upload://${item.file.name}`,
-            file_url: extracted.fileDataUrl,
-          });
-        } catch (extractErr) {
-          setFileQueue((prev) =>
-            prev.map((i) =>
-              i.id === item.id
-                ? {
-                    ...i,
-                    status: "error",
-                    error:
-                      extractErr instanceof Error
-                        ? extractErr.message
-                        : "Failed to extract text content",
-                  }
-                : i
-            )
-          );
-        }
-      }
-
-      if (extractedBatch.length === 0) {
-        throw new Error("Could not extract readable text from any of the selected files.");
-      }
-
-      const res = await fetch("/api/articles/batch-save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: extractedBatch,
-          roomId: defaultRoomId,
-        }),
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || "Batch upload failed.");
-      }
-
-      const { results } = await res.json();
-      const successCount = results.filter((r: { success: boolean }) => r.success).length;
-
-      const resultMap = new Map<string, { success: boolean; error?: string }>(
-        results.map((r: { title: string; success: boolean; error?: string }) => [r.title, r])
-      );
-
-      const updatedQueue = fileQueue.map((item) => {
-        const fileTitle = item.file.name.replace(/\.[^/.]+$/, "");
-        const match = resultMap.get(fileTitle);
-        if (match && !match.success) {
-          return { ...item, status: "error" as const, error: match.error || "Failed to save" };
-        }
-        return { ...item, status: "success" as const };
-      });
-
-      setFileQueue(updatedQueue);
-
-      toast.success(`Successfully saved ${successCount} of ${fileQueue.length} document(s)!`);
-
-      setTimeout(() => {
-        setOpen(false);
-        setFileQueue([]);
-        setUrl("");
-        router.refresh();
-      }, 1200);
+      await processBatchQueue();
     } catch (error) {
       const err = error as Error;
       toast.error(err.message || "An error occurred during save");
