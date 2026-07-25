@@ -68,7 +68,7 @@
     "prettier": "^3.9.4",
     "tailwindcss": "^4",
     "tsx": "^4.20.4",
-    "typescript": "^5"
+    "typescript": "^7"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.1",
