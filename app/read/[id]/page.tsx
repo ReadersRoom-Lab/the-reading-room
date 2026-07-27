@@ -1,5 +1,7 @@
 "use client";
 
+import { Tooltip } from "@/components/ui/tooltip";
+
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -15,6 +17,8 @@ import {
   Globe,
   Clock,
   BookCheck,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +61,8 @@ type HighlightType = {
 
 type FontFamily = "serif" | "sans" | "mono";
 type FontSize = "sm" | "base" | "lg" | "xl";
-type ThemeMode = "paper" | "sepia" | "dark" | "oled";
+type LineHeight = "compact" | "normal" | "relaxed";
+type ThemeMode = "paper" | "sepia" | "mint" | "dark" | "oled";
 type WidthMode = "compact" | "classic" | "wide";
 type ViewMode = "reader" | "native";
 type SelectionType = { text: string; rect: DOMRect; contextSnippet: string } | null;
@@ -70,6 +75,7 @@ interface ReaderShortcutsParams {
   setActiveSelection: (val: SelectionType) => void;
   setConcept: (val: ConceptType) => void;
   setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFocusMode: React.Dispatch<React.SetStateAction<boolean>>;
   setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
   setViewMode: (v: ViewMode) => void;
   setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,9 +93,11 @@ export default function ReaderPage() {
   const [userViewMode, setUserViewMode] = useState<ViewMode | null>(null);
   const [fontFamily, setFontFamily] = useState<FontFamily>("serif");
   const [fontSize, setFontSize] = useState<FontSize>("base");
+  const [lineHeight, setLineHeight] = useState<LineHeight>("normal");
   const [themeMode, setThemeMode] = useState<ThemeMode>("paper");
   const [widthMode, setWidthMode] = useState<WidthMode>("classic");
   const [isBionic, setIsBionic] = useState<boolean>(false);
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
 
   // Audio & Interactive Modals
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
@@ -152,6 +160,7 @@ export default function ReaderPage() {
     setActiveSelection,
     setConcept,
     setIsBionic,
+    setIsFocusMode,
     setThemeMode,
     setViewMode,
     setShowShortcuts,
@@ -179,12 +188,14 @@ export default function ReaderPage() {
   useStreakLogger(articleId);
   const { swipeToast, handleTouchStart, handleTouchEnd } = useReaderSwipeNavigation(router);
 
-  const proseClass = getProseTypographyClass(fontFamily, fontSize, widthMode);
+  const proseClass = getProseTypographyClass(fontFamily, fontSize, widthMode, lineHeight);
   const themeContainerClass = getThemeContainerClass(themeMode);
   const sourceDomain = article ? getArticleSourceDomain(article.source_url) : null;
+  const wordCount = article?.word_count ? Number(article.word_count) : 0;
+  const computedReadTime = wordCount > 0 ? Math.max(1, Math.ceil(wordCount / 200)) : 5;
   const readTimeMinutes = article?.read_time_minutes
     ? Number(article.read_time_minutes)
-    : undefined;
+    : computedReadTime;
 
   if (loading) {
     return (
@@ -207,31 +218,51 @@ export default function ReaderPage() {
     <div
       className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${themeContainerClass}`}
     >
-      <ReaderHeader
-        title={article.title}
-        author={article.author}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        fontFamily={fontFamily}
-        setFontFamily={setFontFamily}
-        fontSize={fontSize}
-        setFontSize={setFontSize}
-        themeMode={themeMode}
-        setThemeMode={setThemeMode}
-        widthMode={widthMode}
-        setWidthMode={setWidthMode}
-        isBionic={isBionic}
-        setIsBionic={setIsBionic}
-        showAudioPlayer={showAudioPlayer}
-        setShowAudioPlayer={setShowAudioPlayer}
-        setShowShortcuts={setShowShortcuts}
-        articleId={article.id}
-        progress={progress}
-        readTimeMinutes={readTimeMinutes}
-        htmlContent={article.content || ""}
-        scrollRef={scrollRef}
-        onBack={() => router.push("/library")}
-      />
+      {!isFocusMode && (
+        <ReaderHeader
+          title={article.title}
+          author={article.author}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          fontFamily={fontFamily}
+          setFontFamily={setFontFamily}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
+          lineHeight={lineHeight}
+          setLineHeight={setLineHeight}
+          themeMode={themeMode}
+          setThemeMode={setThemeMode}
+          widthMode={widthMode}
+          setWidthMode={setWidthMode}
+          isBionic={isBionic}
+          setIsBionic={setIsBionic}
+          isFocusMode={isFocusMode}
+          setIsFocusMode={setIsFocusMode}
+          showAudioPlayer={showAudioPlayer}
+          setShowAudioPlayer={setShowAudioPlayer}
+          setShowShortcuts={setShowShortcuts}
+          articleId={article.id}
+          progress={progress}
+          readTimeMinutes={readTimeMinutes}
+          htmlContent={article.content || ""}
+          scrollRef={scrollRef}
+          onBack={() => router.push("/library")}
+        />
+      )}
+
+      {isFocusMode && (
+        <div className="fixed top-3 right-4 z-50 animate-in fade-in">
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setIsFocusMode(false)}
+            className="h-8 px-3 text-xs font-semibold gap-1.5 shadow-xl bg-[#1A1A1A] text-[#F9F7F2] hover:bg-[#333] border-0 cursor-pointer"
+          >
+            <Minimize2 className="w-3.5 h-3.5" />
+            <span>Exit Focus (F)</span>
+          </Button>
+        </div>
+      )}
 
       <Progress value={progress} className="h-1 rounded-none bg-muted/30" />
 
@@ -257,19 +288,19 @@ export default function ReaderPage() {
               <div className="mb-10 pb-8 border-b border-border/40">
                 <div className="flex flex-wrap items-center gap-2 mb-4 text-xs font-medium">
                   {sourceDomain && (
-                    <span className="inline-flex items-center gap-1 bg-primary/10 text-primary px-2.5 py-1 rounded-md">
+                    <span className="inline-flex items-center gap-1 bg-[#1A1A1A]/10 text-[#1A1A1A] px-2.5 py-1 rounded-md">
                       <Globe className="w-3 h-3" />
                       {sourceDomain}
                     </span>
                   )}
-                  {readTimeMinutes && (
-                    <span className="inline-flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md text-muted-foreground">
+                  {!!readTimeMinutes && (
+                    <span className="inline-flex items-center gap-1 bg-[#F0EDEA] px-2.5 py-1 rounded-md text-[#52525B]">
                       <Clock className="w-3 h-3" />
                       {readTimeMinutes} min read
                     </span>
                   )}
                   {progress > 0 && (
-                    <span className="inline-flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md text-muted-foreground font-mono">
+                    <span className="inline-flex items-center gap-1 bg-[#F0EDEA] px-2.5 py-1 rounded-md text-[#52525B] font-mono">
                       <BookCheck className="w-3 h-3" />
                       {progress}% complete
                     </span>
@@ -281,9 +312,7 @@ export default function ReaderPage() {
                 </h1>
 
                 {article.author && (
-                  <p className="text-base font-medium italic text-muted-foreground">
-                    By {article.author}
-                  </p>
+                  <p className="text-base font-medium italic text-[#52525B]">By {article.author}</p>
                 )}
               </div>
 
@@ -311,6 +340,7 @@ export default function ReaderPage() {
           activeSelection={activeSelection}
           concept={concept}
           editingHighlight={editingHighlight}
+          showDictionary={showDictionary}
           articleId={article.id}
           roomId={article.room_id}
           onHighlight={handleCreateHighlight}
@@ -327,11 +357,46 @@ export default function ReaderPage() {
           onCloseConcept={() => setConcept(null)}
         />
 
+        {/* Mobile Sanctuary Bottom Bar */}
+        {viewMode === "reader" && !isFocusMode && (
+          <div className="sm:hidden fixed bottom-4 left-4 right-4 z-40 bg-background/95 backdrop-blur border border-border/80 shadow-xl rounded-full px-4 py-2 flex items-center justify-around">
+            <Button
+              variant={showAudioPlayer ? "default" : "ghost"}
+              size="sm"
+              className="h-8 px-2 text-xs flex items-center gap-1 cursor-pointer rounded-full"
+              onClick={() => setShowAudioPlayer((prev) => !prev)}
+            >
+              <Volume2 className="w-3.5 h-3.5" />
+              <span>Audio</span>
+            </Button>
+            <ReaderTableOfContents htmlContent={article.content || ""} scrollRef={scrollRef} />
+            <Button
+              variant={isBionic ? "default" : "ghost"}
+              size="sm"
+              className="h-8 px-2 text-xs flex items-center gap-1 cursor-pointer rounded-full"
+              onClick={() => setIsBionic((prev) => !prev)}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>{isBionic ? "Bionic On" : "Bionic"}</span>
+            </Button>
+            <Button
+              variant={isFocusMode ? "default" : "ghost"}
+              size="sm"
+              className="h-8 px-2 text-xs flex items-center gap-1 cursor-pointer rounded-full"
+              onClick={() => setIsFocusMode(true)}
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span>Focus</span>
+            </Button>
+          </div>
+        )}
+
         {showAudioPlayer && (
           <ReaderAudioPlayer
             textContent={article.content || article.textContent || ""}
             articleTitle={article.title}
             onClose={() => setShowAudioPlayer(false)}
+            hasBottomBar={viewMode === "reader" && !isFocusMode}
           />
         )}
 
@@ -349,6 +414,8 @@ function getThemeContainerClass(theme: ThemeMode): string {
   switch (theme) {
     case "sepia":
       return "bg-[#F4ECD8] text-[#433422]";
+    case "mint":
+      return "bg-[#ECFDF5] text-[#064E3B]";
     case "dark":
       return "bg-[#18181B] text-[#E4E4E7]";
     case "oled":
@@ -362,7 +429,8 @@ function getThemeContainerClass(theme: ThemeMode): string {
 function getProseTypographyClass(
   fontFamily: FontFamily,
   fontSize: FontSize,
-  width: WidthMode
+  width: WidthMode,
+  lineHeight: LineHeight = "normal"
 ): string {
   const fontClass =
     fontFamily === "serif" ? "font-serif" : fontFamily === "mono" ? "font-mono" : "font-sans";
@@ -380,7 +448,13 @@ function getProseTypographyClass(
     xl: "prose-xl text-[22px]",
   };
 
-  return `mx-auto ${widthMap[width]} prose ${fontClass} ${sizeMap[fontSize]} prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-p:mb-8 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:my-8 prose-img:rounded-2xl prose-img:shadow-lg prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/60 prose-pre:rounded-xl prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1 prose-mark:py-0.5`;
+  const leadingMap: Record<LineHeight, string> = {
+    compact: "prose-p:leading-[1.5]",
+    normal: "prose-p:leading-[1.85]",
+    relaxed: "prose-p:leading-[2.2]",
+  };
+
+  return `mx-auto ${widthMap[width]} prose ${fontClass} ${sizeMap[fontSize]} prose-headings:font-heading prose-headings:font-bold prose-headings:tracking-tight ${leadingMap[lineHeight]} prose-p:mb-8 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-4 prose-blockquote:border-primary/50 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:my-8 prose-img:rounded-2xl prose-img:shadow-lg prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/60 prose-pre:rounded-xl prose-mark:bg-[#FCD116]/40 dark:prose-mark:bg-[#FCD116]/30 prose-mark:rounded-sm prose-mark:px-1 prose-mark:py-0.5`;
 }
 
 function NativeDocumentViewer({ article }: Readonly<{ article: Record<string, string> }>) {
@@ -424,12 +498,13 @@ function ThemeButtons({
   const themes: { id: ThemeMode; label: string; bg: string; text: string }[] = [
     { id: "paper", label: "Paper", bg: "bg-[#FAF9F6]", text: "text-[#242424]" },
     { id: "sepia", label: "Sepia", bg: "bg-[#F4ECD8]", text: "text-[#433422]" },
+    { id: "mint", label: "Mint", bg: "bg-[#ECFDF5]", text: "text-[#064E3B]" },
     { id: "dark", label: "Dark", bg: "bg-[#18181B]", text: "text-[#E4E4E7]" },
     { id: "oled", label: "OLED", bg: "bg-[#09090B]", text: "text-[#F1F5F9]" },
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-1.5 p-1 mb-2">
+    <div className="grid grid-cols-5 gap-1.5 p-1 mb-2">
       {themes.map((t) => (
         <button
           key={t.id}
@@ -484,6 +559,8 @@ function AppearanceDropdown({
   setFontFamily,
   fontSize,
   setFontSize,
+  lineHeight,
+  setLineHeight,
   themeMode,
   setThemeMode,
   widthMode,
@@ -495,6 +572,8 @@ function AppearanceDropdown({
   setFontFamily: (f: FontFamily) => void;
   fontSize: FontSize;
   setFontSize: (s: FontSize) => void;
+  lineHeight: LineHeight;
+  setLineHeight: (l: LineHeight) => void;
   themeMode: ThemeMode;
   setThemeMode: (t: ThemeMode) => void;
   widthMode: WidthMode;
@@ -504,9 +583,12 @@ function AppearanceDropdown({
 }>) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 cursor-pointer">
+      <DropdownMenuTrigger
+        title="Appearance settings"
+        aria-label="Appearance settings"
+        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 w-9 cursor-pointer"
+      >
         <Type className="w-4 h-4" />
-        <span className="hidden sm:inline">Appearance</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 p-2">
         <DropdownMenuGroup>
@@ -576,6 +658,29 @@ function AppearanceDropdown({
 
         <DropdownMenuSeparator />
 
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+            Line Spacing
+          </DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => setLineHeight("compact")}>
+            <span className={lineHeight === "compact" ? "font-bold text-primary" : ""}>
+              Compact (1.5)
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setLineHeight("normal")}>
+            <span className={lineHeight === "normal" ? "font-bold text-primary" : ""}>
+              Normal (1.85)
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setLineHeight("relaxed")}>
+            <span className={lineHeight === "relaxed" ? "font-bold text-primary" : ""}>
+              Relaxed (2.2)
+            </span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
         <DropdownMenuItem onClick={() => setIsBionic((prev) => !prev)}>
           <div className="flex items-center justify-between w-full">
             <span className="font-semibold text-xs flex items-center gap-1.5">
@@ -599,6 +704,7 @@ function handleSingleHotkeys(
   params: {
     setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
     setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsFocusMode: React.Dispatch<React.SetStateAction<boolean>>;
     setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
     setViewMode: (v: ViewMode) => void;
   }
@@ -608,13 +714,18 @@ function handleSingleHotkeys(
     return true;
   }
 
+  if (key === "f") {
+    params.setIsFocusMode((prev) => !prev);
+    return true;
+  }
+
   if (key === "b") {
     params.setIsBionic((prev) => !prev);
     return true;
   }
 
   if (key === "t") {
-    const themes: ThemeMode[] = ["paper", "sepia", "dark", "oled"];
+    const themes: ThemeMode[] = ["paper", "sepia", "mint", "dark", "oled"];
     params.setThemeMode((prev) => themes[(themes.indexOf(prev) + 1) % themes.length]);
     return true;
   }
@@ -634,6 +745,7 @@ function useReaderKeyboardShortcuts(params: Readonly<ReaderShortcutsParams>) {
     setActiveSelection,
     setConcept,
     setIsBionic,
+    setIsFocusMode,
     setThemeMode,
     setViewMode,
     setShowShortcuts,
@@ -672,7 +784,13 @@ function useReaderKeyboardShortcuts(params: Readonly<ReaderShortcutsParams>) {
 
       if (
         isPlainKey &&
-        handleSingleHotkeys(lowerKey, { setShowShortcuts, setIsBionic, setThemeMode, setViewMode })
+        handleSingleHotkeys(lowerKey, {
+          setShowShortcuts,
+          setIsBionic,
+          setIsFocusMode,
+          setThemeMode,
+          setViewMode,
+        })
       ) {
         e.preventDefault();
         return;
@@ -707,6 +825,7 @@ function useReaderKeyboardShortcuts(params: Readonly<ReaderShortcutsParams>) {
     setActiveSelection,
     setConcept,
     setIsBionic,
+    setIsFocusMode,
     setThemeMode,
     setViewMode,
     setShowShortcuts,
@@ -826,6 +945,28 @@ function useArticleScrollProgress(
   article: Record<string, string> | null,
   articleId: string
 ) {
+  const initialRestoredRef = useRef(false);
+
+  // Restore scroll position to saved reading progress on load
+  useEffect(() => {
+    if (!initialRestoredRef.current && article && scrollRef.current) {
+      const savedProg = Number(article.reading_progress || 0);
+      if (savedProg > 0) {
+        const timer = setTimeout(() => {
+          if (scrollRef.current) {
+            const { scrollHeight, clientHeight } = scrollRef.current;
+            const totalScrollableDistance = scrollHeight - clientHeight;
+            if (totalScrollableDistance > 0) {
+              scrollRef.current.scrollTop = Math.round((savedProg / 100) * totalScrollableDistance);
+              initialRestoredRef.current = true;
+            }
+          }
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [article, scrollRef]);
+
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
@@ -965,12 +1106,16 @@ function ReaderHeader({
   setFontFamily,
   fontSize,
   setFontSize,
+  lineHeight,
+  setLineHeight,
   themeMode,
   setThemeMode,
   widthMode,
   setWidthMode,
   isBionic,
   setIsBionic,
+  isFocusMode,
+  setIsFocusMode,
   showAudioPlayer,
   setShowAudioPlayer,
   setShowShortcuts,
@@ -989,12 +1134,16 @@ function ReaderHeader({
   setFontFamily: (f: FontFamily) => void;
   fontSize: FontSize;
   setFontSize: (s: FontSize) => void;
+  lineHeight: LineHeight;
+  setLineHeight: (l: LineHeight) => void;
   themeMode: ThemeMode;
   setThemeMode: (t: ThemeMode) => void;
   widthMode: WidthMode;
   setWidthMode: (w: WidthMode) => void;
   isBionic: boolean;
   setIsBionic: React.Dispatch<React.SetStateAction<boolean>>;
+  isFocusMode: boolean;
+  setIsFocusMode: React.Dispatch<React.SetStateAction<boolean>>;
   showAudioPlayer: boolean;
   setShowAudioPlayer: React.Dispatch<React.SetStateAction<boolean>>;
   setShowShortcuts: React.Dispatch<React.SetStateAction<boolean>>;
@@ -1010,16 +1159,16 @@ function ReaderHeader({
   return (
     <header className="flex items-center justify-between px-6 py-4 border-b border-border/40 bg-background/80 backdrop-blur z-10 shrink-0">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={onBack}>
+        <Button variant="ghost" size="icon" onClick={onBack} className="cursor-pointer">
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="flex flex-col">
-          <h1 className="font-heading font-semibold text-sm sm:text-base md:text-lg line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-md">
+          <h1 className="font-heading font-semibold text-sm sm:text-base md:text-lg line-clamp-1 max-w-[120px] sm:max-w-xs md:max-w-md">
             {title}
           </h1>
           <div className="flex items-center gap-2">
             {author && (
-              <span className="text-xs text-muted-foreground line-clamp-1 max-w-[120px] xs:max-w-[180px] sm:max-w-xs md:max-w-sm">
+              <span className="text-xs text-[#52525B] line-clamp-1 max-w-[120px] sm:max-w-xs md:max-w-sm">
                 {author}
               </span>
             )}
@@ -1033,27 +1182,39 @@ function ReaderHeader({
       <div className="flex items-center gap-2 sm:gap-3">
         {viewMode === "reader" && (
           <>
-            <Button
-              type="button"
-              variant={showAudioPlayer ? "default" : "outline"}
-              size="sm"
-              className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 cursor-pointer"
-              onClick={() => setShowAudioPlayer((prev) => !prev)}
+            <Tooltip
+              content={showAudioPlayer ? "Stop Audio" : "Listen (Audio)"}
+              side="bottom"
+              className="hidden sm:inline-flex"
             >
-              <Volume2 className="w-4 h-4" />
-              <span>Listen</span>
-            </Button>
+              <Button
+                type="button"
+                variant={showAudioPlayer ? "default" : "outline"}
+                size="icon"
+                className="h-9 w-9 cursor-pointer"
+                onClick={() => setShowAudioPlayer((prev) => !prev)}
+                aria-label={showAudioPlayer ? "Stop audio" : "Listen to article"}
+              >
+                <Volume2 className="w-4 h-4" />
+              </Button>
+            </Tooltip>
 
-            <Button
-              type="button"
-              variant={isBionic ? "default" : "outline"}
-              size="sm"
-              className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 cursor-pointer"
-              onClick={() => setIsBionic((prev) => !prev)}
+            <Tooltip
+              content={isBionic ? "Bionic ON — click to disable" : "Bionic Reading Mode (B)"}
+              side="bottom"
+              className="hidden md:inline-flex"
             >
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Bionic</span>
-            </Button>
+              <Button
+                type="button"
+                variant={isBionic ? "default" : "outline"}
+                size="icon"
+                className="h-9 w-9 cursor-pointer"
+                onClick={() => setIsBionic((prev) => !prev)}
+                aria-label="Toggle Bionic Reading Mode"
+              >
+                <Sparkles className="w-4 h-4 text-amber-500" />
+              </Button>
+            </Tooltip>
 
             <ReaderTableOfContents htmlContent={htmlContent} scrollRef={scrollRef} />
           </>
@@ -1092,6 +1253,8 @@ function ReaderHeader({
             setFontFamily={setFontFamily}
             fontSize={fontSize}
             setFontSize={setFontSize}
+            lineHeight={lineHeight}
+            setLineHeight={setLineHeight}
             themeMode={themeMode}
             setThemeMode={setThemeMode}
             widthMode={widthMode}
@@ -1101,16 +1264,35 @@ function ReaderHeader({
           />
         )}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="h-9 w-9 rounded-md hidden lg:inline-flex cursor-pointer"
-          onClick={() => setShowShortcuts(true)}
-          title="Reader Shortcuts (?)"
+        <Tooltip
+          content={isFocusMode ? "Exit Focus Mode (F)" : "Focus Mode (F)"}
+          side="bottom"
+          className="hidden sm:inline-flex"
         >
-          <Keyboard className="w-4 h-4" />
-        </Button>
+          <Button
+            type="button"
+            variant={isFocusMode ? "default" : "outline"}
+            size="icon"
+            className="h-9 w-9 cursor-pointer"
+            onClick={() => setIsFocusMode((prev) => !prev)}
+            aria-label="Toggle Focus Mode"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </Button>
+        </Tooltip>
+
+        <Tooltip content="Keyboard Shortcuts (?)" side="bottom" className="hidden lg:inline-flex">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 cursor-pointer"
+            onClick={() => setShowShortcuts(true)}
+            aria-label="Keyboard Shortcuts"
+          >
+            <Keyboard className="w-4 h-4" />
+          </Button>
+        </Tooltip>
 
         <ShareDialog type="article" id={articleId} title={title} compact />
         <ExportArticleButton articleId={articleId} articleTitle={title} />
@@ -1152,6 +1334,7 @@ function ReaderPopovers({
   activeSelection,
   concept,
   editingHighlight,
+  showDictionary,
   articleId,
   roomId,
   onHighlight,
@@ -1166,6 +1349,7 @@ function ReaderPopovers({
   activeSelection: SelectionType;
   concept: ConceptType;
   editingHighlight: EditingHighlightType;
+  showDictionary: boolean;
   articleId: string;
   roomId?: string | null;
   onHighlight: (color: string) => void;
@@ -1179,7 +1363,7 @@ function ReaderPopovers({
 }>) {
   return (
     <>
-      {activeSelection && (
+      {activeSelection && !showDictionary && (
         <TextSelectionMenu
           rect={activeSelection.rect}
           onHighlight={onHighlight}
@@ -1187,7 +1371,7 @@ function ReaderPopovers({
           onSaveConcept={() => onSaveConcept(activeSelection.text, "")}
         />
       )}
-      {activeSelection && (
+      {activeSelection && showDictionary && (
         <DictionaryPopover
           word={activeSelection.text}
           rect={activeSelection.rect}

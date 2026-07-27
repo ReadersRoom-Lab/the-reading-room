@@ -40,7 +40,7 @@ export default async function LibraryPage() {
           <p className="font-sans text-sm text-[#52525B]">Your saved articles and documents.</p>
         </div>
         <div className="flex items-center gap-3">
-          <ShareDialog type="library" />
+          <ShareDialog type="library" compact />
           <ExportDrawer />
         </div>
       </div>

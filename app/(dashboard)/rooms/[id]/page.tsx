@@ -79,7 +79,7 @@ export default async function RoomViewPage({
       <div className="flex flex-col gap-6 border-b border-border pb-8">
         <Link
           href="/rooms"
-          className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors w-fit"
+          className="text-sm font-medium text-[#52525B] hover:text-[#1A1A1A] flex items-center gap-1 transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Rooms
         </Link>
@@ -88,11 +88,11 @@ export default async function RoomViewPage({
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl sm:text-4xl font-heading font-bold">{room.name}</h1>
             {room.description && (
-              <p className="text-muted-foreground max-w-2xl text-base sm:text-lg font-source-serif">
+              <p className="text-[#52525B] max-w-2xl text-base sm:text-lg font-source-serif">
                 {room.description}
               </p>
             )}
-            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground uppercase tracking-widest font-semibold">
+            <div className="flex items-center gap-4 mt-2 text-sm text-[#52525B] uppercase tracking-widest font-semibold">
               <span>{room.articles.length} Articles</span>
               <span>•</span>
               <span>{highlightsCount} Highlights</span>
@@ -149,7 +149,7 @@ export default async function RoomViewPage({
         <TabsContent value="all" className="mt-0 outline-none">
           {room.articles.length === 0 ? (
             <div className="py-12 text-center border border-dashed border-border bg-card">
-              <p className="text-muted-foreground">
+              <p className="text-[#52525B]">
                 This room is empty. Move articles here from your library.
               </p>
             </div>
@@ -165,7 +165,7 @@ export default async function RoomViewPage({
         <TabsContent value="unread" className="mt-0 outline-none">
           {unreadArticles.length === 0 ? (
             <div className="py-12 text-center border border-dashed border-border bg-card">
-              <p className="text-muted-foreground">There are no unread articles in this room.</p>
+              <p className="text-[#52525B]">There are no unread articles in this room.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -179,7 +179,7 @@ export default async function RoomViewPage({
         <TabsContent value="in-progress" className="mt-0 outline-none">
           {inProgressArticles.length === 0 ? (
             <div className="py-12 text-center border border-dashed border-border bg-card">
-              <p className="text-muted-foreground">There are no articles in progress.</p>
+              <p className="text-[#52525B]">There are no articles in progress.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -193,7 +193,7 @@ export default async function RoomViewPage({
         <TabsContent value="completed" className="mt-0 outline-none">
           {completedArticles.length === 0 ? (
             <div className="py-12 text-center border border-dashed border-border bg-card">
-              <p className="text-muted-foreground">There are no completed articles in this room.</p>
+              <p className="text-[#52525B]">There are no completed articles in this room.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

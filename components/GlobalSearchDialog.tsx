@@ -87,13 +87,22 @@ export function GlobalSearchDialog() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="hidden md:flex items-center gap-2 px-2 py-1.5 text-sm font-sans text-[#52525B] hover:text-[#1A1A1A] border border-[#E5E5E5] hover:border-[#BDBDBD] bg-white w-full transition-colors"
+        className="hidden md:flex items-center gap-2 px-2 py-1.5 text-sm font-sans text-[#52525B] hover:text-[#1A1A1A] border border-[#E5E5E5] hover:border-[#BDBDBD] bg-white w-full transition-colors cursor-pointer"
       >
         <Search className="w-3.5 h-3.5 shrink-0" />
         <span className="flex-1 text-left">Search library...</span>
         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-0.5 border border-[#E5E5E5] bg-[#F4F3F3] px-1.5 font-mono text-[10px] font-medium text-[#52525B]">
           <span className="text-xs">{shortcutKey}</span>K
         </kbd>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Open Global Search"
+        className="md:hidden flex items-center justify-center p-2 text-[#52525B] hover:text-[#1A1A1A] border border-[#E5E5E5] bg-white transition-colors cursor-pointer"
+      >
+        <Search className="w-4 h-4" />
       </button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>

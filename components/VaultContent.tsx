@@ -233,7 +233,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                   >
                     {selectedEntry.type === "concept" ? "CONCEPT" : "VOCABULARY"}
                   </span>
-                  <span className="text-xs text-[#8C8C8C] flex items-center gap-1">
+                  <span className="text-xs text-[#52525B] flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5" />
                     Saved on {format(new Date(selectedEntry.created_at), "MMMM dd, yyyy")}
                   </span>
@@ -261,7 +261,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                       </button>
                     </div>
                     {selectedEntry.pronunciation && (
-                      <span className="text-xs font-mono text-[#8C8C8C]">
+                      <span className="text-xs font-mono text-[#52525B]">
                         {selectedEntry.pronunciation}
                       </span>
                     )}
@@ -270,7 +270,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                     type="button"
                     disabled={isDeleting === selectedEntry.id}
                     onClick={(e) => handleDelete(selectedEntry.id, e)}
-                    className="text-xs flex items-center gap-1 text-[#8C8C8C] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"
+                    className="text-xs flex items-center gap-1 text-[#52525B] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Delete Entry
@@ -292,7 +292,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               {/* Etymology / Origin Card */}
               {selectedEntry.etymology && (
                 <div className="bg-white border border-[#E5E5E5] p-5">
-                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8C8C8C] mb-2">
+                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-2">
                     Word Origin & Etymology
                   </h4>
                   <p className="font-source-serif text-sm leading-relaxed text-[#333333] italic">
@@ -317,7 +317,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               {/* Vault trails (where found and what passage) */}
               {selectedEntry.vaultTrails && selectedEntry.vaultTrails.length > 0 && (
                 <div className="flex flex-col gap-4 mt-2">
-                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8C8C8C] border-b border-[#E5E5E5] pb-2">
+                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#52525B] border-b border-[#E5E5E5] pb-2">
                     Context & Occurrences
                   </h4>
 
@@ -339,7 +339,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                       )}
 
                       {/* Occurrence metadata */}
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#8C8C8C] pt-2 border-t border-[#F0F0F0] mt-1 font-medium">
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#52525B] pt-2 border-t border-[#F0F0F0] mt-1 font-medium">
                         <div className="flex items-center gap-1.5">
                           <BookOpen className="w-3.5 h-3.5" />
                           <span>
@@ -374,7 +374,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#8C8C8C]">
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[#52525B]">
               <Sparkles className="w-8 h-8 text-[#BDBDBD] mb-2" />
               <p className="text-sm">Select an entry to view details</p>
             </div>
@@ -523,7 +523,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                   >
                     {activeGridEntry.type === "concept" ? "CONCEPT" : "VOCABULARY"}
                   </span>
-                  <span className="text-xs text-[#8C8C8C] flex items-center gap-1">
+                  <span className="text-xs text-[#52525B] flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5" />
                     Saved on {format(new Date(activeGridEntry.created_at), "MMMM dd, yyyy")}
                   </span>
@@ -534,7 +534,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                       {activeGridEntry.term}
                     </DialogTitle>
                     {activeGridEntry.pronunciation && (
-                      <span className="text-xs font-mono text-[#8C8C8C]">
+                      <span className="text-xs font-mono text-[#52525B]">
                         {activeGridEntry.pronunciation}
                       </span>
                     )}
@@ -543,7 +543,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                     type="button"
                     disabled={isDeleting === activeGridEntry.id}
                     onClick={(e) => handleDelete(activeGridEntry.id, e)}
-                    className="text-xs flex items-center gap-1 text-[#8C8C8C] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"
+                    className="text-xs flex items-center gap-1 text-[#52525B] hover:text-red-600 border border-[#E5E5E5] px-2.5 py-1.5 bg-white hover:bg-red-50/50 transition-colors rounded-none font-medium"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Delete Entry
@@ -565,7 +565,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               {/* Etymology / Origin Card */}
               {activeGridEntry.etymology && (
                 <div className="bg-white border border-[#E5E5E5] p-5">
-                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8C8C8C] mb-2">
+                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#52525B] mb-2">
                     Word Origin & Etymology
                   </h4>
                   <p className="font-source-serif text-sm leading-relaxed text-[#333333] italic">
@@ -590,7 +590,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
               {/* Context trails (where found and what passage) */}
               {activeGridEntry.vaultTrails && activeGridEntry.vaultTrails.length > 0 && (
                 <div className="flex flex-col gap-4 mt-2">
-                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#8C8C8C] border-b border-[#E5E5E5] pb-2">
+                  <h4 className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#52525B] border-b border-[#E5E5E5] pb-2">
                     Context & Occurrences
                   </h4>
 
@@ -612,7 +612,7 @@ export function VaultContent({ initialEntries }: Readonly<VaultContentProps>) {
                       )}
 
                       {/* Occurrence metadata */}
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#8C8C8C] pt-2 border-t border-[#F0F0F0] mt-1 font-medium">
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#52525B] pt-2 border-t border-[#F0F0F0] mt-1 font-medium">
                         <div className="flex items-center gap-1.5">
                           <BookOpen className="w-3.5 h-3.5" />
                           <span>

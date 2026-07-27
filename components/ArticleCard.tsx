@@ -63,7 +63,7 @@ export function ArticleCard({ article, isSelected = false, onSelect }: Readonly<
                 {isSelected ? (
                   <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
                 ) : (
-                  <Square className="w-4 h-4 text-[#BDBDBD]" />
+                  <Square className="w-4 h-4 text-[#52525B]" />
                 )}
               </button>
             )}

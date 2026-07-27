@@ -233,7 +233,7 @@ export function SaveArticleDialog({
           <DialogTitle className="font-heading font-bold text-foreground">
             Save Documents & Articles
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-xs text-[#52525B]">
             Paste a URL, DOI, arXiv ID, or upload multiple files at once (.pdf, .txt, .md, .epub,
             .docx, .html, .json).
           </DialogDescription>
@@ -245,7 +245,7 @@ export function SaveArticleDialog({
             <div>
               <label
                 htmlFor="save-url-input"
-                className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1"
+                className="block text-xs font-bold uppercase tracking-wider text-[#52525B] mb-1"
               >
                 Web URL / DOI / arXiv ID
               </label>
@@ -265,7 +265,7 @@ export function SaveArticleDialog({
 
             <div className="flex items-center gap-2">
               <div className="flex-1 border-t border-border" />
-              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+              <span className="text-[10px] text-[#52525B] font-semibold uppercase tracking-wider">
                 OR MULTI-FILE UPLOAD
               </span>
               <div className="flex-1 border-t border-border" />
@@ -300,11 +300,11 @@ export function SaveArticleDialog({
                   }
                 }}
               />
-              <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+              <Upload className="w-6 h-6 mx-auto mb-2 text-[#52525B]" />
               <p className="text-xs font-medium text-foreground">
                 Drop files here or <span className="text-primary underline">browse</span>
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1">
+              <p className="text-[10px] text-[#52525B] mt-1">
                 Supports PDF, TXT, Markdown, EPUB, DOCX, HTML, JSON (up to 50MB each)
               </p>
             </button>
@@ -312,7 +312,7 @@ export function SaveArticleDialog({
             {/* Selected File Queue List */}
             {fileQueue.length > 0 && (
               <div className="flex flex-col gap-2 max-h-48 overflow-y-auto border border-border p-2 bg-muted/20">
-                <div className="flex justify-between items-center px-1 text-xs font-semibold text-muted-foreground">
+                <div className="flex justify-between items-center px-1 text-xs font-semibold text-[#52525B]">
                   <span>
                     Queue ({fileQueue.length} file{fileQueue.length > 1 ? "s" : ""})
                   </span>
@@ -335,7 +335,7 @@ export function SaveArticleDialog({
                     <div className="flex items-center gap-2 overflow-hidden flex-1">
                       <FileText className="w-4 h-4 text-primary shrink-0" />
                       <span className="truncate font-medium text-foreground">{item.file.name}</span>
-                      <span className="text-[10px] text-muted-foreground shrink-0">
+                      <span className="text-[10px] text-[#52525B] shrink-0">
                         ({(item.file.size / (1024 * 1024)).toFixed(1)}MB)
                       </span>
                     </div>

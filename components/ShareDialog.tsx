@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Share2, Copy, Check, Link2, BookOpen, FileText, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export interface ShareDialogProps {
   type: "article" | "room" | "library";
@@ -147,40 +148,53 @@ export function ShareDialog({
     buttonText = "Copy Link Again";
   }
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {trigger ? (
-        <DialogTrigger render={trigger as React.ReactElement} />
-      ) : (
+  const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+
+  let shareTrigger: React.ReactNode;
+  if (trigger) {
+    shareTrigger = <DialogTrigger render={trigger as React.ReactElement} />;
+  } else if (compact) {
+    shareTrigger = (
+      <Tooltip content={`Share ${type}`} side="bottom">
         <DialogTrigger
           render={
-            compact ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 text-xs rounded-none cursor-pointer"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                <span>Share</span>
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                className="gap-2 border-[#E5E5E5] bg-white hover:bg-[#F9F7F2] text-[#1A1A1A] rounded-none cursor-pointer"
-              >
-                <Share2 className="w-4 h-4 text-[#1A1A1A]" />
-                <span>Share {type.charAt(0).toUpperCase() + type.slice(1)}</span>
-              </Button>
-            )
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 border-[#E5E5E5] bg-white hover:bg-[#F9F7F2] text-[#1A1A1A] rounded-none cursor-pointer"
+              aria-label={`Share ${type}`}
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </Button>
           }
         />
-      )}
+      </Tooltip>
+    );
+  } else {
+    shareTrigger = (
+      <DialogTrigger
+        render={
+          <Button
+            variant="outline"
+            className="gap-2 border-[#E5E5E5] bg-white hover:bg-[#F9F7F2] text-[#1A1A1A] rounded-none cursor-pointer"
+          >
+            <Share2 className="w-4 h-4 text-[#1A1A1A]" />
+            <span>Share {typeLabel}</span>
+          </Button>
+        }
+      />
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {shareTrigger}
 
       <DialogContent className="sm:max-w-md bg-white border border-[#E5E5E5] rounded-none font-sans">
         <DialogHeader>
           <DialogTitle className="font-heading font-bold text-lg text-[#1A1A1A] flex items-center gap-2">
             <Share2 className="w-4 h-4 text-[#1A1A1A]" /> Share{" "}
-            {type === "article" ? title : type.charAt(0).toUpperCase() + type.slice(1)}
+            {type === "article" ? title : typeLabel}
           </DialogTitle>
           <DialogDescription className="text-xs text-[#52525B]">
             Share via a public link with custom reader/native options or create a copy in your

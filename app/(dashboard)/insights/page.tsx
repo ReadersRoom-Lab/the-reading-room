@@ -215,14 +215,14 @@ export default function InsightsPage() {
               <div className="absolute right-4 top-4 text-orange-500 opacity-20">
                 <Flame className="w-12 h-12" />
               </div>
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+              <div className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest mb-1">
                 Current Streak
               </div>
               <div className="text-4xl font-heading font-bold text-[#1A1A1A] flex items-baseline gap-1">
                 {stats?.streaks?.current}{" "}
-                <span className="text-sm font-sans font-medium text-muted-foreground">days</span>
+                <span className="text-sm font-sans font-medium text-[#52525B]">days</span>
               </div>
-              <div className="text-xs text-muted-foreground mt-4 pt-4 border-t border-border flex items-center gap-1.5">
+              <div className="text-xs text-[#52525B] mt-4 pt-4 border-t border-border flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-orange-500 shrink-0" />
                 <span>Longest streak: {stats?.streaks?.longest} days</span>
               </div>
@@ -230,13 +230,13 @@ export default function InsightsPage() {
 
             {/* Total Articles Card */}
             <div className="bg-white border border-[#E5E5E5] p-6 flex flex-col justify-between shadow-sm">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+              <div className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest mb-1">
                 Total Articles
               </div>
               <div className="text-4xl font-heading font-bold text-[#1A1A1A]">
                 {stats?.totals?.articles}
               </div>
-              <div className="text-xs text-muted-foreground mt-4 pt-4 border-t border-border flex items-center gap-1.5">
+              <div className="text-xs text-[#52525B] mt-4 pt-4 border-t border-border flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-[#1A1A1A] shrink-0" />
                 <span>Saved in your personal library</span>
               </div>
@@ -244,13 +244,13 @@ export default function InsightsPage() {
 
             {/* Total Highlights Card */}
             <div className="bg-white border border-[#E5E5E5] p-6 flex flex-col justify-between shadow-sm">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+              <div className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest mb-1">
                 Total Highlights
               </div>
               <div className="text-4xl font-heading font-bold text-[#1A1A1A]">
                 {stats?.totals?.highlights}
               </div>
-              <div className="text-xs text-muted-foreground mt-4 pt-4 border-t border-border flex items-center gap-1.5">
+              <div className="text-xs text-[#52525B] mt-4 pt-4 border-t border-border flex items-center gap-1.5">
                 <Highlighter className="w-3.5 h-3.5 text-[#1A1A1A] shrink-0" />
                 <span>Key ideas highlighted in texts</span>
               </div>
@@ -258,13 +258,13 @@ export default function InsightsPage() {
 
             {/* Total Concepts Card */}
             <div className="bg-white border border-[#E5E5E5] p-6 flex flex-col justify-between shadow-sm">
-              <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+              <div className="text-[10px] font-semibold text-[#52525B] uppercase tracking-widest mb-1">
                 Vocabulary Vault
               </div>
               <div className="text-4xl font-heading font-bold text-[#1A1A1A]">
                 {stats?.totals?.vault}
               </div>
-              <div className="text-xs text-muted-foreground mt-4 pt-4 border-t border-border flex items-center gap-1.5">
+              <div className="text-xs text-[#52525B] mt-4 pt-4 border-t border-border flex items-center gap-1.5">
                 <Library className="w-3.5 h-3.5 text-[#1A1A1A] shrink-0" />
                 <span>Words and concepts logged</span>
               </div>
@@ -280,7 +280,7 @@ export default function InsightsPage() {
             <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm md:col-span-2 flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
-                  <TrendingUp className="w-5 h-5 text-muted-foreground" />
+                  <TrendingUp className="w-5 h-5 text-[#52525B]" />
                   <h3 className="font-heading text-lg font-bold text-[#1A1A1A]">
                     Vocabulary Vault Growth
                   </h3>
@@ -317,7 +317,7 @@ export default function InsightsPage() {
                     </svg>
 
                     {/* X-Axis dates labels */}
-                    <div className="flex justify-between w-full text-[10px] text-muted-foreground font-semibold px-4 mt-2">
+                    <div className="flex justify-between w-full text-[10px] text-[#52525B] font-semibold px-4 mt-2">
                       <span>{stats.knowledgeGrowth[0]?.date}</span>
                       <span>
                         {stats.knowledgeGrowth[Math.floor(stats.knowledgeGrowth.length / 2)]?.date}
@@ -326,7 +326,7 @@ export default function InsightsPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground py-12 text-center">
+                  <div className="text-sm text-[#52525B] py-12 text-center">
                     No concept growth logged yet.
                   </div>
                 )}
@@ -337,7 +337,7 @@ export default function InsightsPage() {
             <div className="bg-white border border-[#E5E5E5] p-6 sm:p-8 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-6 border-b border-[#E5E5E5] pb-4">
-                  <FolderOpen className="w-5 h-5 text-muted-foreground" />
+                  <FolderOpen className="w-5 h-5 text-[#52525B]" />
                   <h3 className="font-heading text-lg font-bold text-[#1A1A1A]">
                     Most Active Rooms
                   </h3>
@@ -351,9 +351,7 @@ export default function InsightsPage() {
                         <div key={room.name || idx} className="flex flex-col gap-1.5">
                           <div className="flex justify-between text-xs font-semibold text-[#1A1A1A]">
                             <span className="line-clamp-1 max-w-[70%]">{room.name}</span>
-                            <span className="text-muted-foreground">
-                              {room.articleCount} articles
-                            </span>
+                            <span className="text-[#52525B]">{room.articleCount} articles</span>
                           </div>
                           <div className="w-full bg-[#FCFBF8] border border-border h-4 relative">
                             <div
@@ -366,7 +364,7 @@ export default function InsightsPage() {
                     })}
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground py-12 text-center">
+                  <div className="text-sm text-[#52525B] py-12 text-center">
                     No rooms with articles found.
                   </div>
                 )}

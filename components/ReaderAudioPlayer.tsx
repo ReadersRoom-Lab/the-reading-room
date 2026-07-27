@@ -8,9 +8,16 @@ interface ReaderAudioPlayerProps {
   readonly textContent: string;
   readonly articleTitle: string;
   readonly onClose: () => void;
+  /** When true, bumps the player above the mobile sanctuary bar (sm:hidden) */
+  readonly hasBottomBar?: boolean;
 }
 
-export function ReaderAudioPlayer({ textContent, articleTitle, onClose }: ReaderAudioPlayerProps) {
+export function ReaderAudioPlayer({
+  textContent,
+  articleTitle,
+  onClose,
+  hasBottomBar = false,
+}: ReaderAudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [rate, setRate] = useState<number>(1);
   const [progress, setProgress] = useState<number>(0);
@@ -93,21 +100,24 @@ export function ReaderAudioPlayer({ textContent, articleTitle, onClose }: Reader
 
   if (!isSupported) {
     return (
-      <div className="fixed bottom-6 right-6 z-50 bg-card border border-border px-4 py-3 shadow-xl rounded-xl text-xs text-muted-foreground">
+      <div className="fixed bottom-6 right-6 z-50 bg-card border border-border px-4 py-3 shadow-xl rounded-xl text-xs text-[#52525B]">
         Audio Speech API is not supported in this browser.
       </div>
     );
   }
 
+  // On mobile, push up above the sanctuary bar (which is at bottom-4, so add 56px clearance)
+  const bottomClass = hasBottomBar ? "bottom-[88px] sm:bottom-6" : "bottom-6";
+
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-card/95 backdrop-blur border border-border shadow-2xl rounded-2xl px-5 py-3 flex items-center gap-4 min-w-[340px] xs:min-w-[400px] animate-in fade-in slide-in-from-bottom-4">
+    <div
+      className={`fixed left-1/2 -translate-x-1/2 z-50 bg-card/95 backdrop-blur border border-border shadow-2xl rounded-2xl px-5 py-3 flex items-center gap-4 min-w-[320px] sm:min-w-[400px] animate-in fade-in slide-in-from-bottom-4 ${bottomClass}`}
+    >
       <div className="flex items-center gap-2">
         <Volume2 className="w-4 h-4 text-primary animate-pulse" />
         <div className="flex flex-col">
           <span className="text-xs font-semibold line-clamp-1 max-w-[160px]">{articleTitle}</span>
-          <span className="text-[10px] text-muted-foreground font-mono">
-            {progress}% read aloud
-          </span>
+          <span className="text-[10px] text-[#52525B] font-mono">{progress}% read aloud</span>
         </div>
       </div>
 
@@ -116,7 +126,7 @@ export function ReaderAudioPlayer({ textContent, articleTitle, onClose }: Reader
           type="button"
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-full"
+          className="h-8 w-8 rounded-full cursor-pointer"
           onClick={() => {
             if (typeof window !== "undefined") {
               window.speechSynthesis.cancel();
@@ -152,7 +162,7 @@ export function ReaderAudioPlayer({ textContent, articleTitle, onClose }: Reader
           type="button"
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-full ml-1"
+          className="h-8 w-8 rounded-full ml-1 cursor-pointer"
           onClick={() => {
             if (typeof window !== "undefined") {
               window.speechSynthesis.cancel();

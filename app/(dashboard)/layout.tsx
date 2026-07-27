@@ -1,7 +1,6 @@
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
-import { Home, Library, LayoutGrid, BookMarked, User, Sparkles, GitFork } from "lucide-react";
-import Link from "next/link";
+import { SidebarNav, ProfileNavLink } from "@/components/SidebarNav";
 import { MobileNav } from "@/components/MobileNav";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
@@ -53,54 +52,14 @@ export default async function DashboardLayout({
           <SaveArticleDialog />
         </div>
 
-        {/* Navigation */}
+        {/* Navigation — client component with active route highlighting */}
         <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5">
-          <Link
-            href="/home"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <Home className="w-4 h-4 shrink-0" /> Home
-          </Link>
-          <Link
-            href="/library"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <Library className="w-4 h-4 shrink-0" /> Library
-          </Link>
-          <Link
-            href="/rooms"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <LayoutGrid className="w-4 h-4 shrink-0" /> My Rooms
-          </Link>
-          <Link
-            href="/vault"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <BookMarked className="w-4 h-4 shrink-0" /> Vault
-          </Link>
-          <Link
-            href="/graph"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <GitFork className="w-4 h-4 shrink-0" /> Connected Ideas
-          </Link>
-          <Link
-            href="/insights"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <Sparkles className="w-4 h-4 shrink-0" /> Insights
-          </Link>
+          <SidebarNav variant="desktop" />
         </nav>
 
         {/* Profile at bottom */}
         <div className="border-t border-[#E5E5E5] px-3 py-3">
-          <Link
-            href="/profile"
-            className="flex items-center gap-3 px-3 py-2.5 text-sm font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors"
-          >
-            <User className="w-4 h-4 shrink-0" /> Profile
-          </Link>
+          <ProfileNavLink variant="desktop" />
         </div>
       </aside>
 

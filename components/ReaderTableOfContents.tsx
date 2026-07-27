@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { List, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 
 export interface TocItem {
   id: string;
@@ -119,16 +120,17 @@ export function ReaderTableOfContents({ htmlContent, scrollRef }: ReaderTableOfC
   return (
     <>
       {/* TOC Trigger Button */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setIsOpen(true)}
-        className="h-8 px-2.5 text-xs font-semibold uppercase tracking-wider gap-1.5 border-[#E5E5E5] bg-white text-[#1A1A1A] hover:bg-[#F4F3F3] rounded-none shadow-sm"
-        title="Table of Contents"
-      >
-        <List className="w-3.5 h-3.5 text-[#52525B]" />
-        <span className="hidden sm:inline">Outline</span>
-      </Button>
+      <Tooltip content="Article Outline" side="bottom">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsOpen(true)}
+          className="h-9 w-9 cursor-pointer"
+          aria-label="Article Outline"
+        >
+          <List className="w-4 h-4" />
+        </Button>
+      </Tooltip>
 
       {/* Slide-over Drawer Overlay */}
       {isOpen && (

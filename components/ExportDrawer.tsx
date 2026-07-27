@@ -116,24 +116,26 @@ export function ExportDrawer({ compact }: { compact?: boolean } = {}) {
     }
   };
 
+  const triggerEl = compact ? (
+    <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
+      <Download className="w-3.5 h-3.5" />
+      <span>Export</span>
+    </Button>
+  ) : (
+    <Button
+      variant="outline"
+      size="icon"
+      className="h-9 w-9 border-[#E5E5E5] bg-white hover:bg-[#F9F7F2] text-[#1A1A1A] rounded-none cursor-pointer"
+      title="Export workspace"
+      aria-label="Export workspace"
+    >
+      <Download className="w-4 h-4 text-[#1A1A1A]" />
+    </Button>
+  );
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        {compact ? (
-          <Button variant="outline" size="sm" className="gap-2 rounded-none cursor-pointer">
-            <Download className="w-3.5 h-3.5" />
-            <span>Export</span>
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            className="gap-2 border-[#E5E5E5] bg-white hover:bg-[#F9F7F2] text-[#1A1A1A] rounded-none cursor-pointer"
-          >
-            <Download className="w-4 h-4 text-[#1A1A1A]" />
-            <span>Export Workspace</span>
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger render={triggerEl} />
 
       <DialogContent className="sm:max-w-md bg-white border border-[#E5E5E5] rounded-none font-sans">
         <DialogHeader>

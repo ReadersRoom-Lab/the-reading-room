@@ -26,8 +26,9 @@ export function ReaderShortcutsModal({ isOpen, onClose }: ReaderShortcutsModalPr
   const shortcuts = [
     { key: "H", label: "Highlight selected text" },
     { key: "S", label: "Save term / Look up concept" },
+    { key: "F", label: "Toggle Focus Sanctuary Mode" },
     { key: "B", label: "Toggle Bionic Reading Mode" },
-    { key: "T", label: "Cycle Reading Themes (Paper -> Sepia -> Dark -> OLED)" },
+    { key: "T", label: "Cycle Reading Themes (Paper -> Sepia -> Mint -> Dark -> OLED)" },
     { key: "N", label: "Toggle Reader vs Native view" },
     { key: "?", label: "Toggle this shortcut menu" },
   ];

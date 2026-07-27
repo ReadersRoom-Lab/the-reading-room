@@ -147,7 +147,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
         <div>
           <h3 className="font-heading text-2xl font-bold text-[#1A1A1A]">{item.termOrText}</h3>
           {item.pronunciation && (
-            <span className="text-xs font-mono text-[#8C8C8C] block mt-0.5">
+            <span className="text-xs font-mono text-[#52525B] block mt-0.5">
               {item.pronunciation}
             </span>
           )}
@@ -177,7 +177,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
             <span className="truncate max-w-[70%]">
               From: <strong className="font-heading text-[#1A1A1A]">{item.articleTitle}</strong>
             </span>
-            <span className="text-[10px] text-[#8C8C8C]">
+            <span className="text-[10px] text-[#52525B]">
               Saved {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
             </span>
           </div>
@@ -220,7 +220,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
                 <button
                   type="button"
                   onClick={() => setEditingNote(true)}
-                  className="ml-2 text-[10px] text-[#8C8C8C] hover:text-[#1A1A1A]"
+                  className="ml-2 text-[10px] text-[#52525B] hover:text-[#1A1A1A]"
                 >
                   Edit
                 </button>
@@ -229,7 +229,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
               <button
                 type="button"
                 onClick={() => setEditingNote(true)}
-                className="flex items-center gap-1 text-xs text-[#8C8C8C] hover:text-[#1A1A1A]"
+                className="flex items-center gap-1 text-xs text-[#52525B] hover:text-[#1A1A1A]"
               >
                 <Edit3 className="w-3.5 h-3.5" /> Add memory note...
               </button>
@@ -242,7 +242,7 @@ export function TodaysRediscoveryCard({ initialItem }: Readonly<TodaysRediscover
                 className={`flex items-center gap-1 text-xs font-medium px-2 py-1 transition-colors ${
                   isMastered
                     ? "bg-emerald-100 text-emerald-800"
-                    : "text-[#8C8C8C] hover:text-[#1A1A1A]"
+                    : "text-[#52525B] hover:text-[#1A1A1A]"
                 }`}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
