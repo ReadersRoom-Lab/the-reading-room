@@ -2,10 +2,43 @@
 
 _Automated summary of git contributions. Updated on every push._
 
+## 📅 July 25, 2026
+
+**Lokeshwaran V R:**
+
+- Fix(accessibility): add role=dialog, backdrop button, and keyboard escape listeners to ReaderShortcutsModal
+- Fix(sonar): resolve SonarCloud quality gate issues in page.tsx, ImageLightboxModal, and reader-utils
+- Fix(reader): resolve SonarCloud warnings and merge Mint Reader Mode into main
+- Feat(reader): transform Reader Mode into World-Class Mint Edition with luxury themes, bionic reading, text-to-speech audio player, image lightbox, and keyboard hotkeys
+- Fix(sonar): resolve regex backtracking and String#replaceAll code smells in reader-utils
+- Test: increase paragraph sentence chunking coverage to achieve 100% reader-utils coverage
+- Test: add tests for author bylines and empty clean content for 100% coverage
+- Fix: clean print noise, page headers, timestamps and title underscores in reader mode
+- Test: add comprehensive unit tests for lib/reader-utils.ts for SonarCloud coverage requirement
+- Fix: auto default PDF documents to Native view and chunk long reader paragraphs
+- Feat: add intelligent reader mode formatting and pre-existing highlight support
+- Fix: resolve Chrome iframe blocking in native document viewer
+- Fix: move card selection checkbox inline next to domain badge
+- Fix: resolve UNKNOWN source domain badges and card accessibility warnings
+- Fix(sonar): add role presentation and key handlers to satisfy SonarQube Quality Gate reliability rating
+- Fix(ui): prevent share dialog and dropdown clicks from triggering parent card link navigation
+- Ci: map SONAR_TOKEN to env context for GitHub Actions linter compatibility
+- Ci: fix YAML expression syntax in workflow files
+- Ci: skip SonarCloud scan when SONAR_TOKEN secret is absent
+- Fix(deps): configure minimatch override to resolve lint breakage and security audit
+- Fix(deps): update package overrides to resolve high security vulnerabilities
+- Fix(upload): resolve batch upload payload overflow and stuck UI state
+
+**dependabot[bot]:**
+
+- Chore(deps-dev): bump @tailwindcss/postcss from 4.3.2 to 4.3.3
+- Chore(deps-dev): bump knip from 6.25.0 to 6.29.0
+
 ## 📅 July 24, 2026
 
 **Lokeshwaran V R:**
 
+- Docs: update README.md and CONTRIBUTIONS.md for all contributors
 - Fix(types): add object type guard for item in extractTextFromPdf
 - Test(coverage): boost file-extractor to 100% line coverage and 99.8% total statement coverage
 - Fix(sonar): eliminate regex tag stripping and generateObject deprecation warnings

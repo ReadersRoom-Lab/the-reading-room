@@ -1,20 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import {
-  Menu,
-  X,
-  Home,
-  Library,
-  LayoutGrid,
-  BookMarked,
-  User,
-  Sparkles,
-  GitFork,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { GlobalSearchDialog } from "@/components/GlobalSearchDialog";
 import { SaveArticleDialog } from "@/components/SaveArticleDialog";
+import { SidebarNav, ProfileNavLink } from "@/components/SidebarNav";
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,8 +22,9 @@ export function MobileNav() {
         <button
           type="button"
           onClick={toggleMenu}
-          className="p-2 text-[#1A1A1A]"
-          aria-label="Toggle Menu"
+          className="p-2 text-[#1A1A1A] cursor-pointer hover:bg-[#E5E5E5] rounded-md transition-colors"
+          aria-label={isOpen ? "Close Menu" : "Open Menu"}
+          aria-expanded={isOpen}
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -52,60 +43,13 @@ export function MobileNav() {
             <SaveArticleDialog />
           </div>
 
-          {/* Navigation */}
+          {/* Navigation — uses SidebarNav for active-route highlighting */}
           <nav className="flex-1 px-4 py-4 flex flex-col gap-2">
-            <Link
-              href="/home"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <Home className="w-5 h-5 shrink-0" /> Home
-            </Link>
-            <Link
-              href="/library"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <Library className="w-5 h-5 shrink-0" /> Library
-            </Link>
-            <Link
-              href="/rooms"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <LayoutGrid className="w-5 h-5 shrink-0" /> My Rooms
-            </Link>
-            <Link
-              href="/vault"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <BookMarked className="w-5 h-5 shrink-0" /> Vault
-            </Link>
-            <Link
-              href="/graph"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <GitFork className="w-5 h-5 shrink-0" /> Connected Ideas
-            </Link>
-            <Link
-              href="/insights"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <Sparkles className="w-5 h-5 shrink-0" /> Insights
-            </Link>
+            <SidebarNav variant="mobile" onLinkClick={closeMenu} />
 
             <div className="my-2 border-t border-[#E5E5E5]" />
 
-            <Link
-              href="/profile"
-              onClick={closeMenu}
-              className="flex items-center gap-3 px-3 py-3 text-base font-sans font-medium text-[#444748] hover:bg-[#E5E5E5] hover:text-[#1A1A1A] transition-colors rounded-md"
-            >
-              <User className="w-5 h-5 shrink-0" /> Profile
-            </Link>
+            <ProfileNavLink variant="mobile" onLinkClick={closeMenu} />
           </nav>
         </div>
       )}

@@ -116,14 +116,22 @@ export function RoomAssignDropdown({
   };
 
   return (
-    <>
+    <div className="inline-flex items-center gap-1.5 shrink-0">
+      <ShareDialog
+        type="article"
+        id={articleId}
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        compact
+      />
+
       <DropdownMenu>
         <DropdownMenuTrigger
           onClick={handleTriggerInteraction}
           onKeyDown={handleTriggerInteraction}
           aria-label="Article options"
           title="Article options"
-          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 -mr-2 text-muted-foreground outline-none border-none bg-transparent rounded-none"
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:bg-[#E5E5E5] hover:text-[#1A1A1A] h-8 w-8 text-muted-foreground outline-none border-none bg-transparent rounded-none"
         >
           <MoreVertical className="w-4 h-4" />
         </DropdownMenuTrigger>
@@ -133,7 +141,7 @@ export function RoomAssignDropdown({
           onKeyDown={handleContentInteraction}
         >
           <DropdownMenuGroup>
-            <DropdownMenuLabel className="text-xs uppercase text-muted-foreground tracking-wider font-semibold">
+            <DropdownMenuLabel className="text-xs uppercase text-[#52525B] tracking-wider font-semibold">
               Move to Room
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -142,7 +150,7 @@ export function RoomAssignDropdown({
               className="justify-between cursor-pointer"
             >
               <div className="flex items-center gap-2">
-                <Library className="w-4 h-4 text-muted-foreground" />
+                <Library className="w-4 h-4 text-[#52525B]" />
                 <span>No Room (Library)</span>
               </div>
               {!currentRoomId && <Check className="w-4 h-4 text-primary" />}
@@ -154,7 +162,7 @@ export function RoomAssignDropdown({
                 className="justify-between cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <FolderOpen className="w-4 h-4 text-muted-foreground" />
+                  <FolderOpen className="w-4 h-4 text-[#52525B]" />
                   <span>{room.name}</span>
                 </div>
                 {currentRoomId === room.id && <Check className="w-4 h-4 text-primary" />}
@@ -166,7 +174,7 @@ export function RoomAssignDropdown({
               className="justify-between cursor-pointer"
             >
               <div className="flex items-center gap-2">
-                <Plus className="w-4 h-4 text-muted-foreground" />
+                <Plus className="w-4 h-4 text-[#52525B]" />
                 <span>Create New Room</span>
               </div>
             </DropdownMenuItem>
@@ -194,14 +202,14 @@ export function RoomAssignDropdown({
             }}
             className="cursor-pointer flex items-center gap-2"
           >
-            <Copy className="w-4 h-4 text-muted-foreground" />
+            <Copy className="w-4 h-4 text-[#52525B]" />
             <span>Make a Copy</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setIsShareOpen(true)}
             className="cursor-pointer flex items-center gap-2"
           >
-            <Share2 className="w-4 h-4 text-muted-foreground" />
+            <Share2 className="w-4 h-4 text-[#52525B]" />
             <span>Share Link / Copy</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -217,7 +225,7 @@ export function RoomAssignDropdown({
           {loading && (
             <>
               <DropdownMenuSeparator />
-              <div className="p-2 flex items-center justify-center text-muted-foreground text-xs">
+              <div className="p-2 flex items-center justify-center text-[#52525B] text-xs">
                 <Loader2 className="w-4 h-4 animate-spin mr-2" /> Working...
               </div>
             </>
@@ -255,7 +263,7 @@ export function RoomAssignDropdown({
             <DialogTitle className="font-heading text-xl text-[#1A1A1A]">
               Delete Document
             </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
+            <DialogDescription className="text-xs text-[#52525B]">
               Are you sure you want to delete this document? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
@@ -293,8 +301,6 @@ export function RoomAssignDropdown({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <ShareDialog type="article" id={articleId} open={isShareOpen} onOpenChange={setIsShareOpen} />
-    </>
+    </div>
   );
 }

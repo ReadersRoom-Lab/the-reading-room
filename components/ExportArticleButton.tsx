@@ -95,12 +95,17 @@ export function ExportArticleButton({
         render={
           <Button
             variant="outline"
-            size="sm"
-            className="gap-2 font-sans text-xs rounded-none cursor-pointer"
+            size="icon"
+            className="h-9 w-9 cursor-pointer"
             disabled={exporting}
+            title={exporting ? "Downloading..." : "Download article"}
+            aria-label={exporting ? "Downloading..." : "Download article"}
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>{exporting ? "Downloading..." : "Download"}</span>
+            {exporting ? (
+              <span className="w-3.5 h-3.5 animate-spin border-2 border-current border-t-transparent rounded-full inline-block" />
+            ) : (
+              <Download className="w-3.5 h-3.5" />
+            )}
           </Button>
         }
       />

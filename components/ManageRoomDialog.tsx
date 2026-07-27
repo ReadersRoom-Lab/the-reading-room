@@ -74,8 +74,6 @@ export function ManageRoomDialog({
   const handleConfirmDelete = async () => {
     setDeleting(true);
 
-    setDeleting(true);
-
     try {
       const res = await fetch(`/api/rooms/${roomId}`, {
         method: "DELETE",
@@ -121,9 +119,9 @@ export function ManageRoomDialog({
             <DialogHeader>
               <DialogTitle className="font-heading text-xl text-red-600">Delete Room?</DialogTitle>
             </DialogHeader>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-sm text-[#52525B] mt-2">
               Are you sure you want to delete{" "}
-              <span className="font-semibold text-foreground">{name}</span>?
+              <span className="font-semibold text-[#1A1A1A]">{name}</span>?
               <br />
               <br />
               All articles inside will be safely moved back to your general Library, but the room

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { LayoutGrid, List, Trash2, CheckSquare, Square, BookOpen } from "lucide-react";
+import { LayoutGrid, List, Trash2, CheckSquare, Square } from "lucide-react";
 import Link from "next/link";
 import { ArticleCard } from "./ArticleCard";
+import { RoomAssignDropdown } from "./RoomAssignDropdown";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
@@ -55,6 +56,10 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
       else next.add(id);
       return next;
     });
+  };
+
+  const handleDeleteSuccess = (id: string) => {
+    setArticles((prev) => prev.filter((a) => a.id !== id));
   };
 
   const handleBulkDelete = async () => {
@@ -125,7 +130,7 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
             {selectedIds.size > 0 && selectedIds.size === articles.length ? (
               <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
             ) : (
-              <Square className="w-4 h-4 text-[#BDBDBD]" />
+              <Square className="w-4 h-4 text-[#52525B]" />
             )}
             <span>{selectedIds.size > 0 ? `${selectedIds.size} Selected` : "Select All"}</span>
           </button>
@@ -223,7 +228,7 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
                     {selectedIds.size > 0 && selectedIds.size === articles.length ? (
                       <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
                     ) : (
-                      <Square className="w-4 h-4 text-[#BDBDBD]" />
+                      <Square className="w-4 h-4 text-[#52525B]" />
                     )}
                   </button>
                 </th>
@@ -232,7 +237,7 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
                 <th className="p-3">Read Time</th>
                 <th className="p-3">Progress</th>
                 <th className="p-3">Status</th>
-                <th className="p-3 text-right">Action</th>
+                <th className="p-3 pr-8 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E5E5E5]">
@@ -254,7 +259,7 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
                         {isSelected ? (
                           <CheckSquare className="w-4 h-4 text-[#1A1A1A]" />
                         ) : (
-                          <Square className="w-4 h-4 text-[#BDBDBD]" />
+                          <Square className="w-4 h-4 text-[#52525B]" />
                         )}
                       </button>
                     </td>
@@ -293,13 +298,12 @@ export function LibraryContent({ initialArticles, rooms }: Readonly<LibraryConte
                       </Badge>
                     </td>
 
-                    <td className="p-3 text-right whitespace-nowrap">
-                      <Link
-                        href={`/read/${article.id}`}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A] hover:underline"
-                      >
-                        Read <BookOpen className="w-3 h-3" />
-                      </Link>
+                    <td className="p-3 pr-8 text-center whitespace-nowrap">
+                      <RoomAssignDropdown
+                        articleId={article.id}
+                        currentRoomId={article.room_id}
+                        onDeleteSuccess={() => handleDeleteSuccess(article.id)}
+                      />
                     </td>
                   </tr>
                 );

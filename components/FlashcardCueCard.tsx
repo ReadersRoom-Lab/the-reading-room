@@ -83,11 +83,11 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
               </button>
             </div>
             {concept.pronunciation && (
-              <p className="font-mono text-xs text-[#8C8C8C]">{concept.pronunciation}</p>
+              <p className="font-mono text-xs text-[#52525B]">{concept.pronunciation}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-[#8C8C8C] border-t border-[#E5E5E5] pt-3">
+          <div className="flex items-center justify-between text-[11px] text-[#52525B] border-t border-[#E5E5E5] pt-3">
             <span className="flex items-center gap-1 text-[#D17659] font-medium">
               <RotateCw className="w-3.5 h-3.5" /> Click to flip
             </span>
@@ -101,7 +101,7 @@ export function FlashcardCueCard({ concept, onMastered }: Readonly<FlashcardCueC
             <h4 className="font-heading font-bold text-sm text-[#E6C79C] truncate">
               {concept.term}
             </h4>
-            <span className="text-[9px] uppercase tracking-wider text-[#8C8C8C]">Definition</span>
+            <span className="text-[9px] uppercase tracking-wider text-[#D4D4D8]">Definition</span>
           </div>
 
           <div className="my-auto overflow-y-auto max-h-[140px] pr-1 scrollbar-thin">

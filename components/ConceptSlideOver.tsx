@@ -124,7 +124,7 @@ export function ConceptSlideOver({
         <div className="flex flex-col gap-1 mb-6">
           <h2 className="text-4xl font-heading font-bold text-[#1a1a1a]">{term}</h2>
           {pronunciation && (
-            <span className="text-xs font-mono text-[#8C8C8C]">{pronunciation}</span>
+            <span className="text-xs font-mono text-[#52525B]">{pronunciation}</span>
           )}
         </div>
 
@@ -216,7 +216,7 @@ export function ConceptSlideOver({
         <div className="grid grid-cols-1 gap-3">
           <Button
             variant="outline"
-            className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-muted-foreground"
+            className="w-full h-10 text-sm font-semibold rounded-none border-border hover:bg-muted text-[#52525B] hover:text-[#1A1A1A]"
             onClick={() => noteInputRef.current?.focus()}
             disabled={isFetching}
           >

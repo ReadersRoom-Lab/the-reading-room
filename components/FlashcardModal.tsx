@@ -247,7 +247,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
 
     return (
       <div className="flex flex-col items-center justify-center flex-1 space-y-6">
-        <div className="text-[11px] font-semibold uppercase tracking-widest text-[#BDBDBD]">
+        <div className="text-[11px] font-semibold uppercase tracking-widest text-[#52525B]">
           Card {currentIndex + 1} of {totalCards}
         </div>
 
@@ -266,7 +266,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
             {/* FRONT SIDE */}
             <div className="absolute inset-0 w-full h-full bg-white border-2 border-[#E6C79C] p-8 shadow-md flex flex-col justify-between items-center text-center [backface-visibility:hidden]">
               <div className="w-full flex justify-between items-center">
-                <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#BDBDBD]">
+                <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#52525B]">
                   Vocabulary Word
                 </span>
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-[#D17659] flex items-center gap-1">
@@ -298,7 +298,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
                 )}
               </div>
 
-              <p className="text-xs text-[#BDBDBD] font-sans italic">
+              <p className="text-xs text-[#52525B] font-sans italic">
                 (Click or press Space to reveal definition)
               </p>
             </div>
@@ -361,7 +361,7 @@ export function FlashcardModal({ isOpen, onClose, entries }: FlashcardModalProps
         {/* Rating Controls */}
         {isFlipped ? (
           <div className="flex flex-col items-center gap-2 w-full animate-in fade-in duration-200">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-[#BDBDBD]">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-[#52525B]">
               How well did you recall this term? (SM-2 Interval Scheduling 1-4)
             </div>
 

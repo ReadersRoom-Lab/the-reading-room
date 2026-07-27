@@ -45,12 +45,18 @@ export function ExportRoomButton({ roomId, roomName }: Readonly<ExportRoomButton
   return (
     <Button
       variant="outline"
-      size="sm"
-      className="gap-2 rounded-none"
+      size="icon"
+      className="h-9 w-9 rounded-none cursor-pointer"
       onClick={handleExport}
       disabled={exporting}
+      title={exporting ? "Exporting..." : "Export room as Markdown"}
+      aria-label={exporting ? "Exporting..." : "Export room"}
     >
-      <Download className="w-4 h-4" /> {exporting ? "Exporting..." : "Export"}
+      {exporting ? (
+        <span className="w-4 h-4 animate-spin border-2 border-current border-t-transparent rounded-full inline-block" />
+      ) : (
+        <Download className="w-4 h-4" />
+      )}
     </Button>
   );
 }
