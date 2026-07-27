@@ -71,10 +71,10 @@ export function SidebarNav({ variant = "desktop", onLinkClick }: Readonly<Sideba
 export function ProfileNavLink({
   variant = "desktop",
   onLinkClick,
-}: {
+}: Readonly<{
   variant?: "desktop" | "mobile";
   onLinkClick?: () => void;
-}) {
+}>) {
   const pathname = usePathname();
   const isActive = pathname === "/profile";
 
