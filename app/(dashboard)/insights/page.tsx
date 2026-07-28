@@ -271,6 +271,80 @@ export default function InsightsPage() {
             </div>
           </div>
 
+          {/* Streak Milestone Badges */}
+          <div className="bg-white border border-[#E5E5E5] p-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[#E5E5E5] pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <Flame className="w-5 h-5 text-[#D17659] fill-[#D17659]" />
+                <h3 className="font-heading text-lg font-bold text-[#1A1A1A]">
+                  Streak Milestone Badges
+                </h3>
+              </div>
+              <span className="text-xs font-mono font-semibold text-[#52525B]">
+                Current: {stats?.streaks?.current || 0} Days
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Bronze Badge (5 Days) */}
+              <div
+                className={`p-4 border flex items-center gap-3 transition-colors ${
+                  (stats?.streaks?.current || 0) >= 5
+                    ? "bg-[#FAF9F5] border-[#D17659]"
+                    : "bg-white border-[#E5E5E5] opacity-50"
+                }`}
+              >
+                <div className="w-10 h-10 bg-[#D17659]/15 border border-[#D17659] flex items-center justify-center font-bold text-lg text-[#D17659] shrink-0">
+                  🔥
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-sm text-[#1A1A1A]">5-Day Streak</h4>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#52525B]">
+                    {(stats?.streaks?.current || 0) >= 5 ? "Unlocked 🎉" : "Locked (5 Days)"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Silver Badge (14 Days) */}
+              <div
+                className={`p-4 border flex items-center gap-3 transition-colors ${
+                  (stats?.streaks?.current || 0) >= 14
+                    ? "bg-[#FAF9F5] border-[#D17659]"
+                    : "bg-white border-[#E5E5E5] opacity-50"
+                }`}
+              >
+                <div className="w-10 h-10 bg-slate-200 border border-slate-400 flex items-center justify-center font-bold text-lg text-slate-700 shrink-0">
+                  🥈
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-sm text-[#1A1A1A]">14-Day Streak</h4>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#52525B]">
+                    {(stats?.streaks?.current || 0) >= 14 ? "Unlocked 🎉" : "Locked (14 Days)"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Gold Badge (30 Days) */}
+              <div
+                className={`p-4 border flex items-center gap-3 transition-colors ${
+                  (stats?.streaks?.current || 0) >= 30
+                    ? "bg-[#FAF9F5] border-[#D17659]"
+                    : "bg-white border-[#E5E5E5] opacity-50"
+                }`}
+              >
+                <div className="w-10 h-10 bg-amber-100 border border-amber-400 flex items-center justify-center font-bold text-lg text-amber-700 shrink-0">
+                  🥇
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-sm text-[#1A1A1A]">30-Day Streak</h4>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#52525B]">
+                    {(stats?.streaks?.current || 0) >= 30 ? "Unlocked 🎉" : "Locked (30 Days)"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Annual Heatmap Section */}
           <ReadingHeatmap dailyActivity={stats?.dailyActivity || stats?.activity || {}} />
 

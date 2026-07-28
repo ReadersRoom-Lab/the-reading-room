@@ -27,6 +27,12 @@ This guide details all key features of ReadrSpace and how to use them to elevate
 - Click any outline heading to smoothly scroll directly to that section.
 - View real-time dynamic time remaining (`"X min left"`) computed live as you scroll.
 
+### Enhanced TTS Audio Reader with Voice Selector & Scrubber Bar
+
+- Click **Listen** in any article reader header to open the Web Speech TTS Audio Floating Player.
+- **Voice Selection**: Choose between natural speech synthesis voices directly in the player bar.
+- **Interactive Scrubber**: Drag or click the timeline scrubber to jump narration to any position in the text.
+
 ### Compact Table View & Multi-Select Bulk Actions
 
 - Toggle between **Grid View** (Editorial Cards) and **Compact Table View** in your Library.
@@ -53,12 +59,13 @@ This guide details all key features of ReadrSpace and how to use them to elevate
 
 ---
 
-## 3. 📊 365-Day Reading Heatmap & Analytics Engine
+## 3. 📊 365-Day Reading Heatmap, Daily Goals & Streak Badges
 
-- Accessible from the **Insights** tab (`/insights`).
+- Accessible from the **Insights** tab (`/insights`) and **Dashboard Home** (`/home`).
+- **Custom Daily Reading Target**: Click the settings icon (`<Settings2 />`) on the Daily Streak Widget to set your target reading minutes (`10 min`, `15 min`, `30 min`, `45 min`, `60 min`).
+- **Streak Milestone Badges**: Unlock badges for 5-Day (Bronze Flame 🔥), 14-Day (Silver Flame 🥈), and 30-Day (Gold Flame 🥇) reading streaks.
 - **365-Day Contribution Heatmap**: GitHub-style 52-week activity grid displaying daily reading consistency with 4 intensity levels (`0 min`, `1-10 min`, `11-25 min`, `26+ min`).
 - **Hover Tooltips**: Hover over any heatmap block to view exact date and reading minutes.
-- **Analytics Metrics**: Track total articles read, word count totals, average reading WPM, and top tag breakdown.
 
 ---
 

@@ -127,3 +127,47 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { clerk_id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const dailyGoalMinutes =
+      typeof body.dailyGoalMinutes === "number" && body.dailyGoalMinutes > 0
+        ? Math.min(180, Math.max(5, body.dailyGoalMinutes))
+        : 15;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        daily_goal_minutes: dailyGoalMinutes,
+      },
+    });
+
+    return NextResponse.json(
+      {
+        streakCount: updatedUser.streak_count,
+        dailyGoalMinutes: updatedUser.daily_goal_minutes,
+        readingMinutesToday: updatedUser.reading_minutes_today,
+        lastReadDate: updatedUser.last_read_date,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    logger.error("Error updating daily reading goal:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
