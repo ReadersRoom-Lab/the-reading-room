@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Flame, CheckCircle2, Clock } from "lucide-react";
+import { Flame, CheckCircle2, Clock, Settings2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface StreakData {
   streakCount: number;
@@ -13,6 +14,8 @@ interface StreakData {
 export function DailyStreakWidget({ initialData }: Readonly<{ initialData?: StreakData | null }>) {
   const [data, setData] = useState<StreakData | null>(initialData || null);
   const [loading, setLoading] = useState(!initialData);
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+  const [isSavingGoal, setIsSavingGoal] = useState(false);
 
   useEffect(() => {
     if (!initialData) {
@@ -33,6 +36,30 @@ export function DailyStreakWidget({ initialData }: Readonly<{ initialData?: Stre
   const minutesToday = data?.readingMinutesToday || 0;
   const pct = Math.min(100, Math.round((minutesToday / goalMinutes) * 100));
 
+  const handleUpdateGoal = async (newGoal: number) => {
+    setIsSavingGoal(true);
+    try {
+      const res = await fetch("/api/user/streak", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dailyGoalMinutes: newGoal }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setData((prev) =>
+          prev ? { ...prev, dailyGoalMinutes: updated.dailyGoalMinutes } : updated
+        );
+        toast.success(`Daily reading goal updated to ${newGoal} minutes!`);
+      }
+    } catch (err) {
+      toast.error("Failed to update daily reading goal");
+      console.error(err);
+    } finally {
+      setIsSavingGoal(false);
+      setIsEditingGoal(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="bg-[#FAF9F5] border-2 border-[#1A1A1A] p-5 shadow-sm font-sans animate-pulse min-h-[140px]" />
@@ -47,11 +74,19 @@ export function DailyStreakWidget({ initialData }: Readonly<{ initialData?: Stre
             <Flame className="w-5 h-5 text-[#D17659] fill-[#D17659]" />
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg text-[#1A1A1A] leading-tight">
+            <h3 className="font-heading font-bold text-lg text-[#1A1A1A] leading-tight flex items-center gap-1.5">
               {streakCount} {streakCount === 1 ? "Day" : "Days"} Streak
             </h3>
-            <p className="text-[10px] text-[#52525B] font-medium uppercase tracking-wider">
-              Daily Reading Goal
+            <p className="text-[10px] text-[#52525B] font-medium uppercase tracking-wider flex items-center gap-1">
+              Daily Reading Goal ({goalMinutes} min)
+              <button
+                type="button"
+                onClick={() => setIsEditingGoal((prev) => !prev)}
+                className="text-[#D17659] hover:text-[#1A1A1A] transition-colors cursor-pointer ml-1"
+                title="Edit Daily Reading Goal"
+              >
+                <Settings2 className="w-3.5 h-3.5" />
+              </button>
             </p>
           </div>
         </div>
@@ -60,6 +95,32 @@ export function DailyStreakWidget({ initialData }: Readonly<{ initialData?: Stre
           {pct >= 100 ? "GOAL REACHED!" : `${minutesToday}/${goalMinutes} MIN`}
         </span>
       </div>
+
+      {/* Goal Edit Selector Drawer */}
+      {isEditingGoal && (
+        <div className="mb-3 p-3 bg-white border border-[#E5E5E5] flex flex-col gap-2 animate-in fade-in zoom-in-95 duration-200">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#52525B]">
+            Select Daily Target:
+          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {[10, 15, 30, 45, 60].map((mins) => (
+              <button
+                key={mins}
+                type="button"
+                disabled={isSavingGoal}
+                onClick={() => handleUpdateGoal(mins)}
+                className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider border cursor-pointer transition-colors ${
+                  goalMinutes === mins
+                    ? "bg-[#1A1A1A] text-white border-[#1A1A1A]"
+                    : "bg-[#FAF9F5] text-[#1A1A1A] border-[#E5E5E5] hover:border-[#1A1A1A]"
+                }`}
+              >
+                {mins} min
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Goal Progress Bar */}
       <div className="space-y-1.5">

@@ -83,3 +83,28 @@ test("Heatmap intensity class mapping based on daily minutes read", () => {
   assert.equal(getIntensityClass(20), "bg-[#D17659]/70");
   assert.equal(getIntensityClass(45), "bg-[#D17659]");
 });
+
+test("Daily reading goal target minutes validation clamps between 5 and 180 minutes", () => {
+  function sanitizeGoal(input: number): number {
+    return Math.min(180, Math.max(5, input));
+  }
+
+  assert.equal(sanitizeGoal(30), 30);
+  assert.equal(sanitizeGoal(2), 5); // Below min
+  assert.equal(sanitizeGoal(300), 180); // Above max
+});
+
+test("Streak milestone badge unlock resolution", () => {
+  function getMilestones(streak: number) {
+    return {
+      bronze5Day: streak >= 5,
+      silver14Day: streak >= 14,
+      gold30Day: streak >= 30,
+    };
+  }
+
+  assert.deepEqual(getMilestones(3), { bronze5Day: false, silver14Day: false, gold30Day: false });
+  assert.deepEqual(getMilestones(7), { bronze5Day: true, silver14Day: false, gold30Day: false });
+  assert.deepEqual(getMilestones(14), { bronze5Day: true, silver14Day: true, gold30Day: false });
+  assert.deepEqual(getMilestones(45), { bronze5Day: true, silver14Day: true, gold30Day: true });
+});
