@@ -27,7 +27,7 @@
     "@prisma/client": "^7.8.0",
     "@vercel/speed-insights": "^2.0.0",
     "@xyflow/react": "^12.11.2",
-    "ai": "^7.0.31",
+    "ai": "^7.0.41",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
